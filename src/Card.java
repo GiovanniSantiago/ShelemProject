@@ -2,7 +2,7 @@ import java.awt.image.BufferedImage;
 import java.nio.file.FileSystems;
 
 
-public class Card {
+public class Card implements Comparable<Card>{
 	//---------------------------------------------
 	//----------FIELD------------------------------
 	//---------------------------------------------
@@ -61,6 +61,27 @@ public class Card {
 		return this.rank.toString() + " of " + this.suit.toString();
 	}
 	
+	@Override
+	public int compareTo(Card arg0) {
+		if(this.suit.equals(arg0.getSuit())){
+			if(this.rank.getPosition() < arg0.getRank().getPosition()){
+				return -1;
+			}else if(this.rank.getPosition() == arg0.getRank().getPosition()){
+				return 0;
+			}else{
+				return 1;
+			}
+			
+		}else{
+			if(this.suit.getPosition() < arg0.getSuit().getPosition()){
+				return -1;
+			}else if(this.suit.getPosition() == arg0.getSuit().getPosition()){
+				return 0;
+			}else{
+				return 1;
+			}
+		}
+	}
 	
 	
 	
@@ -72,4 +93,7 @@ public class Card {
 	private void setImg(){
 		ImageRegistry.getImage(this.rank.toString() + "_" + this.suit.toString());
 	}
+
+
+	
 }
