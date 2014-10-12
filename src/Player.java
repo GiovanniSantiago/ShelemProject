@@ -1,10 +1,16 @@
 import java.util.ArrayList;
 
-
+/**
+ * 
+ * @author Giovanni
+ *
+ */
 public class Player {
+	
 	private ArrayList<Card> handCards;
-	private String name;
-	private PlayerPosition position;
+	private String 			name;
+	private PlayerPosition 	position;
+	
 	
 	public Player(PlayerPosition position, String name) {
 		this.position = position;

@@ -1,5 +1,10 @@
-
+/**
+ * 
+ * @author Glorimar Castro
+ *
+ */
 public enum Rank {
+	
 	A(10),
 	TWO(0),
 	THREE(0),

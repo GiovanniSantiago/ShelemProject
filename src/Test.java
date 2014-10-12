@@ -16,7 +16,8 @@ public class Test {
 	public static void main(String[] args) throws IOException {
 		JFrame f = new JFrame("imh");
 		JLabel lb = new JLabel();
-		ImageRegistry.setImageGrid(ImageRegistry.loadImage("classic-playing-cards.jpg"), Utilities.getEnumNames(Rank.values()), Utilities.getEnumNames(Suit.values()), 13, 4);
+		
+		ImageRegistry.setImageGrid(ImageRegistry.loadImage("classic-playing-cards.png"),  Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
 		BufferedImage img = ImageRegistry.getImage(Rank.EIGHT + "_" + Suit.HEARTS.toString());
 		System.out.println(img.getHeight());
 		

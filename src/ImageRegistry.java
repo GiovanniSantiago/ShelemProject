@@ -7,17 +7,29 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-
+/**
+ * This class is for generate and save all the image needed by the Shelem Progam. 
+ * @author Glorimar Castro
+ *
+ */
 public class ImageRegistry {
+	
 	public static HashMap<String, BufferedImage> images = new HashMap<String, BufferedImage>();
-	
-	
-	public static final String IMAGE_PATH = "res/";
+	public static final String IMAGE_PATH = "res\\";
 	
 
-
+	/**
+	 * Este metodo se encarga de buscar la imagen solicitada y añadirla al HashMap de imagenes. Si existe no la añade y solo la devuelve al usuario, 
+	 * si no existe crea la imagen y la añade al HashMap, devolviendo la imagen como reusltado. 
+	 * @param name
+	 * 		Nombre del archivo de la imagen
+	 * @return
+	 */
+	@SuppressWarnings("finally")
 	public static BufferedImage loadImage(String name) {
+		
 		Path fullPath = FileSystems.getDefault().getPath(IMAGE_PATH, name);
+		
 		if(images.containsKey(name)) {
 			return images.get(name);
 		} else {
@@ -29,23 +41,43 @@ public class ImageRegistry {
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println("Cannot load image: "+fullPath);
+			}finally{
+				return images.get(name);
 			}
-			return null;
+			
 		}
 	}
 	
-	/*
+
+	/**
 	 * 
+	 * @param name
+	 * 	Nombre del archivo de la imagen.
+	 * @return
 	 */
-	
 	public static BufferedImage getImage(String name){
 		return images.get(name);
 	}
 	
-	public static void setImageGrid(BufferedImage img, String[] columnName, String[] rowName, int width, int height){
+	/**
+	 * Este metodo se encarga de tomar una imagen y generar sub imagenes a partir de la imagen original. Las sub imagenes se generaran a 
+	 * partir de dividir la imagen en una matriz con las columnas y filas especificadas por el usuario. El nombre de cada imagen generada sera el equivalente 
+	 * a los nombres ingresados por el usuario en el orden en que se generan las imagenes con el orden de los nombres en el arreglo de nombres especificados.
+	 * @param img
+	 * 	Imagen a cortar
+	 * @param rowName
+	 * 	Nombres para las filas generadas
+	 * @param columnName
+	 * 	Nombres para las columnas generada
+	 * @param rows
+	 * 	Cantidad de filas a cortar la imagen
+	 * @param colums
+	 * 	Cantidad de columnas a cortar la imagen
+	 */
+	public static void setImageGrid(BufferedImage img, String[] rowName, String[] columnName, int rows, int colums){
 		BufferedImage	buffImg;
-		int 			gridImgWidth 	= img.getWidth() / width;
-		int				gridImgHeight	= img.getHeight() / height;
+		int 			gridImgWidth 	= img.getWidth() / colums;
+		int				gridImgHeight	= img.getHeight() / rows;
 		int				suitCount		= 0;
 		int				rankCount		= 0;
 		for(String s: rowName){
