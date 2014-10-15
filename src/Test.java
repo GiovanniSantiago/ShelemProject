@@ -25,31 +25,23 @@ public class Test {
 		CardDeck desk = new CardDeck(cards);
 		desk.sortDeck();
 		desk.printDeck();
-		System.out.println();
-		System.out.println();
-		
-		desk.overhandShuffle();
-		System.out.println();System.out.println();
-		desk.printDeck();
 		
 		
-		/*JFrame f = new JFrame("imh");
+		JFrame f = new JFrame("imh");
 		JLabel lb = new JLabel();
 		
 		ImageRegistry.setImageGrid(ImageRegistry.loadImage("classic-playing-cards.png"),  Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
 		BufferedImage img = ImageRegistry.getImage(Rank.EIGHT + "_" + Suit.HEARTS.toString());
 		System.out.println(img.getHeight());
 		
+	
 		
-		Card c = new Card(Suit.DIAMONDS, Rank.FOUR);
-		Card c2 = new Card(Suit.SPADES, Rank.FOUR);
 		
-		System.out.println(c.compareTo(c2));
 		lb.setIcon(new ImageIcon(img));
 		f.add(lb);
 		f.setSize(850, 700);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);*/
+		f.setVisible(true);
 		
 	}
 
