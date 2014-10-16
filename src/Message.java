@@ -1,88 +1,92 @@
+import java.util.HashMap;
+
+/**
+ * Represents a complete message, sendable through a socket with the use of MessageLines. Encodes itself as a String, which is then sent, and then decoded into another Message object, identical to the first.
+ * 
+ * @author Giovanni Santiago
+ *
+ */
 public class Message {
 	String source;
-	Integer[] params;
+	HashMap<String, String> map;
 
+	/**
+	 * Creates a Message object form an encoded String. String MUST be a sequence of string pairs, each followed by a <b>$</b> sign.
+	 * <p>Each string pair contains <i>exactly one</i> colon character <b>:</b>, and <i>at least one</i> non-colon character before and after the colon.</p>
+	 * <p>I.E. each message is a list of pairs terminated by dollar signs, and each pair consists of two <b>non-empty</b> string separated by a colon character</p>
+	 * <p>Examples:</p>
+	 * <p>name:value$other_data:datastuff$ is valid</p>
+	 * @param source
+	 */
 	public Message(String source) {
 		this.source = source;
-		params = generateParameters(source);
+		map = generateMap(source);
+		
 	}
-
+	
 	/**
-	 * Creates a message with the provided name and values. For a name-only
-	 * message, leave values as null
-	 * 
-	 * @param name
-	 *            The name of the message
-	 * @param values
-	 *            The parameters of the message. null for no parameters
+	 * Creates a Message from a list of MessagePairs. No special validation done in this method as sources are already validated in MessagePair constructors.
+	 * @param pairs
 	 */
-	public Message(String name, Integer... values) {
-		if (values == null || values.length == 0) {
-			this.source = name;
-			params = new Integer[0];
-			return;
+	public Message(MessagePair... pairs) {
+		source = "";
+		HashMap<String, String> result = new HashMap<String, String>();
+		for(MessagePair p : pairs) {
+			result.put(p.getKey(),p.getValue());
+			source += p.getKey()+":"+p.getValue()+"$";
 		}
-		params = new Integer[values.length];
-		System.arraycopy(values, 0, params, 0, values.length);
-		this.source = generateSource(name, params);
-	}
-
-	private Integer[] generateParameters(String source) {
-		if(source.contains(":")) {
-			String[] contents = source.substring(source.indexOf(":") + 1)
-					.split(",");
-			Integer[] numbers = new Integer[contents.length];
-
-			for (int i = 0; i < contents.length; i++) {
-				numbers[i] = Integer.valueOf(contents[i]);
-			}
-			return numbers;
-		}
-		
-		return new Integer[0];
-	}
-
-	private String generateSource(String name, Integer[] params) {
-		if(params.length == 0) {
-			return name;
-		}
-		String result = name + ":";
-		for (int i = 0; i < params.length - 1; i++) {
-			result += params[i] + ",";
-		}
-		result += params[params.length - 1];
-		return result;
-	}
-
-	public String getName() {
-		if(source.contains(":")) {
-			return source.substring(0, source.indexOf(":"));
-		} else {
-			return source;
-		}
+		map = result;
 		
 	}
-
+	
 	/**
-	 * Gets the index-th parameter of the message. Assumes index is within
-	 * range.
-	 * 
-	 * @param index
+	 * Generates a HashMap<String,String> after validating the source String. 
+	 * @param source
 	 * @return
 	 */
-	public int getParameter(int index) {
-		return params[index];
+	private HashMap<String, String> generateMap(String source) {
+		if(source.matches("([^:$]+:[^:$]+\\$)+")) {
+			HashMap<String, String> result = new HashMap<String, String>();
+			String[] pieces = source.split("\\$");
+			for(String s : pieces) {
+				String[] pair = s.split(":");
+				result.put(pair[0],pair[1]);
+			}
+			return result;
+		} else {
+			throw new IllegalArgumentException("Encoded message: ["+source + "] is not a valid message string.");
+		}
+		
+		
+	}
+	
+	/**
+	 * Accesses the value mapped to the provided key.
+	 * @param key
+	 * @return
+	 */
+	public String getValue(String key) {
+		if(map.containsKey(key)) {
+			return map.get(key);
+		} else {
+			throw new IllegalArgumentException("Message does not contain a pair with key: ["+key+"]");
+		}
 	}
 
-	public int getParameterCount() {
-		return params.length;
-	}
-
+	/**
+	 * Returns the entire encoded string for this message. Passing this String to Message(String) will create a Message object identical to this one, in terms of key:value pairs.
+	 * @return
+	 */
 	public String getCompleteString() {
 		return source;
 	}
 
+	
 	public String toString() {
-		return source;
+		String result="";
+		for(String s : map.keySet()) {
+			result+="[ "+s+" | "+map.get(s)+" ] ";
+		}
+		return result;
 	}
 }
