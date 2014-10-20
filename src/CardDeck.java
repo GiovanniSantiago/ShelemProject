@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -13,56 +14,150 @@ public class CardDeck {
 	//===============
 	//FIELD
 	//===============
-	private ArrayList<Card> cardDeck;
-	private int				currentPosition = -1;
+	private Card[] 			cardDeck;
+	private int				currentPosition;
+	private int 			actualLenght;
 	
 	
 	//===============
 	//CONSTRUCTORS
 	//===============
-	public CardDeck(ArrayList<Card> cardDeck){
-		this.cardDeck = new ArrayList<Card>();
-		this.cardDeck.addAll(cardDeck);
-	}
-	
 	public CardDeck(Card[] cardDeck){
-		this.cardDeck = new ArrayList<Card>();
+		currentPosition = -1;
+		this.cardDeck = new Card[16];
+		int actualLenght = 0;
 		for(Card card : cardDeck){
-			this.cardDeck.add(card);
+			cardDeck[actualLenght] = card;
+			actualLenght++;
 		}
 	}
-	//===============
-	//METHODS
-	//===============
+	
+	public CardDeck(){
+		currentPosition	= -1;
+		actualLenght	= 0;
+		this.cardDeck = new Card[16];
+		
+	}
+	
+	/**
+	 * Sort in ascending order the cards. Spades < Club < Heart < Diamond
+	 */
 	public void sortDeck(){
-		Collections.sort(cardDeck);
+		Card[] temp = new Card[actualLenght];
+		for(int i = 0; i < actualLenght; i++){
+			temp[i] = cardDeck[i];
+		}
+		Arrays.sort(temp);
+		for(int i = 0; i < actualLenght; i++){
+			cardDeck[i] = temp[i];
+		}
+		
 	}
 	
 	public void printDeck(){
-		for(Card element: cardDeck){
-			System.out.println(element);
+		for(int i = 0; i < actualLenght; i++){
+			System.out.println(cardDeck[i]);
 			
 		}
 	}
 	
+	/**
+	 * Shuffle the arrayof card with the overhand thecnique
+	 */
 	public void overhandShuffle(){
 		sortDeck();
-		Utilities.overhandArrayListShuffle(this.cardDeck);
+		Card[] temp = new Card[actualLenght];
+		for(int i = 0; i < actualLenght; i++){
+			temp[i] = cardDeck[i];
+		}
+		
+		Utilities.overhandArrayShuffle(temp);
+		for(int i = 0; i < actualLenght; i++){
+			cardDeck[i] = temp[i];
+		}
 		
 	}
 	
-	public ArrayList<Card> getDeck(){
-		return this.cardDeck;
+	public boolean addCard(Card card){
+		if(actualLenght < cardDeck.length){
+			cardDeck[actualLenght] = card;
+			actualLenght++;
+			return true;
+		}else
+			return false;
 	}
 	
-	public Card getNextCard(){
-		currentPosition++;
-		if(currentPosition >= cardDeck.size()){
-			currentPosition = 0;
+	public boolean removeCard(Card card){
+		boolean found = false;
+		int position = -1;
+		for(int i = 0; i < actualLenght; i++){
+			if(cardDeck[i].equals(card)){
+				position	= i;
+				found 		= true;
+				break;
+			}
 		}
-		return cardDeck.get(currentPosition);
+		if(position > -1){
+			for(int i = position; i < actualLenght - 1; i++){
+				cardDeck[i] = cardDeck[i+1];
+			}
+			cardDeck[actualLenght-1] = null;
+			
+			if(currentPosition >= position){
+				currentPosition--;
+			}
+			actualLenght--;
+		}
+		
+		return found;
 	}
 	
+	public Card getCard(int position){
+		if(position >= actualLenght){
+			return null;
+		}else
+			return cardDeck[position];
+		
+	}
 	
+	public int getAmntOfCards(){
+		return actualLenght;
+	}
+	
+	public Card[] getDeck(){
+		return cardDeck;
+	}
+	
+	public int getSize(){
+		return actualLenght;
+	}
+	
+	/**
+	 * return the next card and move the pointer to the next card
+	 * @return
+	 */
+	
+	//TODO return an exception
+	public Card getNextCard(){
+		if(currentPosition < actualLenght){
+			if(currentPosition != (actualLenght - 1))
+				currentPosition++;
+			return cardDeck[currentPosition]; 	
+		}else
+			return null;
+		
+	}
+	
+	/**
+	 * Return the previous card but leave the pointer where it is
+	 * @return
+	 */
+	public Card getPreviousCard(){
+		if(currentPosition > 0){
+			return cardDeck[currentPosition - 1];
+		}else
+			return null;
+		
+	}
 	
 }
