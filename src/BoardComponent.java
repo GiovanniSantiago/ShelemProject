@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -18,26 +19,43 @@ public class BoardComponent extends JPanel{
 	//FIELD
 	//==========================================================================================
 	
-	final int 			CARD_WIDTH 				= 68;
+	final int 			CARD_WIDTH 				= 73;
 	final int 			CARD_HEGHT 				= 100;
-	final Dimension 	labelsMaximunDimension	= new Dimension(200, 40);
-	final int			CARD_OVERLAP_FACTOR 	= 3;							//This is used to declare what factor of the card is going to be show and the next card drawn 	
+	final Dimension 	labelsMaximunDimension	= new Dimension(200, 50);
+	final int			CARD_OVERLAP_X_FACTOR 	= 3;							//This is used to declare what factor of the card is going to be show and the next card drawn 	
+	final int			CARD_OVERLAP_Y_FACTOR   = 7;
 	final int			MAX_CARDS_AMNT			= 16;							//Maximun of card that a player can have
 	final static int	PARTNER_POS				= 2;
 	final static int	EAST_OPPONENT_POS		= 1;
 	final static int	WEST_OPPONENT_POS		= 3;
 	final static int	CURRENT_PLAYER_POS		= 0;
+	private final int 	PLAYERCARDS_WIDTH 		= (int) (MAX_CARDS_AMNT*CARD_WIDTH/3 + CARD_WIDTH*(2.0/3));
+	private final int	PLAYERCARDS_HEGHT		= CARD_HEGHT + CARD_HEGHT/CARD_OVERLAP_Y_FACTOR;
 	
 	Graphics2D 			g2;
 	AffineTransform 	oldForm;												//Original setting for the Graphics tranform
 	JLabel[] 			userNames 			= new JLabel[4];;					//Labels for the userNames, Current Player - Player at the right - team player - player at the left
+	JLabel[]			userCards			= new JLabel[MAX_CARDS_AMNT];
 	boolean  			isUserNamesSet 		= false;							//True if the user names where set, false if the user names are nulls
 	int[] 				playerCardsAmmount 	= new int[4];						//Amount of card by player
 	Point[] 			userNamePoint 		= new Point[4];						//Coordinate for drawing player cards in the center
-	Point[] 			deckPoint			= new Point[4];						//Coordinate for drawing the decks, starts coordinates
+	static Point[] 		deckPoint			= new Point[4];						//Coordinate for drawing the decks, starts coordinates
+	Point[]				playeCardPoints		= new Point[4];
 	BufferedImage		backgroundImg;											//Board image
+	BufferedImage		playedCardImg;
+	BufferedImage		partenPlayedCardImg;
+	BufferedImage		eastOpntplayedCardImg;
+	BufferedImage		westOpntplayedCardImg;
 	
-	//For the current player we use a separeta component for easy event handeling 
+	public static CardsMouseListener mouseLst 	= new CardsMouseListener();
+	
+	CardDeck deck;
+	boolean		isDeckSet 				= false;
+	boolean		isCardPlayed 			= false;
+	boolean		isPartnerCardPlayed		= false;
+	boolean		isWestOpntCardPlayed 	= false;
+	boolean		isEastOpntCardPlayed	= false;
+	
 	
 	//=========================================================================================
 	//CONSTRUCTORS
@@ -58,8 +76,13 @@ public class BoardComponent extends JPanel{
 		for(int i = 0; i < this.userNamePoint.length; i++){						//initialize Points where the labels are going to be inserted
 			this.userNamePoint[i] 	= new Point();
 			this.deckPoint[i] 		= new Point();
+			this.playeCardPoints[i] = new Point();
 		}
 		
+		for(int i = 0; i < userCards.length; i++){
+			userCards[i] = new JLabel();
+			userCards[i].setSize(CARD_WIDTH, CARD_HEGHT);
+		}
 		
 
 		
@@ -92,6 +115,25 @@ public class BoardComponent extends JPanel{
 			drawPartneCards();
 		}
 		
+		if(isCardPlayed){
+			g2.drawImage(playedCardImg, null, (int)(playeCardPoints[CURRENT_PLAYER_POS].getX()),  (int)(playeCardPoints[CURRENT_PLAYER_POS].getY()));
+			isCardPlayed = false;
+		}
+		
+		if(isPartnerCardPlayed){
+			g2.drawImage(partenPlayedCardImg, null, (int)(playeCardPoints[PARTNER_POS].getX()),  (int)(playeCardPoints[PARTNER_POS].getY()));
+			isPartnerCardPlayed = false;
+		}
+		
+		if(isEastOpntCardPlayed){
+			g2.drawImage(eastOpntplayedCardImg, null, (int)(playeCardPoints[EAST_OPPONENT_POS].getX()),  (int)(playeCardPoints[EAST_OPPONENT_POS].getY()));
+			isEastOpntCardPlayed = false;
+		}
+		
+		if(isWestOpntCardPlayed){
+			g2.drawImage(westOpntplayedCardImg, null, (int)(playeCardPoints[WEST_OPPONENT_POS].getX()),  (int)(playeCardPoints[WEST_OPPONENT_POS].getY()));
+			isWestOpntCardPlayed = false;
+		}
 				
 	}
 	
@@ -125,12 +167,21 @@ public class BoardComponent extends JPanel{
 		int powSign = 1;
 		for(int i = 0; i < this.deckPoint.length; i+=2){
 			double x = userNamePoint[i].getX() + userNames[i].getWidth()/2 -((MAX_CARDS_AMNT*CARD_WIDTH/3 + CARD_WIDTH*2.0/3))/2;
-			double y = userNamePoint[i].getY() + Math.pow(-1, powSign)*CARD_HEGHT/2;
+			double y = userNamePoint[i].getY() + Math.pow(-1, powSign)*CARD_HEGHT;
 			this.deckPoint[i].setLocation(x, y);
 			this.deckPoint[i + 1].setLocation(userNamePoint[i + 1].getX() + userNames[i + 1].getWidth()/2 + CARD_HEGHT/2, userNames[i+ 1].getHeight()+ userNames[i+ 1].getY());
 			powSign++;
 		}
 		
+		
+		//Set played card points to be drawen
+		this.playeCardPoints[CURRENT_PLAYER_POS].setLocation(this.getWidth()/2 - CARD_WIDTH/2, this.getHeight()/2 + 25);
+		this.playeCardPoints[PARTNER_POS].setLocation(this.getWidth()/2 - CARD_WIDTH/2, this.getHeight()/2 - CARD_HEGHT - 25);
+		this.playeCardPoints[EAST_OPPONENT_POS].setLocation(this.getWidth()/2 + 25, this.getHeight()/2 - CARD_HEGHT/2);
+		this.playeCardPoints[WEST_OPPONENT_POS].setLocation(this.getWidth()/2 - 25 - CARD_WIDTH, this.getHeight()/2 - CARD_HEGHT/2);
+		
+		
+		this.deckPoint[PARTNER_POS].setLocation(deckPoint[PARTNER_POS].getX(), deckPoint[PARTNER_POS].getY()/2);
 		isUserNamesSet = true;
 		repaint();
 		
@@ -200,7 +251,7 @@ public class BoardComponent extends JPanel{
 	        
 			for(int i = 0; i < playerCardsAmmount[playerPosition]; i++){
 				g2.drawImage(ImageRegistry.getImage("cardBack.jpg"), null, x, y);
-				x += CARD_WIDTH/CARD_OVERLAP_FACTOR;
+				x += CARD_WIDTH/CARD_OVERLAP_X_FACTOR;
 			}
 			
 			g2.setTransform(oldForm);
@@ -217,11 +268,70 @@ public class BoardComponent extends JPanel{
                 
 		for(int i = 0; i < playerCardsAmmount[PARTNER_POS]; i++){
 			g2.drawImage(ImageRegistry.getImage("cardBack.jpg"), null, x, y);
-			x += CARD_WIDTH/CARD_OVERLAP_FACTOR;
+			x += CARD_WIDTH/CARD_OVERLAP_X_FACTOR;
 		}
 		
 		g2.setTransform(oldForm);
 	}
+	
+	
+	/**
+	 *  --------------------------------------  SET PLAYED CARD --------------------------------------
+	 *  
+	 * @param image
+	 */
+	public void setPlayedCard(BufferedImage image){
+		this.playedCardImg = image;
+		isCardPlayed = true;
+		repaint();
+	}
+	
+	public void setPartnerPlayedCard(BufferedImage image){
+		this.partenPlayedCardImg = image;
+		isPartnerCardPlayed = true;
+		repaint();
+	}
+	
+	public void setEastOpntPlayedCard(BufferedImage image){
+		this.eastOpntplayedCardImg = image;
+		isEastOpntCardPlayed = true;
+		repaint();
+	}
+	
+	public void setWestOpntPlayedCard(BufferedImage image){
+		this.westOpntplayedCardImg = image;
+		isWestOpntCardPlayed = true;
+		repaint();
+	}
+	
+	/**
+	 *  --------------------------------------     SET DECK     --------------------------------------
+	 *  
+	 * @param deck
+	 */
+	public void setDeck(CardDeck deck){
+		this.deck = deck;
+		isDeckSet = true;
+		int x = (int) this.deckPoint[CURRENT_PLAYER_POS].getX();
+		int y =  (int) this.deckPoint[CURRENT_PLAYER_POS].getY();
+		System.out.println(this.deck.getSize());
+		for(int i = 0; i < this.deck.getSize(); i++){
+			userCards[i].setIcon(new ImageIcon(deck.getCard(i).getImg()));
+			userCards[i].setText(deck.getCard(i).getName());
+			userCards[i].setBounds(x, y, userCards[i].getWidth(), userCards[i].getHeight());
+			this.add(userCards[i], new Integer(i), 0);
+			userCards[i].addMouseListener(mouseLst);
+			x += CARD_WIDTH/CARD_OVERLAP_X_FACTOR;
+		}
+	}
+	
+
+
+	
+	public Point[] getDeckPoints(){
+		return this.deckPoint;
+	}
+	
 	
 	
 }

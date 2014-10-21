@@ -20,7 +20,10 @@ import javax.swing.JPanel;
 
 
 public class Test {
-
+	public static MainFrame mf;
+	
+	
+	
 	public static void main(String[] args) throws IOException {
 		
 		Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
@@ -28,15 +31,33 @@ public class Test {
 		ImageRegistry.setImageGrid(b, Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
 		ImageRegistry.loadImage("cardBack.jpg");  				//load the back of the card to the HashMap of images
 		ImageRegistry.loadImage("boardBackground.png");
-		MainFrame mf = new MainFrame();
 		
-		String[] names = {"Galarfbcfbvwen", "Hola", "Rafael", "perro"};
+		 mf = new MainFrame();
+		 
+		String[] names = {"GlorimarCatsro", "FkJava", "Giovanni", "FkAmmir"};
 		mf.board.setUserNames(names);
 		
 		int[] cards = {16, 16, 16, 16};
 		mf.board.setPlayerCardsAmount(cards);
 		
-	/*	JFrame f = new JFrame("Test");
+		Card[] cards1 = { new Card(Suit.CLUBS, Rank.NINE), new Card(Suit.CLUBS, Rank.TENTH), 
+				new Card(Suit.DIAMONDS, Rank.NINE), new Card(Suit.CLUBS, Rank.TWO), 
+				new Card(Suit.DIAMONDS, Rank.A), new Card(Suit.CLUBS, Rank.FIVE), 
+				new Card(Suit.DIAMONDS, Rank.Q), new Card(Suit.HEARTS, Rank.TENTH), 
+		};
+				
+		CardDeck deck = new CardDeck(cards1);
+		deck.sortDeck();
+		deck.printDeck();
+		
+		
+		mf.board.setDeck(deck);
+		
+		
+		//PlayerDeckComponent gh = new PlayerDeckComponent();
+		//gh.setDeck(deck);
+		/*
+		JFrame f = new JFrame("Test");
 		
 		JPanel p = new JPanel();
 		JButton[] labels = new JButton[3];
@@ -44,14 +65,8 @@ public class Test {
 		
 		int x = 0;
 		int y = 0;
-		for(JButton h : labels){
-			h = new JButton("hdsgdeghdrthrdthj");
-			h.setBounds(x, y, 50, 50);
-			x += 25;
-			p.add(h);
-		}
 		
-		f.add(p);
+		f.add(gh);
 		f.setVisible(true);
 		f.setSize(700, 700);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/

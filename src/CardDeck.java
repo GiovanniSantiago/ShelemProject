@@ -25,9 +25,10 @@ public class CardDeck {
 	public CardDeck(Card[] cardDeck){
 		currentPosition = -1;
 		this.cardDeck = new Card[16];
-		int actualLenght = 0;
+		actualLenght = 0;
 		for(Card card : cardDeck){
-			cardDeck[actualLenght] = card;
+			this.cardDeck[actualLenght] = card;
+			System.out.println("j");
 			actualLenght++;
 		}
 	}
@@ -140,11 +141,26 @@ public class CardDeck {
 	//TODO return an exception
 	public Card getNextCard(){
 		if(currentPosition < actualLenght){
-			if(currentPosition != (actualLenght - 1))
-				currentPosition++;
+			currentPosition++;
 			return cardDeck[currentPosition]; 	
 		}else
 			return null;
+		
+	}
+	
+	/*public boolean hasNextCard(){
+		if(currentPosition < actualLenght -1){
+			return true;
+		}else
+			return false;
+	}*/
+	
+	public boolean setCurrentPosition(int position){
+		if(position > -1 && position < actualLenght){
+			this.currentPosition = position;
+			return true;
+		}else
+			return false;
 		
 	}
 	
