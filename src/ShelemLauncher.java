@@ -1,4 +1,4 @@
-
+@Deprecated
 public class ShelemLauncher {
 	
 	public static void main(String[] args) {
