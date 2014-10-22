@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,15 +18,15 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 
 
-public class MainFrame extends JFrame{
+public class MainPanel extends JPanel{
 	//===============
 	//FIELD
 	//===============
-	private final int		WIDTH			= 1200;
-	private final int		HEIGHT			= 870;
-	private final double	WIDTH_FACTOR	= 20;
+	public static final int		WIDTH			= 1220;										//width of the frame
+	public static final int		HEIGHT			= 873;										//height of the frame
+	private final double	WIDTH_FACTOR	= 20;										//WIDTH_FACTOR and HEIGHT_FACTOR are for the gridbagconstraints
 	private final double	HEIGHT_FACTOR	= 30;
-	private final boolean 	isFrameVisible 	= true;
+	private final boolean 	isFrameVisible 	= true;										//Set the frame visibility
 	private final Dimension	frameDimension 	= new Dimension(WIDTH, HEIGHT);
 	private final Dimension	btnDimension	= new Dimension(0, 20);
 	
@@ -46,7 +47,12 @@ public class MainFrame extends JFrame{
 	//CONSTRUCTORS
 	//===============
 	
-	public MainFrame(){
+	public MainPanel(){
+		
+		ImageRegistry.loadImage("cardBack.jpg");  				//load the back of the card to the HashMap of images
+		ImageRegistry.loadImage("boardBackground.png");
+		ImageRegistry.loadImage("scoreBackground.jpg");
+		
 		//Field initialization
 		gbl	= new GridBagLayout();
 		gbc	= new GridBagConstraints();
@@ -55,13 +61,10 @@ public class MainFrame extends JFrame{
 		setTxtFieldPnl(pastPlaysInfo, txtArea, scrollBar);
 		
 		//MainFrame set up
-		this.setTitle("Shelem");
 		this.setLayout(gbl);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(isFrameVisible);
 		this.setSize(frameDimension);
 		//this.setResizable(false);
-		this.setLocationRelativeTo(null);
 		
 		//Add components
 		addComponents();
@@ -72,6 +75,17 @@ public class MainFrame extends JFrame{
 	//===============
 	//METHODS
 	//===============	
+	
+	@Override
+	public void paintComponent(Graphics g){
+		super.paintComponents(g);
+		
+		Graphics2D g2 = (Graphics2D) g;
+		
+		g2.drawImage(ImageRegistry.getImage("scoreBackground.jpg"), null, 0, 0);
+		
+	}
+	
 	/**
 	 * Initialize all field variables
 	 */
@@ -169,11 +183,15 @@ public class MainFrame extends JFrame{
 		scroll.add(txtArea);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scroll.setBackground(new Color(0,0,0,0));
 		txtArea.setEditable(false);
+		txtArea.setBackground(new Color(0,0,0,0));
 		
 		txtFieldPnl.setVisible(true);
 		txtFieldPnl.setLayout(new BorderLayout());
 		txtFieldPnl.setBorder(infoBorder);
+		txtFieldPnl.setBackground(new Color(0,0,0,0));
+		txtFieldPnl.setForeground(Color.WHITE);
 		
 		txtFieldPnl.add(scroll, BorderLayout.CENTER);
 		

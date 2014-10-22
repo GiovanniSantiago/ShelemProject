@@ -27,6 +27,10 @@ public class Team {
 		
 	}
 	
+	public String getNames(){
+		return players[0].getName() + " " + players[1].getName();
+	}
+	
 	
 	
 }

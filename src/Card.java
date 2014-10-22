@@ -24,6 +24,12 @@ public class Card implements Comparable<Card>{
 		setImg();
 	}
 	
+	
+	/*nvfgjekrng
+	public Card(String cardName){
+		String rank = cardName.substring(0, cardName.indexOf("_"));
+	}*/
+	
 
 	//==============================================
 	//======METHODS==========METHODS================

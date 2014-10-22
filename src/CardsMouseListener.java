@@ -29,10 +29,10 @@ public class CardsMouseListener implements MouseListener{
 			}
 			
 		}else{
-			Test.mf.board.setPartnerPlayedCard(ImageRegistry.getImage(label.getText()));
-			Test.mf.board.setPlayedCard(ImageRegistry.getImage(label.getText()));
-			Test.mf.board.setWestOpntPlayedCard(ImageRegistry.getImage(label.getText()));
-			Test.mf.board.setEastOpntPlayedCard(ImageRegistry.getImage(label.getText()));
+			Test.mp.board.setPartnerPlayedCard(ImageRegistry.getImage(label.getText()));
+			Test.mp.board.setPlayedCard(ImageRegistry.getImage(label.getText()));
+			Test.mp.board.setWestOpntPlayedCard(ImageRegistry.getImage(label.getText()));
+			Test.mp.board.setEastOpntPlayedCard(ImageRegistry.getImage(label.getText()));
 		}
 		
 		

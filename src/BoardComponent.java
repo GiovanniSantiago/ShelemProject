@@ -90,6 +90,7 @@ public class BoardComponent extends JPanel{
 		//Panel Set-up
 		this.backgroundImg = ImageRegistry.getImage("boardBackground.png");
 		this.setLayout(null);
+		this.setBackground(new Color(0,0, 0, 0));
 		this.setSize(backgroundImg.getWidth(), backgroundImg.getHeight());
 		this.setVisible(true);
 	}
@@ -97,6 +98,8 @@ public class BoardComponent extends JPanel{
 	//==========================================================================================
 	//METHODS
 	//==========================================================================================
+	
+	
 	/**
 	 * -------------------------------------- PAINT COMPONENT -------------------------------------- 
 	 * 
@@ -108,7 +111,7 @@ public class BoardComponent extends JPanel{
 		this.g2 = (Graphics2D) g;
 		oldForm = g2.getTransform();
 		
-		g2.drawImage(backgroundImg, null, 0, 0);
+		//g2.drawImage(backgroundImg, null, 0, 0);
 		
 		if(isUserNamesSet){
 			drawOpponentCards();
@@ -119,20 +122,24 @@ public class BoardComponent extends JPanel{
 			g2.drawImage(playedCardImg, null, (int)(playeCardPoints[CURRENT_PLAYER_POS].getX()),  (int)(playeCardPoints[CURRENT_PLAYER_POS].getY()));
 			isCardPlayed = false;
 		}
-		
+		if(isEastOpntCardPlayed){
+			g2.rotate(Math.toRadians(-90), (int)(playeCardPoints[EAST_OPPONENT_POS].getX()), (int)(playeCardPoints[EAST_OPPONENT_POS].getY()+ CARD_WIDTH + 10));
+			g2.drawImage(eastOpntplayedCardImg, null, (int)(playeCardPoints[EAST_OPPONENT_POS].getX()),  (int)(playeCardPoints[EAST_OPPONENT_POS].getY() + CARD_WIDTH + 10));
+			isEastOpntCardPlayed = false;
+			g2.setTransform(oldForm);
+		}
 		if(isPartnerCardPlayed){
 			g2.drawImage(partenPlayedCardImg, null, (int)(playeCardPoints[PARTNER_POS].getX()),  (int)(playeCardPoints[PARTNER_POS].getY()));
 			isPartnerCardPlayed = false;
 		}
 		
-		if(isEastOpntCardPlayed){
-			g2.drawImage(eastOpntplayedCardImg, null, (int)(playeCardPoints[EAST_OPPONENT_POS].getX()),  (int)(playeCardPoints[EAST_OPPONENT_POS].getY()));
-			isEastOpntCardPlayed = false;
-		}
+		
 		
 		if(isWestOpntCardPlayed){
-			g2.drawImage(westOpntplayedCardImg, null, (int)(playeCardPoints[WEST_OPPONENT_POS].getX()),  (int)(playeCardPoints[WEST_OPPONENT_POS].getY()));
+			g2.rotate(Math.toRadians(90), (int)(playeCardPoints[WEST_OPPONENT_POS].getX()) + CARD_WIDTH, (int)(playeCardPoints[WEST_OPPONENT_POS].getY()+ CARD_HEGHT - 14));
+			g2.drawImage(westOpntplayedCardImg, null, (int)(playeCardPoints[WEST_OPPONENT_POS].getX()),  (int)(playeCardPoints[WEST_OPPONENT_POS].getY() + CARD_HEGHT - 14));
 			isWestOpntCardPlayed = false;
+			g2.setTransform(oldForm);
 		}
 				
 	}
@@ -198,6 +205,7 @@ public class BoardComponent extends JPanel{
 	public boolean setPlayerCardsAmount(int playerPosition, int playerCardsAmount){
 		if(playerPosition < 4 && playerPosition> -1 && playerCardsAmount > -1 && playerCardsAmount <= this.MAX_CARDS_AMNT){
 			this.playerCardsAmmount[playerPosition] = playerCardsAmount;
+			System.out.println("gvfdrfgvraegeratg");
 			repaint();
 			return true;
 		}else{
@@ -283,24 +291,29 @@ public class BoardComponent extends JPanel{
 	public void setPlayedCard(BufferedImage image){
 		this.playedCardImg = image;
 		isCardPlayed = true;
+		//this.deck.removeCard(card);
 		repaint();
 	}
 	
 	public void setPartnerPlayedCard(BufferedImage image){
 		this.partenPlayedCardImg = image;
 		isPartnerCardPlayed = true;
+		
+		setPlayerCardsAmount(PARTNER_POS, this.playerCardsAmmount[PARTNER_POS] - 1);
 		repaint();
 	}
 	
 	public void setEastOpntPlayedCard(BufferedImage image){
 		this.eastOpntplayedCardImg = image;
 		isEastOpntCardPlayed = true;
+		setPlayerCardsAmount(EAST_OPPONENT_POS, this.playerCardsAmmount[EAST_OPPONENT_POS] - 1);
 		repaint();
 	}
 	
 	public void setWestOpntPlayedCard(BufferedImage image){
 		this.westOpntplayedCardImg = image;
 		isWestOpntCardPlayed = true;
+		setPlayerCardsAmount(WEST_OPPONENT_POS, this.playerCardsAmmount[WEST_OPPONENT_POS] - 1);
 		repaint();
 	}
 	
@@ -327,11 +340,6 @@ public class BoardComponent extends JPanel{
 	
 
 
-	
-	public Point[] getDeckPoints(){
-		return this.deckPoint;
-	}
-	
 	
 	
 }
