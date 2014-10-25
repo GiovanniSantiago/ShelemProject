@@ -26,9 +26,10 @@ public class ServerRoom extends Thread {
 									case MessageConstants.CLIENT_UPDATE_MYNAME: {
 										namesReceived++;
 										MessageConstants.broadcastMessage(connections, new Message(
-												new MessagePair(MessageConstants.PARAM_NAME,MessageConstants.SERVER),
-												new MessagePair(),
-												new MessagePair()));
+												new MessagePair(MessageConstants.PARAM_NAME,MessageConstants.SERVER_UPDATE_PLAYERNAME),
+												new MessagePair(MessageConstants.PARAM_PLAYER_ID,""+i),
+												new MessagePair(MessageConstants.PARAM_PLAYER_NAME,m.getValue(MessageConstants.PARAM_PLAYER_NAME))));
+										//LEFT AT THIS EXACT LINE
 									} break;
 									case MessageConstants.CLIENT_UPDATE_QUITGAME: {
 										MessageConstants.broadcastMessage(connections, new Message( 
