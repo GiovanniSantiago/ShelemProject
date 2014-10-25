@@ -72,6 +72,15 @@ public class Message {
 			throw new IllegalArgumentException("Message does not contain a pair with key: ["+key+"]");
 		}
 	}
+	
+	/**
+	 * Accesses the value mapped to the provided key as an integer
+	 * @param key
+	 * @return
+	 */
+	public int getInteger(String key) {
+		return Integer.parseInt(getValue(key));
+	}
 
 	/**
 	 * Returns the entire encoded string for this message. Passing this String to Message(String) will create a Message object identical to this one, in terms of key:value pairs.
