@@ -12,13 +12,23 @@ public class Card implements Comparable<Card>{
 	private BufferedImage 	image;
 	
 	
-
+	/**
+	 * 
+	 * @param suit
+	 * @param rank
+	 */
 	public Card(Suit suit, Rank rank){
 		this.suit = suit;
 		this.rank = rank;
 		this.value = rank.getValue();
 		setImg();
 	}
+	
+	
+	/*nvfgjekrng
+	public Card(String cardName){
+		String rank = cardName.substring(0, cardName.indexOf("_"));
+	}*/
 	
 
 	//==============================================
@@ -38,6 +48,7 @@ public class Card implements Comparable<Card>{
 	}
 	
 	public BufferedImage getImg(){
+		setImg();
 		return this.image;
 	}
 	
@@ -61,6 +72,12 @@ public class Card implements Comparable<Card>{
 		return this.rank.toString() + " of " + this.suit.toString();
 	}
 	
+	public boolean equals(Card card){
+		if(this.rank == card.getRank() && this.suit == card.getSuit()){
+			return true;
+		}else 
+			return false;
+	}
 	@Override
 	public int compareTo(Card arg0) {
 		if(this.suit.equals(arg0.getSuit())){
@@ -91,7 +108,7 @@ public class Card implements Comparable<Card>{
 	 * This method have dependecy to ImageRegistry Class
 	 */
 	private void setImg(){
-		ImageRegistry.getImage(this.rank.toString() + "_" + this.suit.toString());
+		this.image = ImageRegistry.getImage(this.rank.toString() + "_" + this.suit.toString());
 	}
 
 

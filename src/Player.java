@@ -7,35 +7,51 @@ import java.util.ArrayList;
  */
 public class Player {
 	
-	private ArrayList<Card> handCards;
+	//===============
+	//FIELD
+	//===============
+	private CardDeck		handDeck;
 	private String 			name;
 	private PlayerPosition 	position;
+	private Player			teamPlayer; //TODO
+	
+
 	
 	
+	//===============
+	//CONSTRUCTORS
+	//==============
 	public Player(PlayerPosition position, String name) {
-		this.position = position;
-		this.name = name;
-		this.handCards = new ArrayList<Card>(12);
+		this.position 	= position;
+		this.name 		= name;
+		this.handDeck 	= new CardDeck();
 	}
 	
+	
+
+	
+	
+	//===============
+	//METHODS
+	//===============
 	public boolean hasSuit(Suit s) {
-		for(Card c : handCards) {
+		for(Card c : handDeck.getDeck()) {
 			if(c.getSuit() == s)
 				return true;
 		}
 		return false;
 	}
 	
-	public int getCardCount() {
-		return handCards.size();
+	public int getAmntOfCard() {
+		return handDeck.getAmntOfCards();
 	}
 	
 	public Card getCard(int i) {
-		return handCards.get(i);
+		return handDeck.getCard(i);
 	}
 	
 	public void dealCard(Card c) {
-		this.handCards.add(c);
+		this.handDeck.addCard(c);
 	}
 
 	public PlayerPosition getPosition() {

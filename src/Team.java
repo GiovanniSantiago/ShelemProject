@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Team {
 	
-	Player[] 		players = new Player[2];
-	ArrayList<Card> collectedCards = new ArrayList<Card>();
-	boolean 		bidWinner = false;
-	int 			gamePoints = 0;
+	Player[] 		players 	= new Player[2];
+	CardDeck		teamDeck 	= new CardDeck();
+	boolean 		bidWinner 	= false;
+	int 			gamePoints 	= 0;
+	int 			bid 		= 0;
 	String 			name;
-	int 			bid = 0;
 	
 	
 	public Team(String name, 
@@ -25,6 +25,10 @@ public class Team {
 		return bidWinner;
 		
 		
+	}
+	
+	public String getNames(){
+		return players[0].getName() + " " + players[1].getName();
 	}
 	
 	

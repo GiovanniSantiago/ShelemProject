@@ -23,8 +23,13 @@ public class Utilities {
 		//Make the cuts
 		for(int i = 0; i <iteration; i++){
 			//initialize needed variables
-			firstPos = 1 + random.nextInt(o.length - 5);
-			lastPos	= firstPos + random.nextInt(o.length - firstPos);
+			if(o.length < 5){
+				firstPos 	= 1 + random.nextInt(o.length - 1);
+				lastPos		= firstPos + random.nextInt(o.length - firstPos);
+			}else{
+				firstPos 	= 1 + random.nextInt(o.length - 5);
+				lastPos		= firstPos + random.nextInt(o.length - firstPos);
+			}
 			
 			//Save the cards to move at the beggining
 			Object[] blockToMove = new Object[lastPos - firstPos + 1];

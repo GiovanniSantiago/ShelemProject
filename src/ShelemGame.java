@@ -84,7 +84,7 @@ public class ShelemGame {
 		ArrayList<Card> widow = new ArrayList<Card>(deck);
 		for(Player p : players) {
 			System.out.println("Player: "+p.getName()+" : "+p.getPosition());
-			for(int i = 0; i < p.getCardCount(); i++) {
+			for(int i = 0; i < p.getAmntOfCard(); i++) {
 				System.out.println("\t"+p.getCard(i).toString());
 				widow.remove(p.getCard(i));
 			}
