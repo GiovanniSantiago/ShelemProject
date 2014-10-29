@@ -120,17 +120,17 @@ public class BoardComponent extends JPanel{
 		
 		if(isCardPlayed){
 			g2.drawImage(playedCardImg, null, (int)(playeCardPoints[CURRENT_PLAYER_POS].getX()),  (int)(playeCardPoints[CURRENT_PLAYER_POS].getY()));
-			isCardPlayed = false;
+			//isCardPlayed = false;
 		}
 		if(isEastOpntCardPlayed){
 			g2.rotate(Math.toRadians(-90), (int)(playeCardPoints[EAST_OPPONENT_POS].getX()), (int)(playeCardPoints[EAST_OPPONENT_POS].getY()+ CARD_WIDTH + 10));
 			g2.drawImage(eastOpntplayedCardImg, null, (int)(playeCardPoints[EAST_OPPONENT_POS].getX()),  (int)(playeCardPoints[EAST_OPPONENT_POS].getY() + CARD_WIDTH + 10));
-			isEastOpntCardPlayed = false;
+			//isEastOpntCardPlayed = false;
 			g2.setTransform(oldForm);
 		}
 		if(isPartnerCardPlayed){
 			g2.drawImage(partenPlayedCardImg, null, (int)(playeCardPoints[PARTNER_POS].getX()),  (int)(playeCardPoints[PARTNER_POS].getY()));
-			isPartnerCardPlayed = false;
+			//isPartnerCardPlayed = false;
 		}
 		
 		
@@ -138,9 +138,12 @@ public class BoardComponent extends JPanel{
 		if(isWestOpntCardPlayed){
 			g2.rotate(Math.toRadians(90), (int)(playeCardPoints[WEST_OPPONENT_POS].getX()) + CARD_WIDTH, (int)(playeCardPoints[WEST_OPPONENT_POS].getY()+ CARD_HEGHT - 14));
 			g2.drawImage(westOpntplayedCardImg, null, (int)(playeCardPoints[WEST_OPPONENT_POS].getX()),  (int)(playeCardPoints[WEST_OPPONENT_POS].getY() + CARD_HEGHT - 14));
-			isWestOpntCardPlayed = false;
+			//isWestOpntCardPlayed = false;
 			g2.setTransform(oldForm);
 		}
+		
+		Test.mp.updateUI();
+		
 				
 	}
 	

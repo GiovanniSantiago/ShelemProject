@@ -43,10 +43,9 @@ public class Test {
 		MainPanel.scoreBoard.setBid(165, 0);
 		String[] names = {"GlorimarCatsro", "Rafael", "Giovanni", "Carlos"};
 		MainPanel.board.setUserNames(names);
-		MainPanel.board.setPlayerCardsAmount(1, 5);
 		
 		MainPanel.scoreBoard.setMaximunScore(700);
-		int[] cards = {16, 16, 16, 16};
+		int[] cards = {16, 5, 16, 16};
 		mp.board.setPlayerCardsAmount(cards);
 		
 		Card[] cards1 = { new Card(Suit.CLUBS, Rank.NINE), new Card(Suit.CLUBS, Rank.TENTH), 
