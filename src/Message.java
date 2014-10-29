@@ -38,6 +38,7 @@ public class Message {
 		map = result;
 		
 	}
+	//					KEY:VALUE$KEY:VALUE$
 	
 	/**
 	 * Generates a HashMap<String,String> after validating the source String. 

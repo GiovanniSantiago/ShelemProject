@@ -11,34 +11,58 @@ public class ServerRoom extends Thread {
 	
 	@Override
 	public void run() {
-		MessageConstants.broadcastMessage(connections, new Message(
-				new MessagePair(MessageConstants.PARAM_NAME,MessageConstants.SERVER_UPDATE_TABLE_CREATED)));
+		MC.broadcastMessage(connections, new Message(
+				new MessagePair(MC.P_NAME,MC.SU_TABLE_CREATED)));
 		int namesReceived = 0;
 		while(true) {
 			switch(state) {
+				/*
+				 * If getting the names form the users
+				 */
 				case GETTING_NAMES: {
+					/*
+					 * Only if there are not four names already (CLIENTS DO NOT SEND MORE THAN ONE NAME EACH AAAAAAA)
+					 */
 					if(namesReceived!=4) {
+						/*
+						 * Poll for messages
+						 */
 						for(int i = 0; i < connections.length; i++) {
 							MessageLine line = connections[i];
-							if(line.isReady()) {
-								Message m = line.receiveMessage();
-								switch(m.getValue(MessageConstants.PARAM_NAME)) {
-									case MessageConstants.CLIENT_UPDATE_MYNAME: {
-										namesReceived++;
-										MessageConstants.broadcastMessage(connections, new Message(
-												new MessagePair(MessageConstants.PARAM_NAME,MessageConstants.SERVER_UPDATE_PLAYERNAME),
-												new MessagePair(MessageConstants.PARAM_PLAYER_ID,""+i),
-												new MessagePair(MessageConstants.PARAM_PLAYER_NAME,m.getValue(MessageConstants.PARAM_PLAYER_NAME))));
-										//LEFT AT THIS EXACT LINE
-									} break;
-									case MessageConstants.CLIENT_UPDATE_QUITGAME: {
-										MessageConstants.broadcastMessage(connections, new Message( 
-												new MessagePair(MessageConstants.PARAM_NAME,MessageConstants.SERVER_UPDATE_PLAYERQUIT),
-												new MessagePair(MessageConstants.PARAM_PLAYER_ID,""+i)));
-										onQuitGame(i);
-										return;
-									} break;
+							try {
+								if(line.isReady()) {
+									/*
+									 * ALL CLIENT MESSAGES IN NAMEGET PHASE
+									 */
+									Message m = line.receiveMessage();
+									switch(m.getValue(MC.P_NAME)) {
+										/*
+										 * CLIENT HAS DISCLOSED NAME
+										 */
+										case MC.CU_MYNAME: {
+											namesReceived++;
+											MC.broadcastMessage(connections, new Message(
+													new MessagePair(MC.P_NAME,MC.SU_PLAYERNAME),
+													new MessagePair(MC.P_PLAYER_ID,""+i),
+													new MessagePair(MC.P_PLAYER_NAME,m.getValue(MC.P_PLAYER_NAME))));
+											//LEFT AT THIS EXACT LINE
+										} break;
+										/*
+										 * CLIENT HAS QUIT NAME
+										 * STOPPED HERE
+										 */
+										case MC.CU_QUITGAME: {
+											MC.broadcastMessage(connections, new Message( 
+													new MessagePair(MC.P_NAME,MC.SU_PLAYERQUIT),
+													new MessagePair(MC.P_PLAYER_ID,""+i)));
+											onQuitGame(i);
+											return;
+										} 
+									}
 								}
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
 						}
 					}
@@ -49,21 +73,7 @@ public class ServerRoom extends Thread {
 				
 			}
 		}
-		for(MessageLine l: connections) {
-			try {
-				if(l.isReady()) {
-					Message m = l.receiveMessage();
-					
-					switch(m.getValue(MessageConstants.PARAM_NAME)) {
-						case 
-					}
-					
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		
 	}
 	
 	private void onQuitGame(int i) {

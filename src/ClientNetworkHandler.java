@@ -24,31 +24,31 @@ public class ClientNetworkHandler implements Runnable {
 			try {
 				if (line.isReady()) {
 					Message m = line.receiveMessage();
-					switch (m.getValue(MessageConstants.PARAM_NAME)) {
-						case MessageConstants.SERVER_UPDATE_PLAYERQUIT: {
+					switch (m.getValue(MC.P_NAME)) {
+						case MC.SU_PLAYERQUIT: {
 							onPlayerQuit();
 							quit = true;
 						}
 							break;
-						case MessageConstants.SERVER_UPDATE_PLAYERNAME: {
+						case MC.SU_PLAYERNAME: {
 							onNameReceived(
-									m.getInteger(MessageConstants.PARAM_PLAYER_ID),
-									m.getValue(MessageConstants.PARAM_PLAYER_NAME));
+									m.getInteger(MC.P_PLAYER_ID),
+									m.getValue(MC.P_PLAYER_NAME));
 						}
 							break;
-						case MessageConstants.SERVER_UPDATE_PLAYERJOIN: {
+						case MC.SU_PLAYERJOIN: {
 							onPlayerJoin(m
-									.getInteger(MessageConstants.PARAM_PLAYER_ID));
+									.getInteger(MC.P_PLAYER_ID));
 						}
 							break;
-						case MessageConstants.SERVER_REQUEST_PLAYERNAME: {
+						case MC.SR_PLAYERNAME: {
 							String name = onNameRequested(m
-									.getInteger(MessageConstants.PARAM_PLAYER_ID));
+									.getInteger(MC.P_PLAYER_ID));
 							line.sendMessage(new Message(new MessagePair(
-									MessageConstants.PARAM_NAME,
-									MessageConstants.CLIENT_UPDATE_MYNAME),
+									MC.P_NAME,
+									MC.CU_MYNAME),
 									new MessagePair(
-											MessageConstants.PARAM_PLAYER_NAME,
+											MC.P_PLAYER_NAME,
 											name)));
 						}
 							break;

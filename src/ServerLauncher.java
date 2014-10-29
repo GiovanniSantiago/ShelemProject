@@ -38,9 +38,9 @@ public class ServerLauncher {
 				System.out.println(String.format(
 						"SERVER: CLIENT ACCEPTED, INDEX %d", amount));
 				connections[amount] = new MessageLine(sock);
-				MessageConstants.broadcastMessage(connections, new Message(
-						new MessagePair(MessageConstants.PARAM_NAME, MessageConstants.SERVER_UPDATE_PLAYERJOIN), 
-						new MessagePair(MessageConstants.PARAM_PLAYER_ID, ""	+ amount)));
+				MC.broadcastMessage(connections, new Message(
+						new MessagePair(MC.P_NAME, MC.SU_PLAYERJOIN), 
+						new MessagePair(MC.P_PLAYER_ID, ""	+ amount)));
 				amount++;
 				if (amount == 4) {
 					System.out
@@ -59,19 +59,19 @@ public class ServerLauncher {
 						boolean quit = false;
 						if (connections[i].isReady()) {
 							Message m = connections[i].receiveMessage();
-							switch (m.getValue(MessageConstants.PARAM_NAME)) {
-								case MessageConstants.CLIENT_UPDATE_QUITGAME: {
+							switch (m.getValue(MC.P_NAME)) {
+								case MC.CU_QUITGAME: {
 									System.out
 											.println("SERVER: A PANSY PLAYER QUIT, BOOHOO, RUINING THE FUN FOR EVERYBODY NOW...");
 									quit = true;
-									MessageConstants.broadcastMessage(
+									MC.broadcastMessage(
 											connections,
 											new Message(
 													new MessagePair(
-															MessageConstants.PARAM_NAME,
-															MessageConstants.SERVER_UPDATE_PLAYERQUIT),
+															MC.P_NAME,
+															MC.SU_PLAYERQUIT),
 													new MessagePair(
-															MessageConstants.PARAM_PLAYER_ID,
+															MC.P_PLAYER_ID,
 															"" + i)));
 									amount = 0;
 									connections = new MessageLine[4];

@@ -25,7 +25,7 @@ public class GameClient {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				handler.line.sendMessage(new Message(new MessagePair(MessageConstants.PARAM_NAME,MessageConstants.CLIENT_UPDATE_QUITGAME)));
+				handler.line.sendMessage(new Message(new MessagePair(MC.P_NAME,MC.CU_QUITGAME)));
 				/*
 				 * Do something to close window or something here
 				 */
