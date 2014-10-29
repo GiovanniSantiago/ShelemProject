@@ -14,6 +14,9 @@ public class ShelemGame {
 	int bid = 100;
 	
 	public ShelemGame() {
+		
+		
+		/*
 		Random random = new Random();
 		PlayerPosition pos = PlayerPosition.NORTH;
 		for (int i = 0; i < players.length; i++) {
@@ -24,7 +27,7 @@ public class ShelemGame {
 		
 		/*
 		 * Create deck of cards
-		 */
+		 
 		{
 			int cardIndex = 0;
 			for(Rank r: Rank.values()) {
@@ -38,7 +41,7 @@ public class ShelemGame {
 		
 		/*
 		 * Deal cards
-		 */
+		 
 		{
 			ArrayList<Card> undealtCards = new ArrayList<Card>(deck);
 			for(int i = 0; i < players.length; i++) {
@@ -53,7 +56,7 @@ public class ShelemGame {
 		
 		/*
 		 * Get bids
-		 */
+		 
 		{
 			ArrayList<Player> biddingPlayers = new ArrayList<Player>();
 			
@@ -69,7 +72,7 @@ public class ShelemGame {
 			}
 		}
 		
-		printStatus();
+		printStatus();*/
 	}
 	
 	private Player getPlayerAtPosition(PlayerPosition p) {
@@ -94,10 +97,5 @@ public class ShelemGame {
 			System.out.println("\t"+c.toString());
 		}
 		
-	}
-	
-	private String receiveConsoleInput() {
-		Scanner s = new Scanner(System.in);
-		return s.nextLine();
 	}
 }
