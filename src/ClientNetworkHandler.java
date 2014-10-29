@@ -83,4 +83,8 @@ public class ClientNetworkHandler implements Runnable {
 				index));
 	}
 	
+	
+	private enum ClientGameState {
+		WAITING_LOBBY_PLAYERS, WAITING_PLAYER_NAMES,
+	}
 }
