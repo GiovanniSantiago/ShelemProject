@@ -18,7 +18,7 @@ public class BoardComponent extends JPanel{
 	//==========================================================================================
 	//FIELD
 	//==========================================================================================
-	
+	//d
 	final int 			CARD_WIDTH 				= 73;
 	final int 			CARD_HEGHT 				= 100;
 	final Dimension 	labelsMaximunDimension	= new Dimension(200, 50);
