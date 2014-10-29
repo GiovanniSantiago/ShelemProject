@@ -79,14 +79,29 @@ public class ServerRoom extends Thread {
 					 * Check of player1 said ready
 					 */
 					try {
-						if(connections[0].isReady()) {
-							Message m = connections[0].receiveMessage();
-							switch(m.getValue(MC.P_NAME)) {
-								case MC.CU_GAMEREADY: {
+						for(int i = 0; i < connections.length;i++) {
+							if(connections[i].isReady()) {
+								Message m = connections[i].receiveMessage();
+								if(m.getValue(MC.P_NAME).equals(MC.CU_QUITGAME)) {
+									MC.broadcastMessage(connections, new Message( 
+											new MessagePair(MC.P_NAME,MC.SU_PLAYERQUIT),
+											new MessagePair(MC.P_PLAYER_ID,""+i)));
+									onQuitGame(i);
+									return;
+								}
+								if(m.getValue(MC.P_NAME).equals(MC.CU_GAMEREADY)) {
+									
+									
+									/*
+									 * Go to waiting bid state
+									 */
 									state = ServerRoomState.WAITING_PLAYER_BIDS;
+									
+									// STOPPED HERE
+									
 									MC.broadcastMessage(connections,new Message(
-											new MessagePair(MC.P_NAME,MC.)));
-								} break;
+											new MessagePair(MC.P_NAME,MC.SU_GAME_START)));
+								}
 							}
 						}
 					} catch (IOException e) {
