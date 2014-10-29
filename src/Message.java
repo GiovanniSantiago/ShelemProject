@@ -38,6 +38,7 @@ public class Message {
 		map = result;
 		
 	}
+	//					KEY:VALUE$KEY:VALUE$
 	
 	/**
 	 * Generates a HashMap<String,String> after validating the source String. 
@@ -71,6 +72,15 @@ public class Message {
 		} else {
 			throw new IllegalArgumentException("Message does not contain a pair with key: ["+key+"]");
 		}
+	}
+	
+	/**
+	 * Accesses the value mapped to the provided key as an integer
+	 * @param key
+	 * @return
+	 */
+	public int getInteger(String key) {
+		return Integer.parseInt(getValue(key));
 	}
 
 	/**

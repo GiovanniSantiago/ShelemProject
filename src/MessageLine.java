@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,6 +21,10 @@ public class MessageLine {
 		
 		output.println(m.getCompleteString());
 		System.out.println("MESSAGE OUT: "+m.getCompleteString());
+	}
+	
+	public boolean isReady() throws IOException {
+		return input.ready();
 	}
 	
 	public Message receiveMessage() throws IOException {
