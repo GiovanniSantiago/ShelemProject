@@ -24,10 +24,14 @@ public class LoginFrame extends JFrame{
 	//===============
 	//FIELD
 	//===============
-	Dimension	frmDimen 		= new Dimension(420, 442);
+	int			frameWidth		= 420;
+	int			frameHeght		= 442;
+	Dimension	frmDimen 		= new Dimension(frameWidth, frameHeght);
+	
 	
 	JButton 	startBtn 		= new JButton("Connect to Server");
 	JButton 	exitBtn 		= new JButton("Exit");
+	JButton		send			= new JButton("Send");
 	JLabel  	srvConLbl		= new JLabel("Connected to Server. Your are player ");
 	JLabel		userNamLbl		= new JLabel("Username: ");
 	JLabel		statusLbl		= new JLabel("", JLabel.RIGHT);
@@ -41,8 +45,8 @@ public class LoginFrame extends JFrame{
 		LoginMainPanel logPnl = new LoginMainPanel();
 		
 		
-
 		
+																
 		this.add(logPnl);
 		this.setTitle("Shelem Login Lobby");
 		this.setSize(frmDimen);
@@ -130,10 +134,20 @@ public class LoginFrame extends JFrame{
 			exitBtn.setBackground(Color.BLACK);
 			exitBtn.setFocusable(false);
 			
+			send.setVisible(false);
+			send.setSize(80, 20);
+			send.setFocusable(false);
+			send.addActionListener(Test.ch.loginListener);
+			send.setFont(new Font("Baskerville Old Face", Font.PLAIN, 14));
+			send.setForeground(Color.WHITE);
+			send.setBackground(Color.BLACK);
+			send.setBounds(frameWidth/2 - send.getWidth()/2, 200, send.getWidth(), send.getHeight());
+			
 			usrNameTxtFld.setVisible(false);
 			usrNameTxtFld.setSize(100, 20);
-			usrNameTxtFld.setBounds(187, 125, 100, 20);
+			usrNameTxtFld.setBounds(frameWidth/2, frameHeght / 2 - 70, usrNameTxtFld.getWidth(), usrNameTxtFld.getHeight());
 			
+			this.add(send);
 			this.add(usrNameTxtFld);
 			this.add(startBtn);
 			this.add(exitBtn);
@@ -147,13 +161,13 @@ public class LoginFrame extends JFrame{
 			
 			userNamLbl.setVisible(false);
 			userNamLbl.setForeground(Color.WHITE);
-			userNamLbl.setBounds(100, 120, 100, 40);
+			userNamLbl.setSize(95, 20);
+			userNamLbl.setBounds(frameWidth/2 -  userNamLbl.getWidth(), frameHeght / 2 - 68, userNamLbl.getWidth(), userNamLbl.getHeight());
 			userNamLbl.setFont(new Font("Baskerville Old Face", Font.PLAIN, 17));
 			
 			statusLbl.setVisible(false);
 			statusLbl.setForeground(Color.WHITE);
 			statusLbl.setBounds(10, (int)frmDimen.getHeight() - 70, (int)frmDimen.getWidth() -45, 20);
-			System.out.println(frmDimen.getHeight());
 			
 			
 			this.add(statusLbl);

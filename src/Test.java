@@ -23,13 +23,21 @@ public class Test {
 	public static MainPanel mp;
 	public static ClientNetworkHandler ch = new ClientNetworkHandler();
 	public static LoginFrame logIn;
+	public static JFrame mainFrame;
 	
 	public static void main(String[] args) throws IOException {
 		
-		 logIn = new LoginFrame();
+		
+		mainFrame 	= new JFrame("Shelem Game");
+		mp 			= new MainPanel();
+		logIn 		= new LoginFrame();
 		
 		
-		
+		mainFrame.add(mp);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setVisible(false);
+		mainFrame.setSize(mp.WIDTH, mp.HEIGHT);
+		mainFrame.setLocationRelativeTo(null);
 		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
@@ -38,12 +46,14 @@ public class Test {
 		ImageRegistry.loadImage("boardBackground.png");
 		
 		
+		
 		mp = new MainPanel();
 		
 	
 		JFrame f = new JFrame();
 		
 		MainPanel.scoreBoard.setSuit(Suit.HEARTS.toString());
+		
 		MainPanel.scoreBoard.setTeamNames("Glorimar Giovanni", "Rafael Carlos");
 		MainPanel.scoreBoard.setTotalScores(500, 250);System.out.println();
 		MainPanel.scoreBoard.setBid(165, 0);

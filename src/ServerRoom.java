@@ -44,18 +44,19 @@ public class ServerRoom extends Thread {
 						Message m = currLine.receiveMessage();
 						switch(state) {
 							case NAME_SETTING_STATE: {
+								System.out.println("kfdjvngfdjkbgvfdnvkjfddddjdkjfvb fdkjb");
 								switch(m.getName()) {
-									case "my_name": {
+									case "MY_NAME": {
 										MC.broadcastMessage(connections, Message.fromPairs(
-												"name:player_name",
-												"player_name:"+m.getValue("player_name"),
+												"name:" + Message.Names.PLAYER_NAME.toString(),
+												Message.Names.PLAYER_NAME.toString() + ":" +m.getValue(Message.Names.PLAYER_NAME.toString()),
 												"id:"+player));
 										players[player] = new Player(m.getValue("name"));
 										numPlayers++;
 										
 										if(numPlayers==4) {
 											MC.broadcastMessage(connections, Message.fromPairs(
-													"name:got_all_names"));
+													"name:" + Message.Names.GOT_ALL_NAMES.toString()));
 											this.state = ServerRoomState.GAME_LOBBY_STATE;
 											game.setPlayers(players);
 											

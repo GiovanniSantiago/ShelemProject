@@ -23,6 +23,8 @@ public class ServerLauncher {
 			return;
 		}
 		
+		
+		//Set timeout for server
 		try {
 			servSock.setSoTimeout(CLIENT_ACCEPT_TIMEOUT);
 		} catch (SocketException e) {

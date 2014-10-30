@@ -1,10 +1,19 @@
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
 
+/**
+ * Esta clase se encarga de las conecciones entre el cliente y el servidor.
+ * Incluye todos los listener utilizados por el UI de Shelem
+ * @author Giovanni Santiago
+ * 
+ */
 public class ClientNetworkHandler implements Runnable {
 	Socket 			sock;
 	MessageLine 	line;
@@ -22,12 +31,14 @@ public class ClientNetworkHandler implements Runnable {
 	/**
 	 * Flag set to true when the server asks for name. For use of UI.
 	 */
-	boolean requestedName = false;
+	boolean isRequestingName = false;
 	
 	/**
 	 * Flag set to true when the server asks for bid. For use of UI.
 	 */
 	boolean requestedBid = false;
+	
+	boolean quit = false;
 	
 	
 	ClientGameState state = ClientGameState.TABLE_CREATION_STATE;
@@ -38,21 +49,25 @@ public class ClientNetworkHandler implements Runnable {
 		
 	}
 	
+	/**
+	 * ----------------------------------RUN-----------------------------------------------------------RUN--
+	 */
 	@Override
 	public void run() {
 		
-		try {
+		try {																			
 			sock = new Socket("localhost", 7169);
 			line = new MessageLine(sock);
 			
-			
+			quit = false;
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+				JOptionPane.showMessageDialog(Test.logIn, "Connection unsuccessful. Please try again later.", "Conection Error", JOptionPane.ERROR_MESSAGE);
+				quit = true;
 		}
 		
 		
-		boolean quit = false;
+		
 		state = ClientGameState.TABLE_CREATION_STATE;
 		
 		/*
@@ -74,7 +89,7 @@ public class ClientNetworkHandler implements Runnable {
 									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
 									break;
 									
-									
+								//Enter here when all player are already logged
 								case "table_full": {
 									//
 									//	Table is full. Server state is now in NAME_SETTING_STATE, thus send my name and change myself to NAME_SETTING_STATE
@@ -85,25 +100,17 @@ public class ClientNetworkHandler implements Runnable {
 									////TODO: USE NAMEREQUEST FLAG
 									////
 									
-									state = ClientGameState.NAME_SETTING_STATE;
-									requestedName=true;
+									state 				= ClientGameState.NAME_SETTING_STATE;
+									isRequestingName	=true;
 									
-									/////////////////
-									//TODO:These three lines will go in UI code
-									/////////////////
-									//TODO:UI CODE AAAAA NAME CAN'T HAVE ':' OR '$' AAAAAAAA
-									/////////////////
-									String name = "Apollopops" + new Random().nextInt(100);
-									line.sendMessage(Message.fromPairs("name:my_name","player_name:"+name));
-									playerId = m.getInteger("id");
-									
-									/////^^^those three
 									
 								} break;
 								//TODO: Add QUITTING message thing
 								
 								case "your_id": {
 									//Si la coneccion se dio entonces pasa a decirle al usuario su id 
+									playerId = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									
 									Test.logIn.exitBtn.setVisible(false);
 									Test.logIn.exitBtn.setSelected(false);
 									
@@ -111,27 +118,37 @@ public class ClientNetworkHandler implements Runnable {
 									Test.logIn.startBtn.setSelected(false);
 									
 									Test.logIn.srvConLbl.setVisible(true);
-									Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + m.getInteger(Message.Keys.PLAYER_ID.toString() ));
+									Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + playerId );
 									
 									Test.logIn.userNamLbl.setVisible(true);
 									Test.logIn.usrNameTxtFld.setVisible(true);
 									
 									Test.logIn.statusLbl.setVisible(true);
 									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
+								
+									Test.logIn.send.setVisible(true);
 								}break;
 							}
 						} break;
 						case NAME_SETTING_STATE: {
 							switch(m.getName()) {
-								case "player_name": {
-									players[m.getInteger("id")] = new Player(m.getValue("player_name"));
+							
+								case "PLAYER_NAME": {
+									players[m.getInteger("id")] = new Player(m.getValue(Message.Names.PLAYER_NAME.toString()));
+									System.out.println(m.getInteger("id"));
 								} break;
-								case "got_all_names": {
-									//
-									//	Everybody sent their name. Server state is now in GAME_LOBBY_STATE.
-									//
-									
+								
+								//Everybody sent their name. Server state is now in GAME_LOBBY_STATE.		
+								case "GOT_ALL_NAMES": {
+																	
 									state = ClientGameState.GAME_LOBBY_STATE;
+									Test.logIn.dispose();
+									Test.mainFrame.setVisible(true);
+									
+									System.out.println(playerId + "   " + ((playerId + 1) % 4) + "   " + (playerId + 2)%4 +   (playerId + 3) % 4);
+									String[] names = {players[playerId].getName(), players[(playerId + 1) % 4].getName(), players[(playerId + 2)%4].getName(), players[(playerId + 3) % 4].getName()};
+									Test.mp.board.setUserNames(names);
+									Test.mp.scoreBoard.setTeamNames(names[0] + " " + names[2], names[1] + " " + names[3]);
 								} break;
 								//TODO: Add QUITTING message thing
 							}
@@ -330,7 +347,7 @@ public class ClientNetworkHandler implements Runnable {
 	 */
 	
 	private Message createSetNameMessage(String name) {
-		return Message.fromPairs("name:my_name","player_name:"+name);
+		return Message.fromPairs("name:" + Message.Names.MY_NAME.toString() ,Message.Names.PLAYER_NAME.toString() + ":"+name);
 		/*
 		return new Message(new MessagePair("name",MC.C_MY_NAME),
 				new MessagePair(MC.PARAMETER_PLAYER_NAME,name));*/
@@ -361,9 +378,26 @@ public class ClientNetworkHandler implements Runnable {
 			}else if(o.equals(Test.logIn.startBtn)){
 				new Thread(Test.ch).start();
 				
-				
-				
-				
+			}else if(o.equals(Test.logIn.send)){
+				if(isRequestingName){
+					
+					String name = Test.logIn.usrNameTxtFld.getText();
+					name = name.replaceAll("$", "");					//The username can't have $ or : because of message regulation with the server
+					name = name.replaceAll(":", "");
+					
+					if(name.length() == 0){
+						JOptionPane.showMessageDialog(Test.logIn, "You have to enter a username. And it can't contain \":\" or \"$\" characters.\nPlease try again.", "Username error", JOptionPane.ERROR_MESSAGE);
+					}else{
+						line.sendMessage(Message.fromPairs("name:" + Message.Names.MY_NAME,Message.Keys.PLAYER_NAME.toString() + ":" +name));
+						Test.logIn.send.setEnabled(false);
+						Test.logIn.statusLbl.setText("Waiting for others player to enter their usernames...");
+						Test.logIn.statusLbl.setForeground(Color.RED);
+						Test.logIn.statusLbl.setFont(new Font(Test.logIn.statusLbl.getFont().getFontName(), Font.BOLD, 15));
+					}
+					
+				}else{
+					JOptionPane.showMessageDialog(Test.logIn, "The server is still waiting for others player to connect.\nPlease wait until all players are connected and then send your username.", "Out message error", JOptionPane.ERROR_MESSAGE);
+				}
 				
 			}
 			
