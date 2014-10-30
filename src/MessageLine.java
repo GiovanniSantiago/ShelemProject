@@ -20,7 +20,7 @@ public class MessageLine {
 	public void sendMessage(Message m) {
 		
 		output.println(m.getCompleteString());
-		System.out.println("MESSAGE OUT: "+m.getCompleteString());
+		System.out.println("MESSAGE OUT: "+m);
 	}
 	
 	public boolean isReady() throws IOException {
@@ -29,7 +29,7 @@ public class MessageLine {
 	
 	public Message receiveMessage() throws IOException {
 		Message m = new Message(input.readLine());
-		System.out.println("MESSAGE IN: " + m.getCompleteString());
+		System.out.println("MESSAGE IN: " + m);
 		return m;
 	}
 }
