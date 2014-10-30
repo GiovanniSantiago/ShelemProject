@@ -43,6 +43,7 @@ public class ServerLauncher {
 				MC.broadcastMessage(connections, new Message(
 						new MessagePair(MC.P_NAME, MC.SU_PLAYERJOIN), 
 						new MessagePair(MC.P_PLAYER_ID, ""	+ amount)));
+				connections[amount].sendMessage(Message.fromPairs("name:your_id","player_id:"+amount));
 				amount++;
 				if (amount == 4) {
 					System.out
