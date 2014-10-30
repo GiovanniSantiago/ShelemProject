@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * Class for show a Frame where the user log in and wait for anothers players
@@ -23,11 +24,13 @@ public class LoginFrame extends JFrame{
 	//===============
 	//FIELD
 	//===============
-	Dimension	frmDimen 	= new Dimension(420, 442);
+	Dimension	frmDimen 		= new Dimension(420, 442);
 	
-	JButton 	startBtn 	= new JButton("Connect to Server");
-	JButton 	exitBtn 	= new JButton("Exit");
-	JLabel  	srvConLbl	= new JLabel("Connected to Server. Your are player ");
+	JButton 	startBtn 		= new JButton("Connect to Server");
+	JButton 	exitBtn 		= new JButton("Exit");
+	JLabel  	srvConLbl		= new JLabel("Connected to Server. Your are player ");
+	JLabel		userNamLbl		= new JLabel("Username: ");
+	JTextField  usrNameTxtFld	= new JTextField();
 	
 	//===============
 	//CONSTRUCTORS
@@ -79,9 +82,8 @@ public class LoginFrame extends JFrame{
 			btnSetUps();
 			labelsSetups();
 			
-			this.add(startBtn);
-			this.add(exitBtn);
-			this.add(srvConLbl);
+			
+			
 			
 			//Labels set up
 			welcomeLbl.setForeground(Color.WHITE);
@@ -127,14 +129,28 @@ public class LoginFrame extends JFrame{
 			exitBtn.setBackground(Color.BLACK);
 			exitBtn.setFocusable(false);
 			
+			usrNameTxtFld.setVisible(false);
+			usrNameTxtFld.setSize(100, 20);
+			usrNameTxtFld.setBounds(187, 125, 100, 20);
 			
+			this.add(usrNameTxtFld);
+			this.add(startBtn);
+			this.add(exitBtn);
 		}
 		
 		private void labelsSetups(){
 			srvConLbl.setVisible(false);
-			srvConLbl.setBounds(75, welcomeLbl.getY() + welcomeLbl.getHeight() + srvConLbl.getHeight() + 75 , 400, 20);
+			srvConLbl.setBounds(70, welcomeLbl.getY() + welcomeLbl.getHeight() + srvConLbl.getHeight() + 75 , 400, 20);
 			srvConLbl.setForeground(Color.WHITE);
-			srvConLbl.setFont(new Font("Baskerville Old Face", Font.BOLD, 15));
+			srvConLbl.setFont(new Font("Baskerville Old Face", Font.PLAIN, 17));
+			
+			userNamLbl.setVisible(false);
+			userNamLbl.setForeground(Color.WHITE);
+			userNamLbl.setBounds(100, 120, 100, 40);
+			userNamLbl.setFont(new Font("Baskerville Old Face", Font.PLAIN, 17));
+			
+			this.add(srvConLbl);
+			this.add(userNamLbl);
 		}
 	}
 	//===========================================================================================================================
