@@ -1,8 +1,11 @@
 import java.io.IOException;
+import java.util.Arrays;
+
 
 public class ServerRoom extends Thread {
 	MessageLine[] connections;
 	ServerRoomState state = ServerRoomState.NAME_SETTING_STATE;
+	ShelemGame game = new ShelemGame();
 	
 	public ServerRoom(MessageLine[] connections) {
 		this.connections = connections;
@@ -14,9 +17,25 @@ public class ServerRoom extends Thread {
 			connections[i].sendMessage(Message.fromPairs("name:table_full","id:"+i));
 		}
 		
+		Player[] players = new Player[4];
+		int numPlayers = 0;
+		
+		Card[] baseDeck = new Card[52];
+		{
+			int index = 0;
+			for(Suit s: Suit.values()) {
+				for(Rank r: Rank.values()) {
+					baseDeck[index] = new Card(s,r);
+					index++;
+				}
+			}
+		}
+		Utilities.overhandArrayShuffle(baseDeck);
+		
+		CardDeck[] playerDecks = new CardDeck[4];
+		playerDecks[0] = new CardDeck(Utilities.subArray(baseDeck, 0, end))
 		
 		boolean quit = false;
-		
 		while(!quit) {
 			try {
 				for(int player = 0; player < connections.length; player++) {
@@ -24,18 +43,64 @@ public class ServerRoom extends Thread {
 					if(currLine.isReady()) {
 						Message m = currLine.receiveMessage();
 						switch(state) {
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							//THIS IS WHERE I LEFT OFF WEDNESDAY. THIS IS NEXT, OR CLIENT GAMESTATE (and ENDGAMESTATE).
-							
-							
-							//TODO: Here go all of the state checks. Good luck.
+							case NAME_SETTING_STATE: {
+								switch(m.getName()) {
+									case "my_name": {
+										MC.broadcastMessage(connections, Message.fromPairs(
+												"name:player_name",
+												"player_name:"+m.getValue("player_name"),
+												"id:"+player));
+										players[player] = new Player(m.getValue("name"));
+										numPlayers++;
+										
+										if(numPlayers==4) {
+											MC.broadcastMessage(connections, Message.fromPairs(
+													"name:got_all_pairs"));
+											this.state = ServerRoomState.GAME_LOBBY_STATE;
+											game.setPlayers(players);
+											
+											// Ask player 1 for ready
+											connections[0].sendMessage(Message.fromPairs("name:is_game_ready"));
+										}
+									} break;
+									//TODO: Add QUITTING message thing
+								} 
+							} break;
+							case GAME_LOBBY_STATE: {
+								switch(m.getName()) {
+									// A player will tell me that he's ready
+									case "i_am_ready": {
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
+										
+										
+									} break;
+									//TODO: Add QUITTING message thing
+								}
+							} break;
+							case BIDDING_STATE: {
+								switch(m.getName()) {
+									//TODO: Add QUITTING message thing
+								}
+							} break;
+							case GAME_STATE: {
+								switch(m.getName()) {
+									//TODO: Add QUITTING message thing
+								}
+							} break;
+							case END_GAME_STATE: {
+								
+							} break;
 						}
 					}
 				}

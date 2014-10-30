@@ -2,10 +2,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
+
 public class ClientNetworkHandler implements Runnable {
 	Socket sock;
 	MessageLine line;
-	
+	Player[] players = new Player[4];
+	int playerId = -1;
 	
 	/**
 	 * Flag set to true when the server asks if player is ready. For use of UI.
@@ -22,6 +24,7 @@ public class ClientNetworkHandler implements Runnable {
 	 */
 	boolean requestedBid = false;
 	
+	
 	ClientGameState state = ClientGameState.TABLE_CREATION_STATE;
 	
 	public ClientNetworkHandler() {
@@ -29,7 +32,6 @@ public class ClientNetworkHandler implements Runnable {
 			sock = new Socket("localhost", 7169);
 			line = new MessageLine(sock);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -39,7 +41,6 @@ public class ClientNetworkHandler implements Runnable {
 	public void run() {
 		boolean quit = false;
 		state = ClientGameState.TABLE_CREATION_STATE;
-		int playerId = -1;
 		
 		/*
 		 * First get all statechanging messages (yet to add quit messages)
@@ -50,14 +51,11 @@ public class ClientNetworkHandler implements Runnable {
 				if(line.isReady()) {
 					Message m = line.receiveMessage();
 					
-					/*
-					 * All state management here
-					 */
-					
 					switch(state) {
 						case TABLE_CREATION_STATE: {
 							switch(m.getName()) {
 								//TODO: Add server notification tick message for when a player joins the table. Happens in ServerLauncher
+								
 								case "table_full": {
 									//
 									//	Table is full. Server state is now in NAME_SETTING_STATE, thus send my name and change myself to NAME_SETTING_STATE
@@ -73,7 +71,7 @@ public class ClientNetworkHandler implements Runnable {
 									/////////////////
 									//TODO:These three lines will go in UI code
 									/////////////////
-									//TODO:UI CODE AAAAA
+									//TODO:UI CODE AAAAA NAME CAN'T HAVE ':' OR '$' AAAAAAAA
 									/////////////////
 									String name = "Apollopops" + new Random().nextInt(100);
 									line.sendMessage(Message.fromPairs("name:my_name","player_name:"+name));
@@ -86,7 +84,9 @@ public class ClientNetworkHandler implements Runnable {
 						} break;
 						case NAME_SETTING_STATE: {
 							switch(m.getName()) {
-								//TODO: Add server notification tick message for when a player sets their name
+								case "player_name": {
+									players[m.getInteger("id")] = new Player(m.getValue("player_name"));
+								} break;
 								case "got_all_names": {
 									//
 									//	Everybody sent their name. Server state is now in GAME_LOBBY_STATE.
