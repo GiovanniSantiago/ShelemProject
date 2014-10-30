@@ -126,7 +126,42 @@ public class Message {
 	
 	
 	public enum Names {
-		TABLE_FULL, GOT_ALL_NAMES, REQUEST_BID, BIDDING_COMPLETE, BIDDING_FAIL, ARE_YOU_READY, I_AM_READY, GAME_READY, MY_BID, MY_NAME, PLAYER_NAME, YOUR_ID
+		/**
+		 * Server notification when all 4 players have joined the table.
+		 */
+		TABLE_FULL, 
+		/**
+		 * Server notification when all 4 players have provided names.
+		 */
+		GOT_ALL_NAMES, 
+		/**
+		 * Server request for this client's current bid.
+		 */
+		REQUEST_BID, 
+		/**
+		 * Server notification when the bidding is successful
+		 */
+		BIDDING_COMPLETE, 
+		/**
+		 * Server notification when everybody passed
+		 */
+		BIDDING_FAIL, 
+		/**
+		 * Server request for confirmation for starting a new game in the gamelobby.
+		 */
+		ARE_YOU_READY, 
+		/**
+		 * Client response to ARE_YOU_READY. Sent when player is ready to start new game
+		 */
+		I_AM_READY, 
+		/**
+		 * Server notification for when
+		 */
+		GAME_READY, 
+		MY_BID, 
+		MY_NAME, 
+		PLAYER_NAME, 
+		YOUR_ID
 	}
 	
 	public enum Keys {
