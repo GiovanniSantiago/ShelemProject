@@ -85,6 +85,7 @@ public class ClientNetworkHandler implements Runnable {
 									////TODO: USE NAMEREQUEST FLAG
 									////
 									
+									state = ClientGameState.NAME_SETTING_STATE;
 									requestedName=true;
 									
 									/////////////////
@@ -95,7 +96,7 @@ public class ClientNetworkHandler implements Runnable {
 									String name = "Apollopops" + new Random().nextInt(100);
 									line.sendMessage(Message.fromPairs("name:my_name","player_name:"+name));
 									playerId = m.getInteger("id");
-									state = ClientGameState.NAME_SETTING_STATE;
+									
 									/////^^^those three
 									
 								} break;
