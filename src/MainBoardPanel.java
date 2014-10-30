@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class BoardComponent extends JPanel{
+public class MainBoardPanel extends JPanel{
 	//==========================================================================================
 	//FIELD
 	//==========================================================================================
@@ -60,7 +60,7 @@ public class BoardComponent extends JPanel{
 	//=========================================================================================
 	//CONSTRUCTORS
 	//=========================================================================================
-	public BoardComponent(){
+	public MainBoardPanel(){
 		
 		//-------------------------
 		//Field initialization

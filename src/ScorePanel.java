@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class ScoreComponent extends JPanel{
+public class ScorePanel extends JPanel{
 	//===============
 	//FIELD
 	//===============
@@ -41,7 +41,7 @@ public class ScoreComponent extends JPanel{
 	//===============
 	//CONSTRUCTORS
 	//==============
-	public ScoreComponent(){
+	public ScorePanel(){
 		ImageRegistry.loadImage("CLUBS.png");
 		ImageRegistry.loadImage("HEARTS.png");
 		ImageRegistry.loadImage("DIAMONDS.png");

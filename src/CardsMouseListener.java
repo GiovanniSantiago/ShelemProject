@@ -22,7 +22,7 @@ public class CardsMouseListener implements MouseListener{
 		
 		if(bidProtocol){
 			
-			if(label.getY() ==  (BoardComponent.deckPoint[0].getY() - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR)){
+			if(label.getY() ==  (MainBoardPanel.deckPoint[0].getY() - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR)){
 				label.setLocation(label.getX(), (int) (label.getY() + CARD_HEGHT/CARD_OVERLAP_Y_FACTOR));
 			}else{
 				label.setLocation(label.getX(), (int) (label.getY() - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR));

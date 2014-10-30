@@ -34,8 +34,8 @@ public class MainPanel extends JPanel{
 	private GridBagConstraints 	gbc;
 	
 	
-	public static BoardComponent	board;
-	public static ScoreComponent 	scoreBoard;
+	public static MainBoardPanel	board;
+	public static ScorePanel 	scoreBoard;
 	public static JButton			leaveButton;
 	public static JButton			endGame;
 	public static JPanel			pastPlaysInfo;
@@ -90,8 +90,8 @@ public class MainPanel extends JPanel{
 	 * Initialize all field variables
 	 */
 	private void setComponents(){
-		board 			= new BoardComponent();
-		scoreBoard 		= new ScoreComponent();
+		board 			= new MainBoardPanel();
+		scoreBoard 		= new ScorePanel();
 		leaveButton 	= new JButton("Leave");
 		endGame			= new JButton("End Game");
 		pastPlaysInfo	= new JPanel();
