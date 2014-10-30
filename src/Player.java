@@ -12,8 +12,7 @@ public class Player {
 	//===============
 	private CardDeck		handDeck;
 	private String 			name;
-	private PlayerPosition 	position;
-	private Player			teamPlayer; //TODO
+	private Team 			team;
 	
 
 	
@@ -21,8 +20,7 @@ public class Player {
 	//===============
 	//CONSTRUCTORS
 	//==============
-	public Player(PlayerPosition position, String name) {
-		this.position 	= position;
+	public Player(String name) {
 		this.name 		= name;
 		this.handDeck 	= new CardDeck();
 	}
@@ -42,6 +40,14 @@ public class Player {
 		return false;
 	}
 	
+	public void setTeam(Team t) {
+		this.team = t;
+	}
+	
+	public Team getTeam() {
+		return this.team;
+	}
+	
 	public int getAmntOfCard() {
 		return handDeck.getAmntOfCards();
 	}
@@ -52,10 +58,6 @@ public class Player {
 	
 	public void dealCard(Card c) {
 		this.handDeck.addCard(c);
-	}
-
-	public PlayerPosition getPosition() {
-		return position;
 	}
 
 	public String getName() {
