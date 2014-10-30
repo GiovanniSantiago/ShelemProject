@@ -23,8 +23,11 @@ public class LoginFrame extends JFrame{
 	//===============
 	//FIELD
 	//===============
-	static JButton startBtn 	= new JButton("Connect to Server");
-	static JButton exitBtn 		= new JButton("Exit");
+	Dimension	frmDimen 	= new Dimension(420, 442);
+	
+	JButton 	startBtn 	= new JButton("Connect to Server");
+	JButton 	exitBtn 	= new JButton("Exit");
+	JLabel  	srvConLbl	= new JLabel("Connected to Server. Your are player ");
 	
 	//===============
 	//CONSTRUCTORS
@@ -38,7 +41,7 @@ public class LoginFrame extends JFrame{
 		
 		this.add(logPnl);
 		this.setTitle("Shelem Login Lobby");
-		this.setSize(new Dimension(420, 442));
+		this.setSize(frmDimen);
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,9 +77,11 @@ public class LoginFrame extends JFrame{
 			
 			
 			btnSetUps();
+			labelsSetups();
 			
 			this.add(startBtn);
 			this.add(exitBtn);
+			this.add(srvConLbl);
 			
 			//Labels set up
 			welcomeLbl.setForeground(Color.WHITE);
@@ -86,6 +91,7 @@ public class LoginFrame extends JFrame{
 			this.setLayout(null);
 			this.setVisible(true);
 			this.setBackground(Color.BLACK);
+			this.setSize(frmDimen);
 			
 			
 		}
@@ -121,6 +127,14 @@ public class LoginFrame extends JFrame{
 			exitBtn.setBackground(Color.BLACK);
 			exitBtn.setFocusable(false);
 			
+			
+		}
+		
+		private void labelsSetups(){
+			srvConLbl.setVisible(false);
+			srvConLbl.setBounds(75, welcomeLbl.getY() + welcomeLbl.getHeight() + srvConLbl.getHeight() + 75 , 400, 20);
+			srvConLbl.setForeground(Color.WHITE);
+			srvConLbl.setFont(new Font("Baskerville Old Face", Font.BOLD, 15));
 		}
 	}
 	//===========================================================================================================================

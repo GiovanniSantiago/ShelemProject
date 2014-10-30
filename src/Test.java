@@ -22,14 +22,14 @@ import javax.swing.JPanel;
 public class Test {
 	public static MainPanel mp;
 	public static ClientNetworkHandler ch = new ClientNetworkHandler();
-	
+	public static LoginFrame logIn;
 	
 	public static void main(String[] args) throws IOException {
 		
+		 logIn = new LoginFrame();
 		
 		
 		
-		LoginFrame logIn = new LoginFrame();
 		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
