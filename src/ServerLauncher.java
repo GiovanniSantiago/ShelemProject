@@ -52,6 +52,7 @@ public class ServerLauncher {
 							.println("SERVER: TABLE COMPLETE, CREATING ROOM...");
 					amount = 0;
 					new ServerRoom(connections).start();
+					connections = new MessageLine[4];
 					System.out
 							.println("SERVER: ROOM CREATED AND PLAYERS FLUSHED");
 				}
