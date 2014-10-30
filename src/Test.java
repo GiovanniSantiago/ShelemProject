@@ -25,7 +25,10 @@ public class Test {
 	
 	
 	public static void main(String[] args) throws IOException {
-		Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
+		
+		LoginFrame logIn = new LoginFrame();
+		
+		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
 		ImageRegistry.setImageGrid(b, Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
 		ImageRegistry.loadImage("cardBack.jpg");  				//load the back of the card to the HashMap of images
@@ -62,7 +65,7 @@ public class Test {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		f.setSize(mp.WIDTH, mp.HEIGHT);
-		f.setLocationRelativeTo(null);
+		f.setLocationRelativeTo(null);*/
 		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
