@@ -23,7 +23,7 @@ public class LoginFrame extends JFrame{
 	//===============
 	//FIELD
 	//===============
-	static JButton startBtn 	= new JButton("Start");
+	static JButton startBtn 	= new JButton("Connect to Server");
 	static JButton exitBtn 		= new JButton("Exit");
 	
 	//===============
@@ -106,17 +106,16 @@ public class LoginFrame extends JFrame{
 		 * 
 		 */
 		private void btnSetUps(){
-			ActionPerformerListener listener = new ActionPerformerListener();
 			
-			startBtn.addActionListener(listener);
-			startBtn.setBounds(new Rectangle(160, 150, 100, 25));
+			startBtn.addActionListener(Test.ch.loginListener);
+			startBtn.setBounds(new Rectangle(100, 150, 200, 25));
 			startBtn.setFont(new Font("Baskerville Old Face", Font.BOLD, 14));
 			startBtn.setForeground(Color.WHITE);
 			startBtn.setBackground(Color.BLACK);
 			startBtn.setFocusable(false);
 			
-			exitBtn.addActionListener(listener);
-			exitBtn.setBounds(new Rectangle(160, 250, 100, 25));
+			exitBtn.addActionListener(Test.ch.loginListener);
+			exitBtn.setBounds(new Rectangle(100, 250, 200, 25));
 			exitBtn.setFont(new Font("Baskerville Old Face", Font.BOLD, 14));
 			exitBtn.setForeground(Color.WHITE);
 			exitBtn.setBackground(Color.BLACK);
@@ -126,28 +125,5 @@ public class LoginFrame extends JFrame{
 	}
 	//===========================================================================================================================
 	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	class ActionPerformerListener implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			Object o = arg0.getSource();
-			
-			if(o.equals(exitBtn)){
-				System.exit(0);
-			}else if(o.equals(startBtn)){
-				exitBtn.setVisible(false);
-				exitBtn.setSelected(false);
-				
-				startBtn.setVisible(false);
-				startBtn.setSelected(false);
-			}
-			
-		}
-		
-	}
+	
 }

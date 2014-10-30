@@ -12,6 +12,8 @@ public class ServerLauncher {
 		ServerSocket servSock;
 		System.out.println("SERVER: SERVER LAUNCHER STARTED");
 		
+		
+		//Try to create the server socket
 		try {
 			servSock = new ServerSocket(7169);
 			System.out.println("SERVER: SERVER SOCKET CREATED");

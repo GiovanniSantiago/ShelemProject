@@ -33,7 +33,7 @@ public class ServerRoom extends Thread {
 		Utilities.overhandArrayShuffle(baseDeck);
 		
 		CardDeck[] playerDecks = new CardDeck[4];
-		playerDecks[0] = new CardDeck(Utilities.subArray(baseDeck, 0, end))
+		//playerDecks[0] = new CardDeck(Utilities.subArray(baseDeck, 0, end));
 		
 		boolean quit = false;
 		while(!quit) {

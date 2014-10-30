@@ -21,10 +21,13 @@ import javax.swing.JPanel;
 
 public class Test {
 	public static MainPanel mp;
-	
+	public static ClientNetworkHandler ch = new ClientNetworkHandler();
 	
 	
 	public static void main(String[] args) throws IOException {
+		
+		
+		
 		
 		LoginFrame logIn = new LoginFrame();
 		

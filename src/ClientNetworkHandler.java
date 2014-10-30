@@ -1,13 +1,18 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
 
 public class ClientNetworkHandler implements Runnable {
-	Socket sock;
-	MessageLine line;
-	Player[] players = new Player[4];
-	int playerId = -1;
+	Socket 			sock;
+	MessageLine 	line;
+	Player[] 		players 		= new Player[4];
+	int 			playerId 		= -1;
+	
+	LoginListener 	loginListener 	= new LoginListener();
+	
 	
 	/**
 	 * Flag set to true when the server asks if player is ready. For use of UI.
@@ -28,6 +33,14 @@ public class ClientNetworkHandler implements Runnable {
 	ClientGameState state = ClientGameState.TABLE_CREATION_STATE;
 	
 	public ClientNetworkHandler() {
+		
+
+		
+	}
+	
+	@Override
+	public void run() {
+		
 		try {
 			sock = new Socket("localhost", 7169);
 			line = new MessageLine(sock);
@@ -35,27 +48,25 @@ public class ClientNetworkHandler implements Runnable {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	@Override
-	public void run() {
+		
 		boolean quit = false;
 		state = ClientGameState.TABLE_CREATION_STATE;
 		
 		/*
-		 * First get all statechanging messages (yet to add quit messages)
+		 * First get all state changing messages (yet to add quit messages)
 		 */
 		
+		//Loop semi infinito para verificar cuando el servidor envio un mensaje
 		while(!quit) {
 			try {
-				if(line.isReady()) {
+				if(line.isReady()) {															//busca si ya hay un mensaje para leer
 					Message m = line.receiveMessage();
 					
 					switch(state) {
 						case TABLE_CREATION_STATE: {
 							switch(m.getName()) {
 								//TODO: Add server notification tick message for when a player joins the table. Happens in ServerLauncher
-								
+							
 								case "table_full": {
 									//
 									//	Table is full. Server state is now in NAME_SETTING_STATE, thus send my name and change myself to NAME_SETTING_STATE
@@ -257,11 +268,8 @@ public class ClientNetworkHandler implements Runnable {
 		System.out.println("NETWORK HANDLING THREAD DONE");
 	}
 	
-	////////////////////////////////
-	////
-	////		THIS IS WHERE THE MOUSELISTENER CLASS IS DECLARED AND DONE
-	////
-	////////////////////////////////
+
+
 	
 	
 	@Deprecated
@@ -300,7 +308,43 @@ public class ClientNetworkHandler implements Runnable {
 				new MessagePair(MC.PARAMETER_PLAYER_NAME,name));*/
 	}
 	
+	////////////////////////////////
+	////
+	////		THIS IS WHERE THE MOUSELISTENER CLASS IS DECLARED AND DONE
+	////
+	////////////////////////////////
 	
+	
+	/**
+	 * -------------------------------------------------------------------------------------------------------------------------
+	 * ----------------------------------------LOGIN LISTENER--------------------------------------------------------------------
+	 * -------------------------------------------------------------------------------------------------------------------------
+	 * @author Glorimar Castro
+	 *
+	 */
+	class LoginListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			Object o = arg0.getSource();
+			
+			if(o.equals(LoginFrame.exitBtn)){
+				System.exit(0);
+			}else if(o.equals(LoginFrame.startBtn)){
+				
+				LoginFrame.exitBtn.setVisible(false);
+				LoginFrame.exitBtn.setSelected(false);
+				
+				LoginFrame.startBtn.setVisible(false);
+				LoginFrame.startBtn.setSelected(false);
+				
+				new Thread(Test.ch).start();
+				
+			}
+			
+		}
+		
+	}
 	private enum ClientGameState {
 		/**
 		 * State in which client waits for enough clients to connect to the server
