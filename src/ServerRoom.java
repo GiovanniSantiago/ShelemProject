@@ -55,7 +55,7 @@ public class ServerRoom extends Thread {
 										
 										if(numPlayers==4) {
 											MC.broadcastMessage(connections, Message.fromPairs(
-													"name:got_all_pairs"));
+													"name:got_all_names"));
 											this.state = ServerRoomState.GAME_LOBBY_STATE;
 											game.setPlayers(players);
 											
