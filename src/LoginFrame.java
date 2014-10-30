@@ -30,6 +30,7 @@ public class LoginFrame extends JFrame{
 	JButton 	exitBtn 		= new JButton("Exit");
 	JLabel  	srvConLbl		= new JLabel("Connected to Server. Your are player ");
 	JLabel		userNamLbl		= new JLabel("Username: ");
+	JLabel		statusLbl		= new JLabel("", JLabel.RIGHT);
 	JTextField  usrNameTxtFld	= new JTextField();
 	
 	//===============
@@ -45,7 +46,7 @@ public class LoginFrame extends JFrame{
 		this.add(logPnl);
 		this.setTitle("Shelem Login Lobby");
 		this.setSize(frmDimen);
-		this.setResizable(false);
+		//this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -149,6 +150,13 @@ public class LoginFrame extends JFrame{
 			userNamLbl.setBounds(100, 120, 100, 40);
 			userNamLbl.setFont(new Font("Baskerville Old Face", Font.PLAIN, 17));
 			
+			statusLbl.setVisible(false);
+			statusLbl.setForeground(Color.WHITE);
+			statusLbl.setBounds(10, (int)frmDimen.getHeight() - 70, (int)frmDimen.getWidth() -45, 20);
+			System.out.println(frmDimen.getHeight());
+			
+			
+			this.add(statusLbl);
 			this.add(srvConLbl);
 			this.add(userNamLbl);
 		}

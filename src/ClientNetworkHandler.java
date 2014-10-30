@@ -71,6 +71,7 @@ public class ClientNetworkHandler implements Runnable {
 								//TODO: Add server notification tick message for when a player joins the table. Happens in ServerLauncher
 								case MC.SU_PLAYERJOIN: 
 									
+									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
 									break;
 									
 									
@@ -100,7 +101,7 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								//TODO: Add QUITTING message thing
 								
-								case "your_id":
+								case "your_id": {
 									//Si la coneccion se dio entonces pasa a decirle al usuario su id 
 									Test.logIn.exitBtn.setVisible(false);
 									Test.logIn.exitBtn.setSelected(false);
@@ -109,11 +110,14 @@ public class ClientNetworkHandler implements Runnable {
 									Test.logIn.startBtn.setSelected(false);
 									
 									Test.logIn.srvConLbl.setVisible(true);
-									Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + m.getInteger("player_id"));
+									Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + m.getInteger(Message.Keys.PLAYER_ID.toString() ));
 									
 									Test.logIn.userNamLbl.setVisible(true);
 									Test.logIn.usrNameTxtFld.setVisible(true);
-									break;
+									
+									Test.logIn.statusLbl.setVisible(true);
+									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
+								}break;
 							}
 						} break;
 						case NAME_SETTING_STATE: {
