@@ -90,6 +90,29 @@ public class Message {
 	public String getCompleteString() {
 		return source;
 	}
+	
+	/**
+	 * Creates a Message from a list of pairs in string form
+	 * 
+	 * "KEY:VALUE","KEY:VALUE","KEY:VALUE"
+	 * @param pairs
+	 * @return
+	 */
+	public static Message fromPairs(String...pairs) {
+		MessagePair[] mPairs = new MessagePair[pairs.length];
+		for(int i = 0; i < pairs.length; i++) {
+			mPairs[i] = new MessagePair(pairs[i]);
+		}
+		return new Message(mPairs);
+	}
+	
+	/**
+	 * Gets the value mapped to the "name" key.
+	 * @return
+	 */
+	public String getName() {
+		return getValue("name");
+	}
 
 	
 	public String toString() {
