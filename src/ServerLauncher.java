@@ -42,8 +42,8 @@ public class ServerLauncher {
 				connections[amount] = new MessageLine(sock);
 				MC.broadcastMessage(connections, new Message(
 						new MessagePair(MC.P_NAME, MC.SU_PLAYERJOIN), 
-						new MessagePair(MC.P_PLAYER_ID, ""	+ amount)));
-				connections[amount].sendMessage(Message.fromPairs("name:your_id","player_id:"+amount));
+						new MessagePair(Message.Keys.PLAYER_ID.toString(), ""	+ amount)));
+				connections[amount].sendMessage(Message.fromPairs("name:your_id",Message.Keys.PLAYER_ID.toString() + ":"+amount));
 				amount++;
 				if (amount == 4) {
 					System.out
@@ -74,7 +74,7 @@ public class ServerLauncher {
 															MC.P_NAME,
 															MC.SU_PLAYERQUIT),
 													new MessagePair(
-															MC.P_PLAYER_ID,
+															Message.Keys.PLAYER_ID.toString() ,
 															"" + i)));
 									amount = 0;
 									connections = new MessageLine[4];

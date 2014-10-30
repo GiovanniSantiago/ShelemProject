@@ -12,7 +12,6 @@ public class ClientNetworkHandler implements Runnable {
 	int 			playerId 		= -1;
 	
 	LoginListener 	loginListener 	= new LoginListener();
-	boolean			isFirstMassege  = true;
 	
 	
 	/**
@@ -47,6 +46,7 @@ public class ClientNetworkHandler implements Runnable {
 			line = new MessageLine(sock);
 			
 			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -70,20 +70,11 @@ public class ClientNetworkHandler implements Runnable {
 							switch(m.getName()) {
 								//TODO: Add server notification tick message for when a player joins the table. Happens in ServerLauncher
 								case MC.SU_PLAYERJOIN: 
-									if(isFirstMassege){
-										//Si la coneccion se dio entonces pasa a decirle al usuario su id 
-										Test.logIn.exitBtn.setVisible(false);
-										Test.logIn.exitBtn.setSelected(false);
-										
-										Test.logIn.startBtn.setVisible(false);
-										Test.logIn.startBtn.setSelected(false);
-										
-										Test.logIn.srvConLbl.setVisible(true);
-										Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + m.getInteger("player_id"));
-										
-										isFirstMassege = false;
-									}
+									
+									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
 									break;
+									
+									
 								case "table_full": {
 									//
 									//	Table is full. Server state is now in NAME_SETTING_STATE, thus send my name and change myself to NAME_SETTING_STATE
@@ -106,8 +97,27 @@ public class ClientNetworkHandler implements Runnable {
 									playerId = m.getInteger("id");
 									state = ClientGameState.NAME_SETTING_STATE;
 									/////^^^those three
+									
 								} break;
 								//TODO: Add QUITTING message thing
+								
+								case "your_id": {
+									//Si la coneccion se dio entonces pasa a decirle al usuario su id 
+									Test.logIn.exitBtn.setVisible(false);
+									Test.logIn.exitBtn.setSelected(false);
+									
+									Test.logIn.startBtn.setVisible(false);
+									Test.logIn.startBtn.setSelected(false);
+									
+									Test.logIn.srvConLbl.setVisible(true);
+									Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + m.getInteger(Message.Keys.PLAYER_ID.toString() ));
+									
+									Test.logIn.userNamLbl.setVisible(true);
+									Test.logIn.usrNameTxtFld.setVisible(true);
+									
+									Test.logIn.statusLbl.setVisible(true);
+									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
+								}break;
 							}
 						} break;
 						case NAME_SETTING_STATE: {
