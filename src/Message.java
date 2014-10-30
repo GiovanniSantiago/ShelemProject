@@ -122,4 +122,14 @@ public class Message {
 		}
 		return result;
 	}
+	
+	
+	
+	public enum Names {
+		TABLE_FULL, GOT_ALL_NAMES, REQUEST_BID, BIDDING_COMPLETE, BIDDING_FAIL, ARE_YOU_READY, I_AM_READY, GAME_READY, MY_BID, MY_NAME, PLAYER_NAME
+	}
+	
+	public enum Keys {
+		PLAYER_ID, PLAYER_NAME, CURRENT_BID, BID_WINNER, BID_AMOUNT, CARDS, 
+	}
 }
