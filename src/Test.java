@@ -26,7 +26,7 @@ public class Test {
 	public static JFrame mainFrame;
 	
 	public static void main(String[] args) throws IOException {
-		
+		//BiddingFrame bf = new BiddingFrame();
 		
 		mainFrame 	= new JFrame("Shelem Game");
 		mp 			= new MainPanel();
@@ -38,7 +38,6 @@ public class Test {
 		mainFrame.setVisible(false);
 		mainFrame.setSize(mp.WIDTH, mp.HEIGHT);
 		mainFrame.setLocationRelativeTo(null);
-		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
 		ImageRegistry.setImageGrid(b, Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
