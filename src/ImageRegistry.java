@@ -15,12 +15,12 @@ import javax.imageio.ImageIO;
 public class ImageRegistry {
 	
 	public static HashMap<String, BufferedImage> images = new HashMap<String, BufferedImage>();
-	public static final String IMAGE_PATH = "res\\";
+	public static final String IMAGE_PATH = "res/";
 	
 
 	/**
-	 * Este metodo se encarga de buscar la imagen solicitada y añadirla al HashMap de imagenes. Si existe no la añade y solo la devuelve al usuario, 
-	 * si no existe crea la imagen y la añade al HashMap, devolviendo la imagen como reusltado. 
+	 * Este metodo se encarga de buscar la imagen solicitada y aï¿½adirla al HashMap de imagenes. Si existe no la aï¿½ade y solo la devuelve al usuario, 
+	 * si no existe crea la imagen y la aï¿½ade al HashMap, devolviendo la imagen como reusltado. 
 	 * @param name
 	 * 		Nombre del archivo de la imagen
 	 * @return
