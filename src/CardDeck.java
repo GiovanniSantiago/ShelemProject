@@ -133,6 +133,18 @@ public class CardDeck {
 		return actualLenght;
 	}
 	
+	public int getCardCount() {
+		int r = 0;
+		for(int i = 0; i < cardDeck.length; i++) {
+			if(cardDeck[i]!=null) {
+				r++;
+			} else {
+				break;
+			}
+		}
+		return r;
+	}
+	
 	/**
 	 * return the next card and move the pointer to the next card
 	 * @return

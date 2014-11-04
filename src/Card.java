@@ -69,7 +69,7 @@ public class Card implements Comparable<Card>{
 	
 	@Override
 	public String toString(){
-		return this.rank.toString() + " of " + this.suit.toString();
+		return this.rank.toString() + " : " + this.suit.toString();
 	}
 	
 	public boolean equals(Card card){

@@ -122,19 +122,4 @@ public class Utilities {
 		return array;
 		
 	}
-	
-	/**
-	 * Returns a new subarray starting at index start (inclusive), and copying amount objects
-	 * @param source
-	 * @param start
-	 * @param amount
-	 * @return
-	 */
-	public static Object[] subArray(Object[] source, int start, int amount) {
-		Object[] res = new Object[amount];
-		for(int i = 0; i < amount;i++) {
-			res[i] = source[start+i];
-		}
-		return res;
-	}
 }

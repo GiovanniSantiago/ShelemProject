@@ -20,6 +20,8 @@ public class ClientNetworkHandler implements Runnable {
 	Player[] 		players 		= new Player[4];
 	int 			playerId 		= -1;
 	
+	Card[] currentCards;
+	
 	LoginListener 	loginListener 	= new LoginListener();
 	
 	
@@ -122,6 +124,7 @@ public class ClientNetworkHandler implements Runnable {
 									
 									Test.logIn.userNamLbl.setVisible(true);
 									Test.logIn.usrNameTxtFld.setVisible(true);
+									// Fix this later, as an extra, so it accepts name anyways, but buffers it. If entered before time, it sends saved name when name requested. If entered after time, send name.
 									
 									Test.logIn.statusLbl.setVisible(true);
 									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
@@ -170,7 +173,7 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								case "game_ready": {
 									//
-									//	Player in charge said he was ready. Server state is now in BIDDING_STATE.
+									//	Player in charge said he was ready. I got my cards now. Server state is now in BIDDING_STATE.
 									//
 									
 									String cardlist = m.getValue("cards");
@@ -195,9 +198,12 @@ public class ClientNetworkHandler implements Runnable {
 									//TODO: USE BIDREQUEST FLAG
 									requestedBid = true;
 									
-									////TODO:THESE LINES GO IN UI CODE
-									//////////////
-									////TODO:UI CODE AAAAA
+									
+									//		U      U	IIIII
+									//		U      U	  I
+									//		U      U	  I
+									//		U	   U	  I
+									//		 UUUUUU 	IIIII
 									Random r = new Random();
 									line.sendMessage(Message.fromPairs("name:my_bid","bid:"+(r.nextFloat()<.8f?m.getInteger("current_bid")+5:0)));
 								} break;
@@ -211,6 +217,16 @@ public class ClientNetworkHandler implements Runnable {
 									//
 									// Everybody passed. Start bidding over.
 									//
+									
+									
+									
+									
+									//		U      U	IIIII
+									//		U      U	  I
+									//		U      U	  I
+									//		U	   U	  I
+									//		 UUUUUU 	IIIII
+									
 									//TODO: Add UI notification that bidding failed.
 									//TODO: reset bidding everything back to normal, including visual notifiers.
 								} break;

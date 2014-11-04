@@ -7,8 +7,27 @@ public class ServerRoom extends Thread {
 	ServerRoomState state = ServerRoomState.NAME_SETTING_STATE;
 	ShelemGame game = new ShelemGame();
 	
+	/**
+	 * Provides references to every possible card. Will always be in order. 
+	 * <br><b><i>Do not modify.
+	 */
+	Card[] baseDeck = new Card[52];
+	/**
+	 * Keeps track of all the shuffles and splits made to the main deck.
+	 * <br><b><i>Modify this for shuffles and such.
+	 */
+	Card[] mainDeck = new Card[52];
+	
 	public ServerRoom(MessageLine[] connections) {
 		this.connections = connections;
+
+		int index = 0;
+		for(Suit s: Suit.values()) {
+			for(Rank r: Rank.values()) {
+				baseDeck[index] = new Card(s,r);
+				index++;
+			}
+		}
 	}
 	
 	@Override
@@ -20,20 +39,17 @@ public class ServerRoom extends Thread {
 		Player[] players = new Player[4];
 		int numPlayers = 0;
 		
-		Card[] baseDeck = new Card[52];
-		{
-			int index = 0;
-			for(Suit s: Suit.values()) {
-				for(Rank r: Rank.values()) {
-					baseDeck[index] = new Card(s,r);
-					index++;
-				}
-			}
-		}
-		Utilities.overhandArrayShuffle(baseDeck);
+		// ------------------------------------------------------------------------------------------------------
+		// ---------------Creates a base deck, shuffles it, and splits it in four, leaving four cards as widow---
+		// ------------------------------------------------------------------------------------------------------
 		
 		CardDeck[] playerDecks = new CardDeck[4];
-		//playerDecks[0] = new CardDeck(Utilities.subArray(baseDeck, 0, end));
+		Card[] widow = new Card[4];
+		
+		
+		//
+		//
+		//
 		
 		boolean quit = false;
 		while(!quit) {
@@ -71,19 +87,48 @@ public class ServerRoom extends Thread {
 								switch(m.getName()) {
 									// A player will tell me that he's ready
 									case "i_am_ready": {
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
-										// DEAL ALL CARDS, SPLIT IN FOUR, AND SEND
 										
+										//
+										//		Shuffle the persistent main deck
+										//
+										
+										Utilities.overhandArrayShuffle(mainDeck);
+										
+										// Make new decks for each player.
+										
+										playerDecks = new CardDeck[4];
+										
+										// Split the persistent main deck and give each playerdeck 12 cards from it.
+										
+										for(int i = 0; i < 4; i++) {
+											Card[] currDeck = new Card[12];
+											System.arraycopy(mainDeck,i*12,currDeck,0,12);
+											playerDecks[i] = new CardDeck(currDeck);
+										}
+										
+										// Separate the widow.
+										
+										widow = new Card[4];
+										System.arraycopy(mainDeck, 12*4, widow, 0, 4);
+										
+										// Send each player their own cards.
+										
+										for(int i = 0; i < 4; i++) {
+											String cards = "";
+											for(int j = 0; j < playerDecks[i].getCardCount(); j++) {
+												cards+=playerDecks[i].getCard(j).getName();
+												if(j!=playerDecks[i].getCardCount()) {
+													cards+=",";
+												}
+											}
+											MessageLine l = connections[i];
+											l.sendMessage(Message.fromPairs(
+													"name:game_ready",
+													"cards:"+cards));
+										}
+										
+										// Go to bidding state
+										this.state = ServerRoomState.BIDDING_STATE;
 										
 									} break;
 									//TODO: Add QUITTING message thing
@@ -91,6 +136,23 @@ public class ServerRoom extends Thread {
 							} break;
 							case BIDDING_STATE: {
 								switch(m.getName()) {
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									// HAVE TO DO BIDDING STATE THINGS NOW
+									// ALSO EXTRACT CARDS FROM CLIENT SIDE MESSAGE i_am_ready
+									
+									
+									
+									
+									
+									
 									//TODO: Add QUITTING message thing
 								}
 							} break;
@@ -109,113 +171,6 @@ public class ServerRoom extends Thread {
 				// Something borked with reading a thing. A socket probably broke or something, I dunno.
 			}
 		}
-		
-		
-		/*if(true)return;
-		MC.broadcastMessage(connections, new Message(
-				new MessagePair(MC.P_NAME,MC.SU_TABLE_CREATED)));
-		int namesReceived = 0;
-		while(true) {
-			switch(state) {
-				/*
-				 * If getting the names form the users
-				 
-				case WAITING_PLAYER_NAMES: {
-					/*
-					 * Only if there are not four names already (CLIENTS DO NOT SEND MORE THAN ONE NAME EACH)
-					 
-					if(namesReceived!=4) {
-						/*
-						 * Poll for messages
-						 
-						for(int i = 0; i < connections.length; i++) {
-							MessageLine line = connections[i];
-							try {
-								if(line.isReady()) {
-									Message m = line.receiveMessage();
-									switch(m.getValue(MC.P_NAME)) {
-										/*
-										 * CLIENT HAS DISCLOSED NAME
-										 
-										case MC.CU_MYNAME: {
-											
-											//Increase name counter and tell everybody.
-											
-											namesReceived++;
-											
-											System.out.println("Player "+i+" submitted name: "+m.getValue(MC.PARAMETER_PLAYER_NAME));
-											
-											MC.broadcastMessage(connections, new Message(
-													new MessagePair(MC.P_NAME,MC.SU_PLAYERNAME),
-													new MessagePair(MC.P_PLAYER_ID,""+i),
-													new MessagePair(MC.PARAMETER_PLAYER_NAME,m.getValue(MC.PARAMETER_PLAYER_NAME))));
-										} break;
-										/*
-										 * CLIENT HAS QUIT GAME
-										 
-										case MC.CU_QUITGAME: {
-											MC.broadcastMessage(connections, new Message( 
-													new MessagePair(MC.P_NAME,MC.SU_PLAYERQUIT),
-													new MessagePair(MC.P_PLAYER_ID,""+i)));
-											onQuitGame(i);
-											return;
-										} 
-									}
-								} 
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-					else {
-						state = ServerRoomState.WAITING_GAMESTART_READY;
-					}
-					/*
-					 * End getting names state
-					 
-				} break;
-				case WAITING_GAMESTART_READY: {
-					/*
-					 * Check of player1 said ready
-					 
-					try {
-						for(int i = 0; i < connections.length;i++) {
-							if(connections[i].isReady()) {
-								Message m = connections[i].receiveMessage();
-								if(m.getValue(MC.P_NAME).equals(MC.CU_QUITGAME)) {
-									MC.broadcastMessage(connections, new Message( 
-											new MessagePair(MC.P_NAME,MC.SU_PLAYERQUIT),
-											new MessagePair(MC.P_PLAYER_ID,""+i)));
-									onQuitGame(i);
-									return;
-								}
-								if(m.getValue(MC.P_NAME).equals(MC.CU_GAMEREADY)) {
-									
-									
-									/*
-									 * Go to waiting bid state
-									 
-									state = ServerRoomState.WAITING_PLAYER_BIDS;
-									
-									// STOPPED HERE
-									
-									MC.broadcastMessage(connections,new Message(
-											new MessagePair(MC.P_NAME,MC.SU_GAME_START)));
-								}
-							}
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} break;
-				
-				
-				
-			}
-		}*/
-		
 	}
 	
 	private void onQuitGame(int i) {

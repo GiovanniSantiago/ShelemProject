@@ -128,6 +128,7 @@ public class Message {
 	public enum Names {
 		/**
 		 * Server notification when all 4 players have joined the table.
+		 * PLAYER_ID:<this player id>
 		 */
 		TABLE_FULL, 
 		/**
@@ -155,13 +156,27 @@ public class Message {
 		 */
 		I_AM_READY, 
 		/**
-		 * Server notification for when
+		 * Server notification for when the controlling player starts next round
 		 */
 		GAME_READY, 
+		/**
+		 * Client response to REQUEST_BID. Sent when player has chosen a new bid.
+		 * BID_AMOUNT is set to 0 if pass.
+		 */
 		MY_BID, 
 		MY_NAME, 
 		PLAYER_NAME, 
-		YOUR_ID
+		YOUR_ID,
+		
+		GIVE_CARD,
+		CARD_PLAYED,
+		HAND_WON,
+		GAME_OVER,
+		NEW_GAME,
+		END_GAME,
+		
+		MY_CARD,
+		
 	}
 	
 	public enum Keys {
