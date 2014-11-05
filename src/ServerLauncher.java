@@ -42,10 +42,13 @@ public class ServerLauncher {
 				System.out.println(String.format(
 						"SERVER: CLIENT ACCEPTED, INDEX %d", amount));
 				connections[amount] = new MessageLine(sock);
-				MC.broadcastMessage(connections, new Message(
-						new MessagePair(MC.P_NAME, MC.SU_PLAYERJOIN), 
-						new MessagePair(Message.Keys.PLAYER_ID.toString(), ""	+ amount)));
-				connections[amount].sendMessage(Message.fromPairs("name:your_id",Message.Keys.PLAYER_ID.toString() + ":"+amount));
+				MC.broadcastMessage(connections, Message.fromPairs(
+						"name:"+Message.Names.PLAYER_JOINED.toString(),
+						Message.Keys.PLAYER_ID.toString()+":"+amount));
+						
+				connections[amount].sendMessage(Message.fromPairs(
+						"name:"+Message.Names.YOUR_ID.toString(),
+						Message.Keys.PLAYER_ID.toString() + ":"+amount));
 				amount++;
 				if (amount == 4) {
 					System.out
@@ -65,20 +68,14 @@ public class ServerLauncher {
 						boolean quit = false;
 						if (connections[i].isReady()) {
 							Message m = connections[i].receiveMessage();
-							switch (m.getValue(MC.P_NAME)) {
-								case MC.CU_QUITGAME: {
+							switch (m.getName()) {
+								case "I_QUIT": {
 									System.out
 											.println("SERVER: A PANSY PLAYER QUIT, BOOHOO, RUINING THE FUN FOR EVERYBODY NOW...");
 									quit = true;
-									MC.broadcastMessage(
-											connections,
-											new Message(
-													new MessagePair(
-															MC.P_NAME,
-															MC.SU_PLAYERQUIT),
-													new MessagePair(
-															Message.Keys.PLAYER_ID.toString() ,
-															"" + i)));
+									MC.broadcastMessage(connections, Message.fromPairs(
+											"name:"+Message.Names.PLAYER_QUIT.toString(),
+											Message.Keys.PLAYER_ID.toString()+":"+i));
 									amount = 0;
 									connections = new MessageLine[4];
 									System.out.println("Server: STARTING PLAYERLIST OVER...");

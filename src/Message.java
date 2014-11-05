@@ -82,6 +82,10 @@ public class Message {
 	public int getInteger(String key) {
 		return Integer.parseInt(getValue(key));
 	}
+	
+	public boolean containsKey(String key) {
+		return map.containsKey(key);
+	}
 
 	/**
 	 * Returns the entire encoded string for this message. Passing this String to Message(String) will create a Message object identical to this one, in terms of key:value pairs.
@@ -126,6 +130,7 @@ public class Message {
 	
 	
 	public enum Names {
+		PLAYER_JOINED,
 		/**
 		 * Server notification when all 4 players have joined the table.
 		 * PLAYER_ID:<this player id>
@@ -177,9 +182,14 @@ public class Message {
 		
 		MY_CARD,
 		
+		SOMEONE_BID,
+		SOMEONE_PASSED,
+		
+		I_QUIT,
+		PLAYER_QUIT,
 	}
 	
 	public enum Keys {
-		PLAYER_ID, PLAYER_NAME, CURRENT_BID, BID_WINNER, BID_AMOUNT, CARDS, 
+		PLAYER_ID, PLAYER_NAME, CURRENT_BID, BID_WINNER, BID_AMOUNT, CARDS, GAME_SETTINGS, 
 	}
 }

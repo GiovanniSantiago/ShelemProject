@@ -85,7 +85,7 @@ public class ClientNetworkHandler implements Runnable {
 					switch(state) {
 						case TABLE_CREATION_STATE: {
 							switch(m.getName()) {
-								case "your_id": {
+								case "YOUR_ID": {
 									//Si la conección se dio entonces pasa a decirle al usuario su id 
 									playerId = m.getInteger(Message.Keys.PLAYER_ID.toString());
 									
@@ -121,13 +121,13 @@ public class ClientNetworkHandler implements Runnable {
 									Test.logIn.send.setVisible(true);
 								}break;
 								//TODO: Add server notification tick message for when a player joins the table. Happens in ServerLauncher
-								case MC.SU_PLAYERJOIN: 
+								case "PLAYER_JOINED": 
 									
 									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
 									break;
 									
 								//Enter here when all player are already logged
-								case "table_full": {
+								case "TABLE_FULL": {
 									//
 									//	Table is full. Server state is now in NAME_SETTING_STATE, thus send my name and change myself to NAME_SETTING_STATE
 									//
@@ -144,15 +144,21 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								//TODO: Add QUITTING message thing
 								
-								
 							}
 						} break;
 						case NAME_SETTING_STATE: {
 							switch(m.getName()) {
-							
+								
 								case "PLAYER_NAME": {
-									players[m.getInteger("id")] = new Player(m.getValue(Message.Names.PLAYER_NAME.toString()));
-									System.out.println(m.getInteger("id"));
+									int index = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									players[index] = new Player(m.getValue(Message.Names.PLAYER_NAME.toString()));
+									System.out.println(index);
+									if(m.containsKey(Message.Keys.GAME_SETTINGS.toString())) {
+										String settingsSource = m.getValue(Message.Keys.GAME_SETTINGS.toString());
+										////////////////////////////////////////////////////////////////
+										/////////HERE GETS GAME SETTINGS////////////////////////////////
+										////////////////////////////////////////////////////////////////
+									}
 								} break;
 								
 								//Everybody sent their name. Server state is now in GAME_LOBBY_STATE.		
@@ -175,7 +181,7 @@ public class ClientNetworkHandler implements Runnable {
 								// I may be asked to say READY.
 								// I WILL be told READY.
 								//TODO: No server notification tick needed.
-								case "is_game_ready": {
+								case "ARE_YOU_READY": {
 									//TODO: Add UI notification that server asked for ready
 									//TODO: USE READYREQUEST FLAG
 									requestedGameReady = true;
@@ -183,14 +189,14 @@ public class ClientNetworkHandler implements Runnable {
 									////TODO:THESE LINES GO IN UI CODE
 									//////////////
 									////TODO:UI CODE AAAAA
-									line.sendMessage(Message.fromPairs("name:i_am_ready"));
+									line.sendMessage(Message.fromPairs("name:"+Message.Names.I_AM_READY.toString()));
 								} break;
-								case "game_ready": {
+								case "GAME_READY": {
 									//
 									//	Player in charge said he was ready. I got my cards now. Server state is now in BIDDING_STATE.
 									//
 									
-									String cardlist = m.getValue("cards");
+									String cardlist = m.getValue(Message.Keys.CARDS.toString());
 									//TODO: Add card receiving mechanism here. cardlist will have the format SUIT_RANK,SUIT_RANK,SUIT_RANK...SUIT_RANK,SUIT_RANK, where SUIT can be H,D,S,C, and RANK can be A,2,3,4,5,6,7,8,9,J,Q,K
 									state = ClientGameState.BIDDING_STATE;
 								}
@@ -203,11 +209,50 @@ public class ClientNetworkHandler implements Runnable {
 								//TODO: Add server notification tick message for when a player passes or sets a bid:
 								//			I will be told if a player sets a bid.
 								//			I will be told if a player passes a bid.
+								case "SOMEONE_BID": {
+									////
+									////	Someone submitted a bid
+									////
+									int player = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									int amount = m.getInteger(Message.Keys.BID_AMOUNT.toString());
+									
+									
+									
+									
+									//		U      U	IIIII
+									//		U      U	  I
+									//		U      U	  I
+									//		U	   U	  I
+									//		 UUUUUU 	IIIII
+									
+									
+									
+									
+								} break;
+								case "SOMEONE_PASS": {
+									////
+									////	Someone submitted a bid
+									////
+									int player = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									
+									
+									
+									
+									//		U      U	IIIII
+									//		U      U	  I
+									//		U      U	  I
+									//		U	   U	  I
+									//		 UUUUUU 	IIIII
+									
+									
+									
+									
+								}
 								
 								//I will be asked for a bid.
 								//I will be told if bidding fails.
 								//I will be told if bidding wins.
-								case "give_bid": {
+								case "REQUEST_BID": {
 									//TODO: Add UI notification that the server asked for bid
 									//TODO: USE BIDREQUEST FLAG
 									requestedBid = true;
@@ -219,19 +264,38 @@ public class ClientNetworkHandler implements Runnable {
 									//		U	   U	  I
 									//		 UUUUUU 	IIIII
 									Random r = new Random();
-									line.sendMessage(Message.fromPairs("name:my_bid","bid:"+(r.nextFloat()<.8f?m.getInteger("current_bid")+5:0)));
+									if(m.getInteger(Message.Keys.BID_AMOUNT.toString())==0) {
+										////
+										////	You are first bidder
+										////	This is dummy response
+										////
+										line.sendMessage(Message.fromPairs(
+												"name:"+Message.Names.MY_BID.toString(),
+												Message.Keys.BID_AMOUNT.toString()+":"+(r.nextFloat()<.8f?100:0)));
+									} else {
+										////
+										////	This is dummy response
+										////
+										line.sendMessage(Message.fromPairs(
+												"name:"+Message.Names.MY_BID.toString(),
+												Message.Keys.BID_AMOUNT.toString()+":"+(r.nextFloat()<.8f?m.getInteger(Message.Keys.CURRENT_BID.toString())+5:0)));
+									}
+									
 								} break;
-								case "bidding_win": {
+								case "BIDDING_COMPLETE": {
 									//
 									//	A bidder has won. Server state is now in GAME_STATE
 									//
+									
 									state = ClientGameState.GAME_STATE;
 								} break;
-								case "bidding_fail": {
+								case "BIDDING_FAIL": {
 									//
 									// Everybody passed. Start bidding over.
 									//
+									String cardlist = m.getValue(Message.Keys.CARDS.toString());
 									
+									//////// GET CARDS FROM THIS TOO.
 									
 									
 									
@@ -410,6 +474,7 @@ public class ClientNetworkHandler implements Runnable {
 				
 			}else if(o.equals(Test.logIn.send)){
 				if(isRequestingName){
+					isRequestingName = false;
 					
 					String name = Test.logIn.usrNameTxtFld.getText();
 					name = name.replaceAll("$", "");					//The username can't have $ or : because of message regulation with the server
@@ -418,7 +483,9 @@ public class ClientNetworkHandler implements Runnable {
 					if(name.length() == 0){
 						JOptionPane.showMessageDialog(Test.logIn, "You have to enter a username. And it can't contain \":\" or \"$\" characters.\nPlease try again.", "Username error", JOptionPane.ERROR_MESSAGE);
 					}else{
-						line.sendMessage(Message.fromPairs("name:" + Message.Names.MY_NAME,Message.Keys.PLAYER_NAME.toString() + ":" +name));
+						line.sendMessage(Message.fromPairs(
+								"name:" + Message.Names.MY_NAME,
+								Message.Keys.PLAYER_NAME.toString() + ":" +name));
 						Test.logIn.send.setEnabled(false);
 						Test.logIn.statusLbl.setText("Waiting for others player to enter their usernames...");
 						Test.logIn.statusLbl.setForeground(Color.RED);
