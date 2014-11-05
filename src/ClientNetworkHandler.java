@@ -434,21 +434,41 @@ public class ClientNetworkHandler implements Runnable {
 					isRequestingName = false;
 					
 					String name = Test.logIn.usrNameTxtFld.getText();
-					String targetScore = Test.logIn.targetScoreTxtFld.getText();
-
-					if(!Utilities.isInteger(targetScore)) {
-						JOptionPane.showMessageDialog(Test.logIn, "Score Target must be an integer number.", "Score Target input error", JOptionPane.INFORMATION_MESSAGE);
-					}
 					name = name.replaceAll("$", "");					//The username can't have $ or : because of message regulation with the server
 					name = name.replaceAll(":", "");
 					
 					if(name.length() == 0){
-						JOptionPane.showMessageDialog(Test.logIn, "You have to enter a username. And it can't contain \":\" or \"$\" characters.\nPlease try again.", "Username error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Test.logIn, "You have to enter a username. And it can't contain \":\" or \"$\" characters.\nPlease try again.", "Username error", JOptionPane.WARNING_MESSAGE);
 					}else{
-						line.sendMessage(Message.fromPairs(
-								"name:" + Message.Names.MY_NAME,
-								Message.Keys.PLAYER_NAME.toString() + ":" +name));
-						Test.logIn.send.setEnabled(false);
+						if(playerId == 0){
+							String targetScore = Test.logIn.targetScoreTxtFld.getText();
+							
+							if(!Utilities.isInteger(targetScore)){
+								JOptionPane.showMessageDialog(Test.logIn, "Score Target must be an integer number.", "Score Target input error", JOptionPane.WARNING_MESSAGE);
+							}else{
+								int targetScoreInt = Integer.parseInt(targetScore);
+								
+								if(targetScoreInt < 0){
+									        targetScoreInt *= -1;
+								}
+								targetScore = "" + targetScoreInt;
+								line.sendMessage(Message.fromPairs(
+										"name:" + Message.Names.MY_NAME,
+										Message.Keys.PLAYER_NAME.toString() + ":" +name,
+										Message.Keys.GAME_SETTINGS.toString()+":"+targetScore));
+								Test.logIn.send.setEnabled(false);
+							}
+							
+							
+							
+						}else{
+							line.sendMessage(Message.fromPairs(
+									"name:" + Message.Names.MY_NAME,
+									Message.Keys.PLAYER_NAME.toString() + ":" +name));
+							Test.logIn.send.setEnabled(false);
+						}
+					
+						
 						Test.logIn.statusLbl.setText("Waiting for others player to enter their usernames...");
 						Test.logIn.statusLbl.setForeground(Color.RED);
 						Test.logIn.statusLbl.setFont(new Font(Test.logIn.statusLbl.getFont().getFontName(), Font.BOLD, 15));
