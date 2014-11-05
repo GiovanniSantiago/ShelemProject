@@ -495,20 +495,23 @@ public class ClientNetworkHandler implements Runnable {
 									        targetScoreInt *= -1;
 								}
 								targetScore = "" + targetScoreInt;
+								line.sendMessage(Message.fromPairs(
+										"name:" + Message.Names.MY_NAME,
+										Message.Keys.PLAYER_NAME.toString() + ":" +name,
+										Message.Keys.GAME_SETTINGS.toString()+":"+targetScore));
+								Test.logIn.send.setEnabled(false);
 							}
 							
-							line.sendMessage(Message.fromPairs(
-									"name:" + Message.Names.MY_NAME,
-									Message.Keys.PLAYER_NAME.toString() + ":" +name,
-									Message.Keys.GAME_SETTINGS.toString()+":"+targetScore));
+							
 							
 						}else{
 							line.sendMessage(Message.fromPairs(
 									"name:" + Message.Names.MY_NAME,
 									Message.Keys.PLAYER_NAME.toString() + ":" +name));
+							Test.logIn.send.setEnabled(false);
 						}
 					
-						Test.logIn.send.setEnabled(false);
+						
 						Test.logIn.statusLbl.setText("Waiting for others player to enter their usernames...");
 						Test.logIn.statusLbl.setForeground(Color.RED);
 						Test.logIn.statusLbl.setFont(new Font(Test.logIn.statusLbl.getFont().getFontName(), Font.BOLD, 15));
