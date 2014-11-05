@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,19 +19,23 @@ public class ClientNetworkHandler implements Runnable {
 	Socket 			sock;
 	MessageLine 	line;
 	Player[] 		players 		= new Player[4];
+	int				playersPos[]	= new int[4];
 	int 			playerId 		= -1;
 	
 	
-	
+	BidListener		bidListener 	= new BidListener();
 	LoginListener 	loginListener 	= new LoginListener();
 	
 	//==========================================
 	//Field para Shelem Game Logic
 	//==========================================
 	int 		targetScore 	= 0;
-	
+	int			actualBid		= 100;
 	Card[] 		myCards 		= new Card[12];
 	CardDeck 	myDeck;
+	
+	
+	
 	
 	/**
 	 * Flag set to true when the server asks if player is ready. For use of UI.
@@ -167,6 +172,10 @@ public class ClientNetworkHandler implements Runnable {
 									Test.mainFrame.setVisible(true);
 									
 									System.out.println(playerId + "   " + ((playerId + 1) % 4) + "   " + (playerId + 2)%4 +   (playerId + 3) % 4);
+									playersPos[playerId] = 0;
+									playersPos[(playerId + 1) % 4] = 1;
+									playersPos[(playerId + 2) % 4] = 2;
+									playersPos[(playerId + 3) % 4] = 3;
 									String[] names = {players[playerId].getName(), players[(playerId + 1) % 4].getName(), players[(playerId + 2)%4].getName(), players[(playerId + 3) % 4].getName()};
 									Test.mp.board.setUserNames(names);
 									Test.mp.scoreBoard.setTeamNames(names[0] + " " + names[2], names[1] + " " + names[3]);
@@ -208,6 +217,19 @@ public class ClientNetworkHandler implements Runnable {
 									
 									int playersCardsAmmounts[] = {12, 12, 12, 12};
 									Test.mp.board.setPlayerCardsAmount(playersCardsAmmounts);
+									
+									//Muestra es panel para el Bid y hace el set del mismo
+									String userNames[] = {players[playerId].getName(), players[(playerId + 1)%4].getName(), players[(playerId + 2)%4].getName(), players[(playerId + 3)%4].getName()};
+									Test.mp.bidPanel = new BiddingPanel(userNames);
+									
+									//GCN ===============================CORREGIRR
+									if(playerId == 0){
+										Test.mp.bidPanel.eneableButtons();
+									}
+									
+									Test.mp.bidPanel.setBounds(Test.mp.board.getWidth()/2 - Test.mp.bidPanel.getWidth()/2, Test.mp.board.getHeight()/2 - Test.mp.bidPanel.getHeight()/2 + 20, Test.mp.bidPanel.getWidth(), Test.mp.bidPanel.getHeight());
+									Test.mp.board.add(Test.mp.bidPanel);
+									
 									// DUPE END
 									
 									state = ClientGameState.BIDDING_STATE;
@@ -226,19 +248,11 @@ public class ClientNetworkHandler implements Runnable {
 									////	Someone submitted a bid
 									////
 									int player = m.getInteger(Message.Keys.PLAYER_ID.toString());
-									int amount = m.getInteger(Message.Keys.BID_AMOUNT.toString());
+									actualBid = m.getInteger(Message.Keys.BID_AMOUNT.toString());
 									
 									
-									
-									
-									//		U      U	IIIII
-									//		U      U	  I
-									//		U      U	  I
-									//		U	   U	  I
-									//		 UUUUUU 	IIIII
-									
-									
-									
+									Test.mp.bidPanel.setPlayerBid(playersPos[player], actualBid);
+									Test.mp.bidPanel.bidStatuslbl.setText(players[player].getName() + " bid. Waiting for next player...");
 									
 								} break;
 								case "SOMEONE_PASSED": {
@@ -246,21 +260,11 @@ public class ClientNetworkHandler implements Runnable {
 									////	Someone submitted a bid
 									////
 									int player = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									Test.mp.bidPanel.setPlayerBid(playersPos[player], -1);
+									Test.mp.bidPanel.bidStatuslbl.setText(players[player].getName() + " pass. Waiting for next player...");
 									
-									
-									
-									
-									//		U      U	IIIII
-									//		U      U	  I
-									//		U      U	  I
-									//		U	   U	  I
-									//		 UUUUUU 	IIIII
-									
-									
-									
-									
-								}
-								
+								}break; //-_- -_- Te estoy mirando mal Giovanni estube 36min dandole cabeza de pq esto esta dando problema y te comistes un BREAK!!!! JAJAJA
+										//loll y pa colmo se fue en loop infinito
 								//I will be asked for a bid.
 								//I will be told if bidding fails.
 								//I will be told if bidding wins.
@@ -268,30 +272,12 @@ public class ClientNetworkHandler implements Runnable {
 									//TODO: Add UI notification that the server asked for bid
 									//TODO: USE BIDREQUEST FLAG
 									requestedBid = true;
+									Test.mp.bidPanel.sumBtn.setEnabled(true);
+									Test.mp.bidPanel.senBidBtn.setEnabled(true);
+									Test.mp.bidPanel.passBtn.setEnabled(true);
+									Test.mp.bidPanel.bidStatuslbl.setText("It is your Turn");
+									Test.mp.bidPanel.bidStatuslbl.setForeground(Color.YELLOW);
 									
-									
-									//		U      U	IIIII
-									//		U      U	  I
-									//		U      U	  I
-									//		U	   U	  I
-									//		 UUUUUU 	IIIII
-									Random r = new Random();
-									if(m.getInteger(Message.Keys.CURRENT_BID.toString())==0) {
-										////
-										////	You are first bidder
-										////	This is dummy response
-										////
-										line.sendMessage(Message.fromPairs(
-												"name:"+Message.Names.MY_BID.toString(),
-												Message.Keys.BID_AMOUNT.toString()+":"+(r.nextFloat()<.8f?100:0)));
-									} else {
-										////
-										////	This is dummy response
-										////
-										line.sendMessage(Message.fromPairs(
-												"name:"+Message.Names.MY_BID.toString(),
-												Message.Keys.BID_AMOUNT.toString()+":"+(r.nextFloat()<.8f?m.getInteger(Message.Keys.CURRENT_BID.toString())+5:0)));
-									}
 									
 								} break;
 								case "BIDDING_COMPLETE": {
@@ -529,6 +515,45 @@ public class ClientNetworkHandler implements Runnable {
 		}
 		
 	}
+	
+	
+	
+	class BidListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JButton btn = (JButton) e.getSource();
+			
+			if(btn == Test.mp.bidPanel.sumBtn){
+				actualBid+=5;
+				Test.mp.bidPanel.bidTxt.setText("" + actualBid);
+			}else if(btn == Test.mp.bidPanel.passBtn){
+				Test.mp.bidPanel.senBidBtn.setEnabled(false);
+				Test.mp.bidPanel.senBidBtn.setVisible(false);
+				Test.mp.bidPanel.passBtn.setEnabled(false);
+				Test.mp.bidPanel.passBtn.setVisible(false);
+				Test.mp.bidPanel.sumBtn.setEnabled(false);
+				Test.mp.bidPanel.sumBtn.setVisible(false);
+				System.out.println("dfgbfgbhfgHN");
+				line.sendMessage(Message.fromPairs(
+						"name:"+Message.Names.MY_BID.toString(),
+						Message.Keys.BID_AMOUNT.toString()+":"+0));
+
+			}else{
+				Test.mp.bidPanel.senBidBtn.setEnabled(false);
+				Test.mp.bidPanel.passBtn.setEnabled(false);
+				Test.mp.bidPanel.sumBtn.setEnabled(false);
+				line.sendMessage(Message.fromPairs(
+						"name:"+Message.Names.MY_BID.toString(),
+						Message.Keys.BID_AMOUNT.toString()+":"+actualBid));
+			}
+			
+		}
+		
+	}
+	
+	
+	
 	private enum ClientGameState {
 		/**
 		 * State in which client waits for enough clients to connect to the server

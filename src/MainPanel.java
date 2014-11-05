@@ -41,6 +41,7 @@ public class MainPanel extends JPanel{
 	public JPanel			pastPlaysInfo;
 	public JTextArea		txtArea;
 	public JScrollPane		scrollBar;
+	public BiddingPanel		bidPanel;
 	
 
 	//===============

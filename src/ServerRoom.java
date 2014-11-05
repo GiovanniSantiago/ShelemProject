@@ -21,8 +21,18 @@ public class ServerRoom extends Thread {
 	int teamDeck1amount = 0;
 	int teamDeck2amount = 0;
 	
-	int bidStarter = 0;
+	//------------------------
+	//---BID Variables
+	//------------------------
+	int 		bidStarter = 0;
+	int 		currentBid = 0;
 	
+	/**
+	 * ================================================================================
+	 * 						CONSTRUCTOR
+	 * ================================================================================
+	 * @param connections
+	 */
 	public ServerRoom(MessageLine[] connections) {
 		this.connections = connections;
 
@@ -36,6 +46,11 @@ public class ServerRoom extends Thread {
 		}
 	}
 	
+	/**
+	 * ================================================================================
+	 * 								RUN
+	 * ================================================================================
+	 */
 	@Override
 	public void run() {
 		for(int i = 0; i < connections.length; i++) {
@@ -51,9 +66,9 @@ public class ServerRoom extends Thread {
 		
 		int currentBid = 0;
 		
-		boolean bidCanFail = true;
-		int bidPassCount = 0;
-		boolean[] havePassedBid = new boolean[] {false,false,false,false};
+		boolean 	bidCanFail = true;
+		int 		bidPassCount = 0;
+		boolean[] 	havePassedBid = new boolean[] {false,false,false,false};
 		
 		boolean quit = false;
 		while(!quit) {
@@ -64,7 +79,6 @@ public class ServerRoom extends Thread {
 						Message m = currLine.receiveMessage();
 						switch(state) {
 							case NAME_SETTING_STATE: {
-								System.out.println("kfdjvngfdjkbgvfdnvkjfddddjdkjfvb fdkjb");
 								switch(m.getName()) {
 									case "MY_NAME": {
 										if(m.containsKey(Message.Keys.GAME_SETTINGS.toString())) {
@@ -147,6 +161,8 @@ public class ServerRoom extends Thread {
 										bidPassCount = 0;
 										havePassedBid = new boolean[] { false,false,false,false};
 										
+									
+										
 										connections[bidStarter].sendMessage(Message.fromPairs(
 												"name:"+Message.Names.REQUEST_BID.toString(),
 												Message.Keys.CURRENT_BID.toString()+":0"));
@@ -173,6 +189,7 @@ public class ServerRoom extends Thread {
 									case "MY_BID": {
 										
 										int bid = m.getInteger(Message.Keys.BID_AMOUNT.toString());
+										
 										
 										//TODO: REVISE CONCEPTUAL CORRECTNESS OF THIS
 										
@@ -383,10 +400,11 @@ public class ServerRoom extends Thread {
 										}
 										
 										// Find the next correct person.
+										//GCN Giova te corregi este pedazo de codigo no debe de comenzar en uno y el nextPerson no era i
 										int nextPerson = 0;
-										for(int i = 0; i < 4; i++) {
+										for(int i = 1; i < 4; i++) {
 											if(!havePassedBid[(player+i)%4]) {
-												nextPerson = i;
+												nextPerson = (player+i)%4;
 												break;
 											}
 										}

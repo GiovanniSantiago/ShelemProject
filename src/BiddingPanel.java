@@ -66,7 +66,7 @@ public class BiddingPanel extends JPanel{
 			bidingInfo.setBounds(3, 3, bidingInfo.getWidth(), bidingInfo.getHeight());
 			
 			for(int i = 0; i < playersBids.length; i++){
-				playersBids[i] = new JLabel(userNames[i] + " bid: ", JLabel.CENTER);
+				playersBids[i] = new JLabel(userNames[i] + " bid: 0", JLabel.CENTER);
 				playersBids[i].setSize(120, 20);
 				playersBids[i].setForeground(new Color(118, 0, 0));
 				playersBids[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -79,6 +79,7 @@ public class BiddingPanel extends JPanel{
 			
 			
 			bidTxt.setSize(100, 25);
+			bidTxt.setText("100");
 			bidTxt.setBounds(FRAME_WIDTH/2 - bidTxt.getWidth()/2, playersBids[0].getY() + playersBids[0].getHeight() + 15, bidTxt.getWidth(), bidTxt.getHeight());
 			bidTxt.setEditable(false);
 			
@@ -94,18 +95,21 @@ public class BiddingPanel extends JPanel{
 			
 			
 			senBidBtn.setSize(75, 20);
+			senBidBtn.addActionListener(Test.ch.bidListener);
 			senBidBtn.setEnabled(false);
 			senBidBtn.setForeground(Color.WHITE);
 			senBidBtn.setBackground(Color.DARK_GRAY);
 			senBidBtn.setBounds(FRAME_WIDTH/2 - senBidBtn.getWidth()/2- 5, bidTxt.getY() + bidTxt.getHeight() + 10, senBidBtn.getWidth(), senBidBtn.getHeight());
 			
 			sumBtn.setSize(50, 20);
+			sumBtn.addActionListener(Test.ch.bidListener);
 			sumBtn.setEnabled(false);
 			sumBtn.setForeground(Color.WHITE);
 			sumBtn.setBackground(Color.DARK_GRAY);
 			sumBtn.setBounds(senBidBtn.getX() - sumBtn.getWidth() - 5, bidTxt.getY() + bidTxt.getHeight() + 10, sumBtn.getWidth(), sumBtn.getHeight());
 			
 			passBtn.setSize(75, 20);
+			passBtn.addActionListener(Test.ch.bidListener);
 			passBtn.setEnabled(false);
 			passBtn.setForeground(Color.WHITE);
 			passBtn.setBackground(Color.DARK_GRAY);
@@ -132,6 +136,37 @@ public class BiddingPanel extends JPanel{
 			this.add(bidingInfo);
 			
 		}
+		
+		public void eneableButtons(){
+			this.passBtn.setEnabled(true);
+			this.senBidBtn.setEnabled(true);
+			this.sumBtn.setEnabled(true);
+		}
+		
+		/**
+		 * ------------------------------------------------------------------------------------------
+		 * 									SET PLAYER BID
+		 * ------------------------------------------------------------------------------------------
+		 *      Este metodo se encarga de hacer un update al label de un jugador e indicar cuanto aposto.
+		 * Si el jugador paso entonces se recibe como ammount -1 y esto se encarga de poner en el UI que dicho usuario
+		 * paso.En el caso de que un jugador haya pasado no se hace update al bid text.
+		 * @param playerPos
+		 * @param ammount
+		 */
+		public void setPlayerBid(int playerPos, int ammount){
+			if(ammount == -1){
+				playersBids[playerPos].setText(userNames[playerPos] + " pass");
+			}else{
+				playersBids[playerPos].setText(userNames[playerPos] + " bid: " + ammount);
+				bidTxt.setText("" + ammount);
+			}
+			
+			repaint();
+		}
+		
+		
+		
+		
 		
 		
 	
