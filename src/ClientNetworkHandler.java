@@ -265,7 +265,7 @@ public class ClientNetworkHandler implements Runnable {
 									//		U	   U	  I
 									//		 UUUUUU 	IIIII
 									Random r = new Random();
-									if(m.getInteger(Message.Keys.BID_AMOUNT.toString())==0) {
+									if(m.getInteger(Message.Keys.CURRENT_BID.toString())==0) {
 										////
 										////	You are first bidder
 										////	This is dummy response
