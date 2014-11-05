@@ -174,6 +174,7 @@ public class ServerRoom extends Thread {
 										
 										int bid = m.getInteger(Message.Keys.BID_AMOUNT.toString());
 										
+										//TODO: REVISE CONCEPTUAL CORRECTNESS OF THIS
 										
 										/*
 										 * 
@@ -380,6 +381,20 @@ public class ServerRoom extends Thread {
 												// Do nothing special
 											}
 										}
+										
+										// Find the next correct person.
+										int nextPerson = 0;
+										for(int i = 0; i < 4; i++) {
+											if(!havePassedBid[(player+i)%4]) {
+												nextPerson = i;
+												break;
+											}
+										}
+										
+										//Ask the next correct person
+										connections[nextPerson].sendMessage(Message.fromPairs(
+												"name:"+Message.Names.REQUEST_BID,
+												Message.Keys.CURRENT_BID+":"+currentBid));
 									}
 									//TODO: Add QUITTING message thing
 								}
@@ -387,6 +402,9 @@ public class ServerRoom extends Thread {
 							case WIDOW_STATE: {
 								switch(m.getName()) {
 									case "MY_TRASH": {
+										
+										
+										//TODO: VERIFY THAT THIS IS CORRECT, CONCEPTUALLY
 										Card[] trashCards = new Card[4];
 										String cardSource = m.getValue(Message.Keys.CARDS.toString());
 										String[] sourceList = cardSource.split(",");
