@@ -343,7 +343,7 @@ public class ServerRoom extends Thread {
 													
 													
 													
-													
+													break;
 													
 												} else { // Not only one left
 													// Do nothing special
@@ -393,6 +393,8 @@ public class ServerRoom extends Thread {
 												connections[player].sendMessage(Message.fromPairs(
 														"name:"+Message.Names.YOUR_WIDOW,
 														Message.Keys.CARDS+":"+cardlist));
+												
+												break;
 											} else { // No this is not the last person
 												
 												// Do nothing special

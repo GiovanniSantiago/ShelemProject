@@ -463,7 +463,7 @@ public class ClientNetworkHandler implements Runnable {
 				
 			}else if(o.equals(Test.logIn.send)){
 				if(isRequestingName){
-					isRequestingName = false;
+					
 					
 					String name = Test.logIn.usrNameTxtFld.getText();
 					name = name.replaceAll("$", "");					//The username can't have $ or : because of message regulation with the server
@@ -489,6 +489,7 @@ public class ClientNetworkHandler implements Runnable {
 										Message.Keys.PLAYER_NAME.toString() + ":" +name,
 										Message.Keys.GAME_SETTINGS.toString()+":"+targetScore));
 								Test.logIn.send.setEnabled(false);
+								isRequestingName = false;
 							}
 							
 							
@@ -498,6 +499,7 @@ public class ClientNetworkHandler implements Runnable {
 									"name:" + Message.Names.MY_NAME,
 									Message.Keys.PLAYER_NAME.toString() + ":" +name));
 							Test.logIn.send.setEnabled(false);
+							isRequestingName = false;
 						}
 					
 						
