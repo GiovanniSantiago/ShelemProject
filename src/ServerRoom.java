@@ -4,7 +4,6 @@ import java.io.IOException;
 public class ServerRoom extends Thread {
 	MessageLine[] connections;
 	ServerRoomState state = ServerRoomState.NAME_SETTING_STATE;
-	ShelemGame game = new ShelemGame();
 	
 	/**
 	 * Provides references to every possible card. Will always be in order. 
@@ -48,6 +47,7 @@ public class ServerRoom extends Thread {
 		int currentBid = 0;
 		
 		boolean bidPassers[] = new boolean[] {false,false,false,false};
+		boolean bidCanFail = true;
 		
 		boolean quit = false;
 		while(!quit) {
@@ -80,7 +80,6 @@ public class ServerRoom extends Thread {
 											MC.broadcastMessage(connections, Message.fromPairs(
 													"name:" + Message.Names.GOT_ALL_NAMES.toString()));
 											this.state = ServerRoomState.GAME_LOBBY_STATE;
-											game.setPlayers(players);
 											
 											// Ask player 1 for ready
 											connections[0].sendMessage(Message.fromPairs("name:"+Message.Names.ARE_YOU_READY.toString()));
@@ -216,6 +215,8 @@ public class ServerRoom extends Thread {
 															Message.Keys.CARDS.toString()+":"+cards));
 												}
 												
+												
+												
 												//
 												//	End shufflespread
 												//
@@ -223,6 +224,9 @@ public class ServerRoom extends Thread {
 												connections[bidStarter].sendMessage(Message.fromPairs(
 														"name:"+Message.Names.REQUEST_BID.toString(),
 														Message.Keys.CURRENT_BID+":0"));
+												
+												bidPassers = new boolean[] {false,false,false,false};
+												
 												break;
 											}
 											
