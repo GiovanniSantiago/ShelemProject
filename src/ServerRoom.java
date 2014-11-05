@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Arrays;
 
 
 public class ServerRoom extends Thread {
@@ -18,6 +17,8 @@ public class ServerRoom extends Thread {
 	 */
 	Card[] mainDeck = new Card[52];
 	
+	int bidStarter = 0;
+	
 	public ServerRoom(MessageLine[] connections) {
 		this.connections = connections;
 
@@ -34,23 +35,19 @@ public class ServerRoom extends Thread {
 	@Override
 	public void run() {
 		for(int i = 0; i < connections.length; i++) {
-			connections[i].sendMessage(Message.fromPairs("name:table_full","id:"+i));
+			connections[i].sendMessage(Message.fromPairs(
+					"name:"+Message.Names.TABLE_FULL.toString()));
 		}
 		
 		Player[] players = new Player[4];
 		int numPlayers = 0;
 		
-		// ------------------------------------------------------------------------------------------------------
-		// ---------------Creates a base deck, shuffles it, and splits it in four, leaving four cards as widow---
-		// ------------------------------------------------------------------------------------------------------
-		
 		CardDeck[] playerDecks = new CardDeck[4];
 		Card[] widow = new Card[4];
 		
+		int currentBid = 0;
 		
-		//
-		//
-		//
+		boolean bidPassers[] = new boolean[] {false,false,false,false};
 		
 		boolean quit = false;
 		while(!quit) {
@@ -64,11 +61,19 @@ public class ServerRoom extends Thread {
 								System.out.println("kfdjvngfdjkbgvfdnvkjfddddjdkjfvb fdkjb");
 								switch(m.getName()) {
 									case "MY_NAME": {
-										MC.broadcastMessage(connections, Message.fromPairs(
-												"name:" + Message.Names.PLAYER_NAME.toString(),
-												Message.Names.PLAYER_NAME.toString() + ":" +m.getValue(Message.Names.PLAYER_NAME.toString()),
-												"id:"+player));
-										players[player] = new Player(m.getValue("name"));
+										if(m.containsKey(Message.Keys.GAME_SETTINGS.toString())) {
+											MC.broadcastMessage(connections, Message.fromPairs(
+													"name:" + Message.Names.PLAYER_NAME.toString(),
+													Message.Keys.PLAYER_NAME.toString() + ":" +m.getValue(Message.Names.PLAYER_NAME.toString()),
+													Message.Keys.PLAYER_ID.toString()+":"+player,
+													Message.Keys.GAME_SETTINGS.toString()+":"+m.getValue(Message.Keys.GAME_SETTINGS.toString())));
+										} else {
+											MC.broadcastMessage(connections, Message.fromPairs(
+													"name:" + Message.Names.PLAYER_NAME.toString(),
+													Message.Keys.PLAYER_NAME.toString() + ":" +m.getValue(Message.Names.PLAYER_NAME.toString()),
+													Message.Keys.PLAYER_ID.toString()+":"+player));
+										}
+										players[player] = new Player(m.getValue(Message.Keys.PLAYER_NAME.toString()));
 										numPlayers++;
 										
 										if(numPlayers==4) {
@@ -78,7 +83,7 @@ public class ServerRoom extends Thread {
 											game.setPlayers(players);
 											
 											// Ask player 1 for ready
-											connections[0].sendMessage(Message.fromPairs("name:is_game_ready"));
+											connections[0].sendMessage(Message.fromPairs("name:"+Message.Names.ARE_YOU_READY.toString()));
 										}
 									} break;
 									//TODO: Add QUITTING message thing
@@ -87,7 +92,7 @@ public class ServerRoom extends Thread {
 							case GAME_LOBBY_STATE: {
 								switch(m.getName()) {
 									// A player will tell me that he's ready
-									case "i_am_ready": {
+									case "I_AM_READY": {
 										
 										//
 										//		Shuffle the persistent main deck
@@ -124,12 +129,20 @@ public class ServerRoom extends Thread {
 											}
 											MessageLine l = connections[i];
 											l.sendMessage(Message.fromPairs(
-													"name:game_ready",
-													"cards:"+cards));
+													"name:"+Message.Names.GAME_READY.toString(),
+													Message.Keys.CARDS.toString()+":"+cards));
 										}
 										
 										// Go to bidding state
 										this.state = ServerRoomState.BIDDING_STATE;
+										connections[bidStarter].sendMessage(Message.fromPairs(
+												"name:"+Message.Names.REQUEST_BID.toString(),
+												Message.Keys.CURRENT_BID.toString()+":0"));
+										bidStarter ++;
+										if(bidStarter==4) {
+											bidStarter = 0;
+										}
+										
 										
 									} break;
 									//TODO: Add QUITTING message thing
@@ -145,16 +158,76 @@ public class ServerRoom extends Thread {
 							case BIDDING_STATE: {
 								switch(m.getName()) {
 									
-									
-									
-									
-									
-									
-									
-									
-									
-									// HAVE TO DO BIDDING STATE THINGS NOW
-									// ALSO EXTRACT CARDS FROM CLIENT SIDE MESSAGE i_am_ready
+									case "MY_BID": {
+										int bid = m.getInteger(Message.Keys.BID_AMOUNT.toString());
+										if(bid == 0) {
+											// Tell everyone someone passed
+											MC.broadcastMessage(connections, Message.fromPairs(
+													"name:"+Message.Names.SOMEONE_PASSED.toString(),
+													Message.Keys.PLAYER_ID+":"+player));
+											
+											// Remember who passed
+											bidPassers[player] = true;
+											
+											// If all passed, tell everybody it failed, and start over. Shuffle maindeck, spread cards, and ask bidstarter to bid again.
+											boolean allPass = true;
+											for(boolean b : bidPassers) {
+												allPass = allPass && b;
+											}
+											if(allPass) {
+												currentBid = 100;
+												
+												//
+												//	Start shufflespread
+												//
+												
+												Utilities.overhandArrayShuffle(mainDeck);
+												
+												// Make new decks for each player.
+												
+												playerDecks = new CardDeck[4];
+												
+												// Split the persistent main deck and give each playerdeck 12 cards from it.
+												
+												for(int i = 0; i < 4; i++) {
+													Card[] currDeck = new Card[12];
+													System.arraycopy(mainDeck,i*12,currDeck,0,12);
+													playerDecks[i] = new CardDeck(currDeck);
+												}
+												
+												// Separate the widow.
+												
+												widow = new Card[4];
+												System.arraycopy(mainDeck, 12*4, widow, 0, 4);
+												
+												// Send each player their own cards.
+												
+												for(int i = 0; i < 4; i++) {
+													String cards = "";
+													for(int j = 0; j < playerDecks[i].getCardCount(); j++) {
+														cards+=playerDecks[i].getCard(j).getName();
+														if(j!=playerDecks[i].getCardCount()) {
+															cards+=",";
+														}
+													}
+													MessageLine l = connections[i];
+													l.sendMessage(Message.fromPairs(
+															"name:"+Message.Names.BIDDING_FAIL.toString(),
+															Message.Keys.CARDS.toString()+":"+cards));
+												}
+												
+												//
+												//	End shufflespread
+												//
+												
+												connections[bidStarter].sendMessage(Message.fromPairs(
+														"name:"+Message.Names.REQUEST_BID.toString(),
+														Message.Keys.CURRENT_BID+":0"));
+												break;
+											}
+											
+										}
+									} break;
 									
 									
 									
