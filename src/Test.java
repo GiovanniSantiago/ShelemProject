@@ -26,8 +26,8 @@ public class Test {
 	public static JFrame mainFrame;
 	
 	public static void main(String[] args) throws IOException {
-		//BiddingFrame bf = new BiddingFrame();
 		
+	
 		mainFrame 	= new JFrame("Shelem Game");
 		mp 			= new MainPanel();
 		logIn 		= new LoginFrame();
@@ -38,6 +38,8 @@ public class Test {
 		mainFrame.setVisible(false);
 		mainFrame.setSize(mp.WIDTH, mp.HEIGHT);
 		mainFrame.setLocationRelativeTo(null);
+		
+		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
 		ImageRegistry.setImageGrid(b, Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
@@ -51,15 +53,15 @@ public class Test {
 	
 		JFrame f = new JFrame();
 		
-		MainPanel.scoreBoard.setSuit(Suit.HEARTS.toString());
+		mp.scoreBoard.setSuit(Suit.HEARTS.toString());
 		
-		MainPanel.scoreBoard.setTeamNames("Glorimar Giovanni", "Rafael Carlos");
-		MainPanel.scoreBoard.setTotalScores(500, 250);System.out.println();
-		MainPanel.scoreBoard.setBid(165, 0);
+		mp.scoreBoard.setTeamNames("Glorimar Giovanni", "Rafael Carlos");
+		mp.scoreBoard.setTotalScores(500, 250);System.out.println();
+		mp.scoreBoard.setBid(165, 0);
 		String[] names = {"GlorimarCatsro", "Rafael", "Giovanni", "Carlos"};
-		MainPanel.board.setUserNames(names);
+		mp.board.setUserNames(names);
 		
-		MainPanel.scoreBoard.setMaximunScore(700);
+		mp.scoreBoard.setTargetScore(700);
 		int[] cards = {16, 5, 16, 16};
 		mp.board.setPlayerCardsAmount(cards);
 		
@@ -72,12 +74,17 @@ public class Test {
 		CardDeck deck = new CardDeck(cards1);
 		deck.sortDeck();
 		
-		MainPanel.board.setDeck(deck);
+		mp.board.setDeck(deck);
+		bf.setBounds(mp.board.getWidth()/2 - bf.getWidth()/2, mp.board.getHeight()/2 - bf.getHeight()/2 + 20, bf.getWidth(), bf.getHeight());
+		mp.board.add(bf);
 		f.add(mp);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		f.setSize(mp.WIDTH, mp.HEIGHT);
-		f.setLocationRelativeTo(null);*/
+		f.setLocationRelativeTo(null);
+		
+		*/
+	
 		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));

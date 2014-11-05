@@ -19,6 +19,7 @@ public class MainBoardPanel extends JPanel{
 	//FIELD
 	//==========================================================================================
 	//ddsd
+	final int			WIDTH = 1000, HEGTH = 800;
 	final int 			CARD_WIDTH 				= 73;
 	final int 			CARD_HEGHT 				= 100;
 	final Dimension 	labelsMaximunDimension	= new Dimension(200, 50);
@@ -91,7 +92,7 @@ public class MainBoardPanel extends JPanel{
 		this.backgroundImg = ImageRegistry.getImage("boardBackground.png");
 		this.setLayout(null);
 		this.setBackground(new Color(0,0, 0, 0));
-		this.setSize(backgroundImg.getWidth(), backgroundImg.getHeight());
+		this.setSize(WIDTH, HEGTH);
 		this.setVisible(true);
 	}
 	
@@ -208,7 +209,6 @@ public class MainBoardPanel extends JPanel{
 	public boolean setPlayerCardsAmount(int playerPosition, int playerCardsAmount){
 		if(playerPosition < 4 && playerPosition> -1 && playerCardsAmount > -1 && playerCardsAmount <= this.MAX_CARDS_AMNT){
 			this.playerCardsAmmount[playerPosition] = playerCardsAmount;
-			System.out.println("gvfdrfgvraegeratg");
 			repaint();
 			return true;
 		}else{

@@ -20,15 +20,17 @@ public class ClientNetworkHandler implements Runnable {
 	Player[] 		players 		= new Player[4];
 	int 			playerId 		= -1;
 	
-	Card[] currentCards = new Card[16];
+	
 	
 	LoginListener 	loginListener 	= new LoginListener();
 	
 	//==========================================
 	//Field para Shelem Game Logic
 	//==========================================
-	int targetScore 	= 0;
+	int 		targetScore 	= 0;
 	
+	Card[] 		myCards 		= new Card[12];
+	CardDeck 	myDeck;
 	
 	/**
 	 * Flag set to true when the server asks if player is ready. For use of UI.
@@ -133,24 +135,16 @@ public class ClientNetworkHandler implements Runnable {
 									
 								//Enter here when all player are already logged
 								case "TABLE_FULL": {
-									//
 									//	Table is full. Server state is now in NAME_SETTING_STATE, thus send my name and change myself to NAME_SETTING_STATE
-									//
-									
-									
-									////TODO: Add UI notification that server asked for name (?) (if name is not provided before any networking already)
-									////TODO: USE NAMEREQUEST FLAG
-									////
-									
+										
 									state 				= ClientGameState.NAME_SETTING_STATE;
 									isRequestingName	=true;
-									
 									
 								} break;
 								//TODO: Add QUITTING message thing
 								
 							}
-						} break;
+						} break;  //Table creation State out
 						case NAME_SETTING_STATE: {
 							switch(m.getName()) {
 								
@@ -179,7 +173,7 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								//TODO: Add QUITTING message thing
 							}
-						} break;
+						} break;//NameSetting out
 						case GAME_LOBBY_STATE: {
 							switch(m.getName()) {
 								// I may be asked to say READY.
@@ -196,29 +190,24 @@ public class ClientNetworkHandler implements Runnable {
 									line.sendMessage(Message.fromPairs("name:"+Message.Names.I_AM_READY.toString()));
 								} break;
 								case "GAME_READY": {
-									//
+									
 									//	Player in charge said he was ready. I got my cards now. Server state is now in BIDDING_STATE.
-									//
+									// 	Show initial cards in the board
 									
 									// DUPE CODE FROM GAME_READY
 									
-									String cardlist = m.getValue(Message.Keys.CARDS.toString());
-									//TODO: Get cards and such
-									String[] cardNames = cardlist.split("_");
-									
-									Card[] cards = new Card[16];
-									for(int i = 0; i < 16; i++) {
-										cards[i] = new Card(cardNames[i]);
+									String 		cardlist 	= m.getValue(Message.Keys.CARDS.toString());		//Gets input from the server
+									String[] 	cardNames 	= cardlist.split(",");								//Convierte el input del server a un array de nombres de cartas
+																
+									for(int i = 0; i < cardNames.length; i++) {								//Inicializa las cartas del current player
+										this.myCards[i] = new Card(cardNames[i]);
 									}
 									
+									this.myDeck = new CardDeck(this.myCards);
+									Test.mp.board.setDeck(this.myDeck);
 									
-									
-									////////
-									////////
-									////////	TODO: Do something with these cards.
-									////////
-									////////
-									
+									int playersCardsAmmounts[] = {12, 12, 12, 12};
+									Test.mp.board.setPlayerCardsAmount(playersCardsAmmounts);
 									// DUPE END
 									
 									state = ClientGameState.BIDDING_STATE;
@@ -317,13 +306,18 @@ public class ClientNetworkHandler implements Runnable {
 									// Everybody passed. Start bidding over.
 									//
 									
-									//
-									//
-									//
-									//		HERE GOES DUPE
-									//
-									//
-									//
+									String 		cardlist 	= m.getValue(Message.Keys.CARDS.toString());		//Gets input from the server
+									String[] 	cardNames 	= cardlist.split(",");								//Convierte el input del server a un array de nombres de cartas
+																
+									for(int i = 0; i < cardNames.length; i++) {									//cambia las cartas del current player
+										this.myCards[i] = new Card(cardNames[i]);
+									}
+									
+									this.myDeck.setDeck(this.myCards);
+									Test.mp.board.setDeck(this.myDeck);
+									
+									int playersCardsAmmounts[] = {12, 12, 12, 12};
+									Test.mp.board.setPlayerCardsAmount(playersCardsAmmounts);
 									
 									
 									

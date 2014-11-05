@@ -28,7 +28,6 @@ public class CardDeck {
 		actualLenght = 0;
 		for(Card card : cardDeck){
 			this.cardDeck[actualLenght] = card;
-			System.out.println("j");
 			actualLenght++;
 		}
 	}
@@ -53,6 +52,28 @@ public class CardDeck {
 			cardDeck[i] = temp[i];
 		}
 		
+	}
+	
+	/**
+	 * -------------------------------------------------------------------------------------------------------------
+	 * 											SET CARD DECK
+	 * -------------------------------------------------------------------------------------------------------------
+	 * Allow the user to set the deck with a new set of cards
+	 * @param cardDeck
+	 */
+	public void setDeck(Card[] cardDeck){
+		currentPosition = -1;
+		actualLenght = 0;
+		for(Card card : cardDeck){
+			this.cardDeck[actualLenght] = card;
+			actualLenght++;
+		}
+		if(actualLenght < 16 && actualLenght > 12){
+			this.cardDeck[13] = null;
+			this.cardDeck[14] = null;
+			this.cardDeck[15] = null;
+			this.cardDeck[16] = null;
+		}
 	}
 	
 	public void printDeck(){

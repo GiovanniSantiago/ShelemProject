@@ -22,8 +22,8 @@ public class MainPanel extends JPanel{
 	//===============
 	//FIELD
 	//===============
-	public static final int		WIDTH			= 1220;										//width of the frame
-	public static final int		HEIGHT			= 873;										//height of the frame
+	public static final int		WIDTH			= 1100;										//width of the frame
+	public static final int		HEIGHT			= 900;										//height of the frame
 	private final double	WIDTH_FACTOR	= 20;										//WIDTH_FACTOR and HEIGHT_FACTOR are for the gridbagconstraints
 	private final double	HEIGHT_FACTOR	= 30;
 	private final boolean 	isFrameVisible 	= true;										//Set the frame visibility
@@ -50,8 +50,9 @@ public class MainPanel extends JPanel{
 	public MainPanel(){
 		
 		ImageRegistry.loadImage("cardBack.jpg");  				//load the back of the card to the HashMap of images
-		ImageRegistry.loadImage("boardBackground.png");
+		ImageRegistry.loadImage("try1.jpg");
 		ImageRegistry.loadImage("scoreBackground.jpg");
+		ImageRegistry.setImageGrid(ImageRegistry.loadImage("classic-playing-cards.png"), Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13); 
 		
 		//Field initialization
 		gbl	= new GridBagLayout();
@@ -62,6 +63,7 @@ public class MainPanel extends JPanel{
 		
 		//MainFrame set up
 		this.setLayout(gbl);
+		this.setBackground(Color.BLACK);
 		this.setVisible(isFrameVisible);
 		this.setSize(frameDimension);
 		//this.setResizable(false);
@@ -82,7 +84,7 @@ public class MainPanel extends JPanel{
 		
 		Graphics2D g2 = (Graphics2D) g;
 		
-		g2.drawImage(ImageRegistry.getImage("scoreBackground.jpg"), null, 0, 0);
+		g2.drawImage(ImageRegistry.getImage("try1.jpg"), null, 0, 0);
 		
 	}
 	
@@ -108,7 +110,7 @@ public class MainPanel extends JPanel{
 		gbc.gridx		= 0;
 		gbc.gridy		= 0;
 		gbc.gridheight	= 3;
-		gbc.gridwidth	= 1;
+		gbc.gridwidth	= 3;
 		gbc.weightx		= WIDTH*(20/WIDTH_FACTOR);
 		gbc.weighty		= HEIGHT*(10/HEIGHT_FACTOR);
 		gbc.fill		= GridBagConstraints.BOTH;
@@ -123,7 +125,7 @@ public class MainPanel extends JPanel{
 		gbc.gridheight	= 0;
 		gbc.gridwidth	= 3;
 		gbc.weightx		= WIDTH*(7/WIDTH_FACTOR);
-		gbc.weighty		= HEIGHT*(5/HEIGHT_FACTOR);
+		gbc.weighty		= HEIGHT*(2/HEIGHT_FACTOR);
 		gbc.anchor		= GridBagConstraints.WEST;
 		
 		this.add(scoreBoard, gbc);
@@ -139,7 +141,7 @@ public class MainPanel extends JPanel{
 		gbc.anchor		= GridBagConstraints.CENTER;
 		gbc.insets		= new Insets(0,0,5,0);
 		
-		this.add(leaveButton, gbc);
+		//this.add(leaveButton, gbc);
 		
 		//endGame button set up
 		gbc.gridx		= 2;
@@ -152,7 +154,7 @@ public class MainPanel extends JPanel{
 		gbc.anchor		= GridBagConstraints.CENTER;
 		gbc.insets		= new Insets(0,0,10,0);
 		
-		this.add(endGame, gbc);
+		//this.add(endGame, gbc);
 		
 		//pastPlaysInfo set up
 		gbc.gridx		= 1;
@@ -164,7 +166,7 @@ public class MainPanel extends JPanel{
 		gbc.fill		= GridBagConstraints.BOTH;
 		gbc.anchor		= GridBagConstraints.NORTH;
 		
-		this.add(pastPlaysInfo, gbc);
+		//this.add(pastPlaysInfo, gbc);
 		
 	}
 	
@@ -184,12 +186,13 @@ public class MainPanel extends JPanel{
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scroll.setBackground(new Color(0,0,0,0));
+		scroll.setVisible(false);
 		txtArea.setEditable(false);
 		txtArea.setBackground(new Color(0,0,0,0));
 		
 		txtFieldPnl.setVisible(true);
 		txtFieldPnl.setLayout(new BorderLayout());
-		txtFieldPnl.setBorder(infoBorder);
+		//txtFieldPnl.setBorder(infoBorder);
 		txtFieldPnl.setBackground(new Color(0,0,0,0));
 		txtFieldPnl.setForeground(Color.WHITE);
 		
