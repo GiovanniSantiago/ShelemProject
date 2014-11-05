@@ -167,6 +167,13 @@ public class ScorePanel extends JPanel{
 		repaint();
 	}
 	
+	/**
+	 * ---------------------------------------------------------------------------------------------------
+	 * 									SET TEAM NAMES
+	 * ---------------------------------------------------------------------------------------------------
+	 * @param nameTeam1
+	 * @param nameTeam2
+	 */
 	public void setTeamNames(String nameTeam1, String nameTeam2){
 		teamLabels[0].setText("[Team1: " + nameTeam1 + "]");
 		teamLabels[1].setText("[Team2: " + nameTeam2 + "]");
@@ -181,7 +188,7 @@ public class ScorePanel extends JPanel{
 		
 	}
 	
-	public void setMaximunScore(int maximunScore){
+	public void setTargetScore(int maximunScore){
 		maximunScoreLbl[0].setText("" + maximunScore);
 		maximunScoreLbl[1].setText("" + maximunScore);
 		repaint();

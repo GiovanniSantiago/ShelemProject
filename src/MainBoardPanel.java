@@ -49,7 +49,7 @@ public class MainBoardPanel extends JPanel{
 	
 	public static CardsMouseListener mouseLst 	= new CardsMouseListener();
 	
-	CardDeck deck;
+	CardDeck 	deck;
 	boolean		isDeckSet 				= false;
 	boolean		isCardPlayed 			= false;
 	boolean		isPartnerCardPlayed		= false;

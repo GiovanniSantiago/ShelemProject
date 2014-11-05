@@ -34,13 +34,13 @@ public class MainPanel extends JPanel{
 	private GridBagConstraints 	gbc;
 	
 	
-	public static MainBoardPanel	board;
-	public static ScorePanel 	scoreBoard;
-	public static JButton			leaveButton;
-	public static JButton			endGame;
-	public static JPanel			pastPlaysInfo;
-	public static JTextArea			txtArea;
-	public static JScrollPane		scrollBar;
+	public MainBoardPanel	board;
+	public ScorePanel 		scoreBoard;
+	public JButton			leaveButton;
+	public JButton			endGame;
+	public JPanel			pastPlaysInfo;
+	public JTextArea		txtArea;
+	public JScrollPane		scrollBar;
 	
 
 	//===============

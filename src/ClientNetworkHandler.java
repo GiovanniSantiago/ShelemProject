@@ -20,9 +20,15 @@ public class ClientNetworkHandler implements Runnable {
 	Player[] 		players 		= new Player[4];
 	int 			playerId 		= -1;
 	
+	
 	Card[] currentCards;
 	
 	LoginListener 	loginListener 	= new LoginListener();
+	
+	//==========================================
+	//Field para Shelem Game Logic
+	//==========================================
+	int targetScore 	= 0;
 	
 	
 	/**
@@ -155,9 +161,8 @@ public class ClientNetworkHandler implements Runnable {
 									System.out.println(index);
 									if(m.containsKey(Message.Keys.GAME_SETTINGS.toString())) {
 										String settingsSource = m.getValue(Message.Keys.GAME_SETTINGS.toString());
-										////////////////////////////////////////////////////////////////
-										/////////HERE GETS GAME SETTINGS////////////////////////////////
-										////////////////////////////////////////////////////////////////
+										this.targetScore = Integer.parseInt(settingsSource);
+										Test.mp.scoreBoard.setTargetScore(targetScore);
 									}
 								} break;
 								
