@@ -85,6 +85,41 @@ public class ClientNetworkHandler implements Runnable {
 					switch(state) {
 						case TABLE_CREATION_STATE: {
 							switch(m.getName()) {
+								case "your_id": {
+									//Si la conección se dio entonces pasa a decirle al usuario su id 
+									playerId = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									
+									if(playerId == 0){				//si es el primer jugador entonces hace setting del juego //
+										Test.logIn.srvConLbl.setText("<HTML><p width = \"" + (Test.logIn.getWidth() - 30) + "\" align= \"center\">Congratulations you are player " + (playerId + 1) + "!!!!<br>You have the opportunity to decide the targeted score</p></HTM>");
+										Test.logIn.srvConLbl.setSize(Test.logIn.frameWidth, 50);
+										Test.logIn.srvConLbl.setLocation(10, Test.logIn.srvConLbl.getY());
+										
+										Test.logIn.targetScoreLbl.setVisible(true);
+										Test.logIn.targetScoreTxtFld.setVisible(true);
+										
+										Test.logIn.send.setLocation(Test.logIn.send.getX(), Test.logIn.targetScoreLbl.getY() + Test.logIn.targetScoreLbl.getHeight() + 10);
+									}else{
+										Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + (playerId + 1) );
+									}
+									Test.logIn.exitBtn.setVisible(false);
+									Test.logIn.exitBtn.setSelected(false);
+	
+									Test.logIn.startBtn.setVisible(false);
+									Test.logIn.startBtn.setSelected(false);
+	
+									Test.logIn.srvConLbl.setVisible(true);
+									
+	
+									Test.logIn.userNamLbl.setVisible(true);
+									Test.logIn.usrNameTxtFld.setVisible(true);
+									// Fix this later, as an extra, so it accepts name anyways, but buffers it. If entered before time, it sends saved name when name requested. If entered after time, send name.
+	
+									Test.logIn.statusLbl.setVisible(true);
+									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
+	
+									
+									Test.logIn.send.setVisible(true);
+								}break;
 								//TODO: Add server notification tick message for when a player joins the table. Happens in ServerLauncher
 								case MC.SU_PLAYERJOIN: 
 									
@@ -109,28 +144,7 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								//TODO: Add QUITTING message thing
 								
-								case "your_id": {
-									//Si la coneccion se dio entonces pasa a decirle al usuario su id 
-									playerId = m.getInteger(Message.Keys.PLAYER_ID.toString());
-									
-									Test.logIn.exitBtn.setVisible(false);
-									Test.logIn.exitBtn.setSelected(false);
-									
-									Test.logIn.startBtn.setVisible(false);
-									Test.logIn.startBtn.setSelected(false);
-									
-									Test.logIn.srvConLbl.setVisible(true);
-									Test.logIn.srvConLbl.setText(Test.logIn.srvConLbl.getText() + playerId );
-									
-									Test.logIn.userNamLbl.setVisible(true);
-									Test.logIn.usrNameTxtFld.setVisible(true);
-									// Fix this later, as an extra, so it accepts name anyways, but buffers it. If entered before time, it sends saved name when name requested. If entered after time, send name.
-									
-									Test.logIn.statusLbl.setVisible(true);
-									Test.logIn.statusLbl.setText("Waiting for " + (4 - (m.getInteger(Message.Keys.PLAYER_ID.toString()) + 1)) + " more players...");
 								
-									Test.logIn.send.setVisible(true);
-								}break;
 							}
 						} break;
 						case NAME_SETTING_STATE: {

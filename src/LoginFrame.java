@@ -32,10 +32,12 @@ public class LoginFrame extends JFrame{
 	JButton 	startBtn 		= new JButton("Connect to Server");
 	JButton 	exitBtn 		= new JButton("Exit");
 	JButton		send			= new JButton("Send");
-	JLabel  	srvConLbl		= new JLabel("Connected to Server. Your are player ");
+	JLabel  	srvConLbl		= new JLabel("Connected to Server. You are player ");
 	JLabel		userNamLbl		= new JLabel("Username: ");
 	JLabel		statusLbl		= new JLabel("", JLabel.RIGHT);
+	JLabel		targetScoreLbl	= new JLabel("Target Score: ");
 	JTextField  usrNameTxtFld	= new JTextField();
+	JTextField  targetScoreTxtFld	= new JTextField();
 	
 	//===============
 	//CONSTRUCTORS
@@ -59,20 +61,11 @@ public class LoginFrame extends JFrame{
 	//===============
 	//METHODS
 	//===============
-	/**
-	 * -----------------------------------------------------------------------------
-	 */
 
 	
-	
-	
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
-	//===========================================================================================================================
+	//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+	//&&&&&&&&&&&&&&&&&&&&&&&	 INTERNAL CLASSES
+	//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 	class LoginMainPanel extends JPanel{
 		//Fields
 		Font	font		= new Font("Baskerville Old Face", Font.BOLD, 30);
@@ -147,6 +140,12 @@ public class LoginFrame extends JFrame{
 			usrNameTxtFld.setSize(100, 20);
 			usrNameTxtFld.setBounds(frameWidth/2, frameHeght / 2 - 70, usrNameTxtFld.getWidth(), usrNameTxtFld.getHeight());
 			
+			targetScoreTxtFld.setVisible(false);
+			targetScoreTxtFld.setSize(100, 20);
+			targetScoreTxtFld.setBounds(frameWidth/2, usrNameTxtFld.getY() + usrNameTxtFld.getHeight() + 10, targetScoreTxtFld.getWidth(), targetScoreTxtFld.getHeight());
+			
+			
+			this.add(targetScoreTxtFld);
 			this.add(send);
 			this.add(usrNameTxtFld);
 			this.add(startBtn);
@@ -165,11 +164,17 @@ public class LoginFrame extends JFrame{
 			userNamLbl.setBounds(frameWidth/2 -  userNamLbl.getWidth(), frameHeght / 2 - 68, userNamLbl.getWidth(), userNamLbl.getHeight());
 			userNamLbl.setFont(new Font("Baskerville Old Face", Font.PLAIN, 17));
 			
+			targetScoreLbl.setVisible(false);
+			targetScoreLbl.setFont(new Font("Baskerville Old Face", Font.PLAIN, 17));
+			targetScoreLbl.setForeground(Color.WHITE);
+			targetScoreLbl.setSize(110, 20);
+			targetScoreLbl.setBounds(frameWidth/2 -  targetScoreLbl.getWidth(), userNamLbl.getY() + userNamLbl.getHeight() + 10, targetScoreLbl.getWidth(), targetScoreLbl.getHeight());
+			
 			statusLbl.setVisible(false);
 			statusLbl.setForeground(Color.WHITE);
 			statusLbl.setBounds(10, (int)frmDimen.getHeight() - 70, (int)frmDimen.getWidth() -45, 20);
 			
-			
+			this.add(targetScoreLbl);
 			this.add(statusLbl);
 			this.add(srvConLbl);
 			this.add(userNamLbl);
