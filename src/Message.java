@@ -187,6 +187,9 @@ public class Message {
 		
 		I_QUIT,
 		PLAYER_QUIT,
+		
+		YOUR_WIDOW,
+		MY_TRASH
 	}
 	
 	public enum Keys {
