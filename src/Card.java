@@ -25,10 +25,13 @@ public class Card implements Comparable<Card>{
 	}
 	
 	
-	/*nvfgjekrng
 	public Card(String cardName){
-		String rank = cardName.substring(0, cardName.indexOf("_"));
-	}*/
+		String s[] = cardName.split("_");
+		this.rank = Rank.valueOf(s[0]);
+		this.suit = Suit.valueOf(s[1]);
+		this.value = rank.getValue();
+		setImg();
+	}
 	
 
 	//==============================================

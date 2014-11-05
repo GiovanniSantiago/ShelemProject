@@ -18,7 +18,6 @@ public class ServerLauncher {
 			servSock = new ServerSocket(7169);
 			System.out.println("SERVER: SERVER SOCKET CREATED");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
@@ -28,7 +27,6 @@ public class ServerLauncher {
 		try {
 			servSock.setSoTimeout(CLIENT_ACCEPT_TIMEOUT);
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out
@@ -86,12 +84,10 @@ public class ServerLauncher {
 						if (quit)
 							break;
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

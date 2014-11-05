@@ -86,7 +86,7 @@ public class ClientNetworkHandler implements Runnable {
 						case TABLE_CREATION_STATE: {
 							switch(m.getName()) {
 								case "YOUR_ID": {
-									//Si la conección se dio entonces pasa a decirle al usuario su id 
+									//Si la conecciï¿½n se dio entonces pasa a decirle al usuario su id 
 									playerId = m.getInteger(Message.Keys.PLAYER_ID.toString());
 									
 									if(playerId == 0){				//si es el primer jugador entonces hace setting del juego //
@@ -197,7 +197,8 @@ public class ClientNetworkHandler implements Runnable {
 									//
 									
 									String cardlist = m.getValue(Message.Keys.CARDS.toString());
-									//TODO: Add card receiving mechanism here. cardlist will have the format SUIT_RANK,SUIT_RANK,SUIT_RANK...SUIT_RANK,SUIT_RANK, where SUIT can be H,D,S,C, and RANK can be A,2,3,4,5,6,7,8,9,J,Q,K
+									//TODO: Get cards and such
+									System.out.println("MY CARDS ARE ALAALLALALA: "+cardlist);
 									state = ClientGameState.BIDDING_STATE;
 								}
 								
@@ -360,50 +361,6 @@ public class ClientNetworkHandler implements Runnable {
 		
 		
 		
-		
-		/*
-		 * DISABLING BOTTOM CODE FOR ATTEMPTS AT LESS NONSENSICAL AND DISPARATE REPLACEMENT
-		 */
-		/*while (!quit) {
-			try {
-				if (line.isReady()) {
-					Message m = line.receiveMessage();
-					switch (m.getValue(MC.P_NAME)) {
-						case MC.SU_PLAYERQUIT: {
-							onPlayerQuit();
-							quit = true;
-						}
-							break;
-						case MC.SU_PLAYERNAME: {
-							onNameReceived(
-									m.getInteger(MC.P_PLAYER_ID),
-									m.getValue(MC.PARAMETER_PLAYER_NAME));
-						}
-							break;
-						case MC.SU_PLAYERJOIN: {
-							onPlayerJoin(m
-									.getInteger(MC.P_PLAYER_ID));
-						}
-							break;
-						case MC.SR_PLAYERNAME: {
-							String name = onNameRequested(m
-									.getInteger(MC.P_PLAYER_ID));
-							line.sendMessage(new Message(new MessagePair(
-									MC.P_NAME,
-									MC.CU_MYNAME),
-									new MessagePair(
-											MC.PARAMETER_PLAYER_NAME,
-											name)));
-						}
-							break;
-					}
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
-		
 		System.out.println("NETWORK HANDLING THREAD DONE");
 	}
 	
@@ -477,6 +434,11 @@ public class ClientNetworkHandler implements Runnable {
 					isRequestingName = false;
 					
 					String name = Test.logIn.usrNameTxtFld.getText();
+					String targetScore = Test.logIn.targetScoreTxtFld.getText();
+
+					if(!Utilities.isInteger(targetScore)) {
+						JOptionPane.showMessageDialog(Test.logIn, "Score Target must be an integer number.", "Score Target input error", JOptionPane.INFORMATION_MESSAGE);
+					}
 					name = name.replaceAll("$", "");					//The username can't have $ or : because of message regulation with the server
 					name = name.replaceAll(":", "");
 					
