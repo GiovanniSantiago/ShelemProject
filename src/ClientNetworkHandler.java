@@ -20,7 +20,7 @@ public class ClientNetworkHandler implements Runnable {
 	Player[] 		players 		= new Player[4];
 	int 			playerId 		= -1;
 	
-	Card[] currentCards;
+	Card[] currentCards = new Card[16];
 	
 	LoginListener 	loginListener 	= new LoginListener();
 	
@@ -196,9 +196,27 @@ public class ClientNetworkHandler implements Runnable {
 									//	Player in charge said he was ready. I got my cards now. Server state is now in BIDDING_STATE.
 									//
 									
+									// DUPE CODE FROM GAME_READY
+									
 									String cardlist = m.getValue(Message.Keys.CARDS.toString());
 									//TODO: Get cards and such
-									System.out.println("MY CARDS ARE ALAALLALALA: "+cardlist);
+									String[] cardNames = cardlist.split("_");
+									
+									Card[] cards = new Card[16];
+									for(int i = 0; i < 16; i++) {
+										cards[i] = new Card(cardNames[i]);
+									}
+									
+									
+									
+									////////
+									////////
+									////////	TODO: Do something with these cards.
+									////////
+									////////
+									
+									// DUPE END
+									
 									state = ClientGameState.BIDDING_STATE;
 								}
 								
@@ -294,9 +312,14 @@ public class ClientNetworkHandler implements Runnable {
 									//
 									// Everybody passed. Start bidding over.
 									//
-									String cardlist = m.getValue(Message.Keys.CARDS.toString());
 									
-									//////// GET CARDS FROM THIS TOO.
+									//
+									//
+									//
+									//		HERE GOES DUPE
+									//
+									//
+									//
 									
 									
 									
