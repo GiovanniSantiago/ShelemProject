@@ -24,6 +24,11 @@ public class ClientNetworkHandler implements Runnable {
 	
 	LoginListener 	loginListener 	= new LoginListener();
 	
+	//==========================================
+	//Field para Shelem Game Logic
+	//==========================================
+	int targetScore 	= 0;
+	
 	
 	/**
 	 * Flag set to true when the server asks if player is ready. For use of UI.
@@ -155,9 +160,8 @@ public class ClientNetworkHandler implements Runnable {
 									System.out.println(index);
 									if(m.containsKey(Message.Keys.GAME_SETTINGS.toString())) {
 										String settingsSource = m.getValue(Message.Keys.GAME_SETTINGS.toString());
-										////////////////////////////////////////////////////////////////
-										/////////HERE GETS GAME SETTINGS////////////////////////////////
-										////////////////////////////////////////////////////////////////
+										this.targetScore = Integer.parseInt(settingsSource);
+										Test.mp.scoreBoard.setTargetScore(targetScore);
 									}
 								} break;
 								
