@@ -25,6 +25,7 @@ public class ServerRoom extends Thread {
 		for(Suit s: Suit.values()) {
 			for(Rank r: Rank.values()) {
 				baseDeck[index] = new Card(s,r);
+				mainDeck[index]=baseDeck[index];
 				index++;
 			}
 		}
