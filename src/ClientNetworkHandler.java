@@ -139,6 +139,12 @@ public class ClientNetworkHandler implements Runnable {
 								case "PLAYER_NAME": {
 									players[m.getInteger("id")] = new Player(m.getValue(Message.Names.PLAYER_NAME.toString()));
 									System.out.println(m.getInteger("id"));
+									if(m.containsKey(Message.Keys.GAME_SETTINGS.toString())) {
+										String settingsSource = m.getValue(Message.Keys.GAME_SETTINGS.toString());
+										////////////////////////////////////////////////////////////////
+										/////////HERE GETS GAME SETTINGS////////////////////////////////
+										////////////////////////////////////////////////////////////////
+									}
 								} break;
 								
 								//Everybody sent their name. Server state is now in GAME_LOBBY_STATE.		
