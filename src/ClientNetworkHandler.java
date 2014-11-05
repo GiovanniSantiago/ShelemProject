@@ -241,7 +241,7 @@ public class ClientNetworkHandler implements Runnable {
 									
 									
 								} break;
-								case "SOMEONE_PASS": {
+								case "SOMEONE_PASSED": {
 									////
 									////	Someone submitted a bid
 									////
@@ -299,7 +299,13 @@ public class ClientNetworkHandler implements Runnable {
 									//	A bidder has won. Server state is now in GAME_STATE
 									//
 									
-									state = ClientGameState.GAME_STATE;
+									int bidWinner = m.getInteger(Message.Keys.BID_WINNER.toString());
+									if(bidWinner==playerId) {
+										state = ClientGameState.WIDOW_STATE;
+									} else {
+										state = ClientGameState.GAME_STATE;
+									}
+									//state = ClientGameState.GAME_STATE;
 								} break;
 								case "BIDDING_FAIL": {
 									//
@@ -333,13 +339,32 @@ public class ClientNetworkHandler implements Runnable {
 								//TODO: Add QUITTING message thing
 							}
 						} break;
+						case WIDOW_STATE: {
+							switch(m.getName()) {
+								case "YOUR_WIDOW": {
+									String widowSource = m.getValue(Message.Keys.CARDS.toString());
+									
+									///////
+									///////
+									///////
+									///////	TODO: EXTRACT WIDOW FROM THIS AND CAN NOW SEND THE FOUR TRASH CARDS
+									///////
+									///////
+									///////
+									
+									this.state = ClientGameState.GAME_STATE;
+								} break;
+								
+								//TODO: Add QUITTING message thing
+							}
+						} break;
 						case GAME_STATE: {
 							switch(m.getName()) {
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
+								//TODO: THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
 								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
@@ -533,6 +558,7 @@ public class ClientNetworkHandler implements Runnable {
 		/**
 		 * State after game is over. Communication with server may or may not have ceased when entering this state
 		 */
-		END_GAME_STATE
+		END_GAME_STATE,
+		WIDOW_STATE
 	}
 }
