@@ -34,8 +34,15 @@ public class ClientNetworkHandler implements Runnable {
 	Card[] 		myCards 		= new Card[12];
 	CardDeck 	myDeck;
 	
-	
-	
+	////
+	////
+	////
+	////
+	////	FLAGS ARE UNNECESSARY IF UI IS CONSTANTLY DISABLING/ENABLING COMPONENTS.
+	////
+	////
+	////
+	////
 	
 	/**
 	 * Flag set to true when the server asks if player is ready. For use of UI.
@@ -263,7 +270,7 @@ public class ClientNetworkHandler implements Runnable {
 									Test.mp.bidPanel.setPlayerBid(playersPos[player], -1);
 									Test.mp.bidPanel.bidStatuslbl.setText(players[player].getName() + " pass. Waiting for next player...");
 									
-								}break; //-_- -_- Te estoy mirando mal Giovanni estube 36min dandole cabeza de pq esto esta dando problema y te comistes un BREAK!!!! JAJAJA
+								} break; //-_- -_- Te estoy mirando mal Giovanni estube 36min dandole cabeza de pq esto esta dando problema y te comistes un BREAK!!!! JAJAJA
 										//loll y pa colmo se fue en loop infinito
 								//I will be asked for a bid.
 								//I will be told if bidding fails.
@@ -330,6 +337,7 @@ public class ClientNetworkHandler implements Runnable {
 								case "YOUR_WIDOW": {
 									String widowSource = m.getValue(Message.Keys.CARDS.toString());
 									
+									Card[] widow = new Card[4];
 									///////
 									///////
 									///////

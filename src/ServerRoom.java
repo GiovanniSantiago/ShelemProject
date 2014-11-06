@@ -157,9 +157,10 @@ public class ServerRoom extends Thread {
 										
 										
 										//Reset failbid countthings
+										havePassedBid = new boolean[] { false, false, false, false};
 										bidCanFail = true;
 										bidPassCount = 0;
-										havePassedBid = new boolean[] { false,false,false,false};
+										currentBid = 100;
 										
 									
 										
@@ -222,6 +223,7 @@ public class ServerRoom extends Thread {
 										 * 
 										 * Find next correct person
 										 * 
+										 *
 										 * 
 										 * Ask the correct next person
 										 * 
@@ -290,6 +292,7 @@ public class ServerRoom extends Thread {
 													havePassedBid = new boolean[] { false, false, false, false};
 													bidCanFail = true;
 													bidPassCount = 0;
+													currentBid = 100;
 													
 													
 												} else { // No everyone did not pass
