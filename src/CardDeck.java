@@ -100,10 +100,18 @@ public class CardDeck {
 		
 	}
 	
+	/**
+	 * ------------------------------------------------------------------------------------------
+	 * 											ADD CARD
+	 * ------------------------------------------------------------------------------------------
+	 * @param card
+	 * @return
+	 */
 	public boolean addCard(Card card){
 		if(actualLenght < cardDeck.length){
 			cardDeck[actualLenght] = card;
 			actualLenght++;
+			
 			return true;
 		}else
 			return false;

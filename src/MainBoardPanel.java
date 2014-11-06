@@ -19,7 +19,7 @@ public class MainBoardPanel extends JPanel{
 	//FIELD
 	//==========================================================================================
 	//ddsd
-	final int			WIDTH = 1000, HEGTH = 800;
+	final int			WIDTH = 1000, HEGTH = 700;
 	final int 			CARD_WIDTH 				= 73;
 	final int 			CARD_HEGHT 				= 100;
 	final Dimension 	labelsMaximunDimension	= new Dimension(200, 50);
@@ -330,15 +330,18 @@ public class MainBoardPanel extends JPanel{
 		isDeckSet = true;
 		int x = (int) this.deckPoint[CURRENT_PLAYER_POS].getX();
 		int y =  (int) this.deckPoint[CURRENT_PLAYER_POS].getY();
-		System.out.println(this.deck.getSize());
+		
 		for(int i = 0; i < this.deck.getSize(); i++){
 			userCards[i].setIcon(new ImageIcon(deck.getCard(i).getImg()));
 			userCards[i].setText(deck.getCard(i).getName());
 			userCards[i].setBounds(x, y, userCards[i].getWidth(), userCards[i].getHeight());
 			this.add(userCards[i], new Integer(i), 0);
+			userCards[i].removeMouseListener(mouseLst);		//FK THIS LINE BITCHESSSSS
 			userCards[i].addMouseListener(mouseLst);
 			x += CARD_WIDTH/CARD_OVERLAP_X_FACTOR;
 		}
+		this.deck.sortDeck();
+		
 	}
 	
 

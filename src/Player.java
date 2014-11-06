@@ -3,6 +3,7 @@ import java.util.ArrayList;
 /**
  * 
  * @author Giovanni
+ * @author Glorimar Castro
  *
  */
 public class Player {
@@ -11,8 +12,10 @@ public class Player {
 	//FIELD
 	//===============
 	private CardDeck		handDeck;
-	private String 			name;
+	private String 			userName;
 	private Team 			team;
+	private	int				playerID;
+	private int				playerTablePosition;
 	
 
 	
@@ -21,7 +24,7 @@ public class Player {
 	//CONSTRUCTORS
 	//==============
 	public Player(String name) {
-		this.name 		= name;
+		this.userName 		= name;
 		this.handDeck 	= new CardDeck();
 	}
 	
@@ -44,6 +47,25 @@ public class Player {
 		this.team = t;
 	}
 	
+	/**
+	 * ---------------------------------------------------------------
+	 * 						SET PLAYER ID
+	 * ---------------------------------------------------------------
+	 * @param id
+	 */
+	public void setPlayerID(int id){
+		this.playerID = id;
+	}
+	
+	/**
+	 * ---------------------------------------------------------------
+	 * 						SET PLAYER POSITION
+	 * ---------------------------------------------------------------
+	 * @param pos
+	 */
+	public void setPlayerPosition(int pos){
+		this.playerTablePosition = pos;
+	}
 	public Team getTeam() {
 		return this.team;
 	}
@@ -60,7 +82,29 @@ public class Player {
 		this.handDeck.addCard(c);
 	}
 
+	/**
+	 * ---------------------------------------------------------------
+	 * 						GET PLAYER ID
+	 * ---------------------------------------------------------------
+	 * @return
+	 */
+	public int getPlayerId(){
+		return playerID;
+	}
+	
+	/**
+	 * ---------------------------------------------------------------
+	 * 						GET PLAYER POSITION
+	 * ---------------------------------------------------------------
+	 * @return
+	 */
+	public int getPlayerPosition(){
+		return this.playerTablePosition;
+	}
+	public String getUserName(){
+		return userName;
+	}
 	public String getName() {
-		return name;
+		return userName;
 	}
 }

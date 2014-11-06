@@ -297,7 +297,55 @@ public class ServerRoom extends Thread {
 													
 												} else { // No everyone did not pass
 													
-													// Do nothing special
+													// Is there one left?
+													int peopleLeft = 0;
+													for(int i = 0; i < 4; i++) {
+														if(!havePassedBid[i]) {
+															peopleLeft++;
+														}
+													}
+													// Is there one left?
+													if(peopleLeft == 1) { // Yes only one left
+														
+														// Declare one left the winner
+														int lonePlayer = 0;
+														{
+															for(int i = 0; i < 4; i++) {
+																if(!havePassedBid[i]) {
+																	lonePlayer = i;
+																	break;
+																}
+															}
+															
+														}
+														
+														// Tell everyone there was a winner
+														MC.broadcastMessage(connections, Message.fromPairs(
+																"name:"+Message.Names.BIDDING_COMPLETE.toString(),
+																Message.Keys.BID_AMOUNT.toString()+":"+currentBid,
+																Message.Keys.BID_WINNER.toString()+":"+lonePlayer));
+														
+														// Move to widowstate
+														state = ServerRoomState.WIDOW_STATE;
+														String cardlist = "";
+														for(int i = 0; i < widow.length;i++) {
+															cardlist+=widow[i].getName();
+															if(i!=widow.length-1) {
+																cardlist+=",";
+															}
+														}
+														connections[lonePlayer].sendMessage(Message.fromPairs(
+																"name:"+Message.Names.YOUR_WIDOW,
+																Message.Keys.CARDS+":"+cardlist));
+														
+														System.out.println(lonePlayer + "   ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\nENTROOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\");");
+														
+														break;
+														
+													} else { // Not only one left
+														// Do nothing special
+														
+													}
 												}
 												
 												
@@ -344,7 +392,7 @@ public class ServerRoom extends Thread {
 															"name:"+Message.Names.YOUR_WIDOW,
 															Message.Keys.CARDS+":"+cardlist));
 													
-													
+													System.out.println("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\nENTROOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\");");
 													
 													break;
 													

@@ -39,8 +39,8 @@ public class Test {
 		mainFrame.setSize(mp.WIDTH, mp.HEIGHT);
 		mainFrame.setLocationRelativeTo(null);
 		
-		
-		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
+		/*
+		Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
 		BufferedImage b = ImageIO.read(new File(fullPath.toString()));
 		ImageRegistry.setImageGrid(b, Utilities.getEnumNames(Suit.values()), Utilities.getEnumNames(Rank.values()), 4, 13);
 		ImageRegistry.loadImage("cardBack.jpg");  				//load the back of the card to the HashMap of images
@@ -75,15 +75,23 @@ public class Test {
 		deck.sortDeck();
 		
 		mp.board.setDeck(deck);
-		bf.setBounds(mp.board.getWidth()/2 - bf.getWidth()/2, mp.board.getHeight()/2 - bf.getHeight()/2 + 20, bf.getWidth(), bf.getHeight());
-		mp.board.add(bf);
+		
+	
+		deck.addCard(new Card("J_HEARTS"));
+		deck.addCard(new Card("J_HEARTS"));
+		deck.addCard(new Card("J_HEARTS"));
+		deck.addCard(new Card("J_HEARTS"));
+		
+		deck.sortDeck();
+		mp.board.setDeck(deck);
+		
 		f.add(mp);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		f.setSize(mp.WIDTH, mp.HEIGHT);
-		f.setLocationRelativeTo(null);
+		f.setLocationRelativeTo(null);*/
 		
-		*/
+		
 	
 		
 		/*Path fullPath = FileSystems.getDefault().getPath("res\\", "classic-playing-cards.png");
