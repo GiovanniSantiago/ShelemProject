@@ -21,10 +21,12 @@ public class CardsMouseListener implements MouseListener{
 		if(isMyTurn){
 			if(bidProtocol){
 				
-				if(label.getY() ==  (MainBoardPanel.deckPoint[0].getY() - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR)){
-					label.setLocation(label.getX(), (int) (label.getY() + CARD_HEGHT/CARD_OVERLAP_Y_FACTOR));
-				}else{
-					label.setLocation(label.getX(), (int) (label.getY() - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR));
+				
+				if(label.getY() <= 540){
+					label.setLocation(label.getX(), 566 );
+				}else if(label.getY() <= 570){
+					label.setLocation(label.getX(), 550 - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR);
+					
 				}
 				
 			}else{
