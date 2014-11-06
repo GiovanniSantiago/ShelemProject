@@ -447,6 +447,10 @@ public class ServerRoom extends Thread {
 											teamDeck2amount+=trashCards.length;
 										}
 										
+										MC.broadcastMessage(connections, Message.fromPairs(
+												"name:"+Message.Names.GAME_SUIT,
+												Message.Keys.SUIT+":"+m.getValue(Message.Keys.SUIT.toString())));
+										
 										this.state = ServerRoomState.GAME_STATE;
 									} break;
 									//TODO: Add QUITTING message thing

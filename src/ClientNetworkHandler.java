@@ -372,10 +372,17 @@ public class ClientNetworkHandler implements Runnable {
 										myDeck.addCard(new Card(s));
 									}
 									
+									
 									//UI Update
+									//TODO: Remember that the message sent from client is 
+									//name:MY_TRASH
+									//CARDS:<CARDLIST>
+									//SUIT:<selected game suit>
+									//
 									myDeck.sortDeck();
 									Test.mp.board.setDeck(myDeck);
 									Test.mp.board.mouseLst.isMyTurn = true;
+									//
 									
 									///////
 									///////
@@ -393,16 +400,18 @@ public class ClientNetworkHandler implements Runnable {
 						} break;
 						case GAME_STATE: {
 							switch(m.getName()) {
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//TODO: THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
-								//THIS IS WHERE I LEFT OFF WEDNESDAY. GAMESTATE (or ENDGAMESTATE) IS NEXT, OR SERVERSIDE EVERYTHING TILL THIS POINT.
+								case "GAME_SUIT": {
+									
+									String suit = m.getValue(Message.Keys.SUIT.toString());
+									//
+									//
+									//
+									//	Here the client is notified of the game suit.
+									//
+									//
+									//
+									
+								} break;
 								
 								
 								
@@ -412,7 +421,25 @@ public class ClientNetworkHandler implements Runnable {
 								//I will be asked for my play. I will provide a valid card every time.
 								//I will be told if the game is over, if there will be a next game, who won. If so, go to GAME_LOBBY_STATE
 								//I will be told if the game is over, if the gameset is over. If so, go to END_GAME_STATE
-								
+								case "GIVE_CARD": {
+									//
+									//
+									//	Here the player is asked 
+									//
+									//
+								} break;
+								case "CARD_PLAYED": {
+									
+								} break;
+								case "HAND_WON": {
+									
+								} break;
+								case "GAME_OVER": {
+									
+								} break;
+								case "SET_OVER": {
+									
+								} break;
 								//cases here
 								
 								//TODO: Add QUITTING message thing

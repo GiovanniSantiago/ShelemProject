@@ -173,12 +173,18 @@ public class Message {
 		PLAYER_NAME, 
 		YOUR_ID,
 		
+		GAME_SUIT,
 		GIVE_CARD,
 		CARD_PLAYED,
 		HAND_WON,
+		/**
+		 * When a round is over, but a new one will happen
+		 */
 		GAME_OVER,
-		NEW_GAME,
-		END_GAME,
+		/**
+		 * When a round is over, but the game set is done.
+		 */
+		SET_OVER,
 		
 		MY_CARD,
 		
@@ -189,10 +195,12 @@ public class Message {
 		PLAYER_QUIT,
 		
 		YOUR_WIDOW,
-		MY_TRASH
+		MY_TRASH,
+		
+		
 	}
 	
 	public enum Keys {
-		PLAYER_ID, PLAYER_NAME, CURRENT_BID, BID_WINNER, BID_AMOUNT, CARDS, GAME_SETTINGS, 
+		PLAYER_ID, PLAYER_NAME, CURRENT_BID, BID_WINNER, BID_AMOUNT, CARDS, GAME_SETTINGS, SUIT
 	}
 }
