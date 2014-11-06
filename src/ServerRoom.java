@@ -344,7 +344,6 @@ public class ServerRoom extends Thread {
 															"name:"+Message.Names.YOUR_WIDOW,
 															Message.Keys.CARDS+":"+cardlist));
 													
-													System.out.println("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\n\nENTROOOOOOOOOOOOOOOOOOOOOOOOOOO\n\n\n\n\");");
 													
 													break;
 													

@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,6 +28,8 @@ public class ClientNetworkHandler implements Runnable {
 	
 	BidListener		bidListener 	= new BidListener();
 	LoginListener 	loginListener 	= new LoginListener();
+	
+	JLabel			infoLbl			= new JLabel();
 	
 	//==========================================
 	//Field para Shelem Game Logic
@@ -315,17 +318,19 @@ public class ClientNetworkHandler implements Runnable {
 										Test.mp.scoreBoard.teamBidsLbl[0].setText("" + actualBid);
 									}else{
 										oponentTeam.setBidStatus(true);
+										Test.mp.scoreBoard.teamBidsLbl[1].setText("" + actualBid);
 									}
 									
 									if(bidWinnerID==playerId) {
 										state = ClientGameState.WIDOW_STATE;
 									} else {
+										
 										state = ClientGameState.GAME_STATE;
 									}
 									
 									//UI Update
 									Test.mp.bidPanel.setVisible(false);
-									JOptionPane.showMessageDialog(Test.mainFrame, "Player " + bidWinnerID + " gano");
+									//JOptionPane.showMessageDialog(Test.mainFrame, "Player " + bidWinnerID + " gano");
 									
 								} break;
 								
