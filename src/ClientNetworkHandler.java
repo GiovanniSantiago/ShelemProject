@@ -377,7 +377,6 @@ public class ClientNetworkHandler implements Runnable {
 									Test.mp.board.setDeck(myDeck);
 									Test.mp.board.mouseLst.isMyTurn = true;
 									
-									Card[] widow = new Card[4];
 									///////
 									///////
 									///////
