@@ -37,6 +37,7 @@ public class MainBoardPanel extends JPanel{
 	AffineTransform 	oldForm;												//Original setting for the Graphics tranform
 	JLabel[] 			userNames 			= new JLabel[4];;					//Labels for the userNames, Current Player - Player at the right - team player - player at the left
 	JLabel[]			userCards			= new JLabel[MAX_CARDS_AMNT];
+	JLabel				infoLabel			= new JLabel();						//Label for give general info to the user
 	boolean  			isUserNamesSet 		= false;							//True if the user names where set, false if the user names are nulls
 	int[] 				playerCardsAmmount 	= new int[4];						//Amount of card by player
 	Point[] 			userNamePoint 		= new Point[4];						//Coordinate for drawing player cards in the center
@@ -85,7 +86,12 @@ public class MainBoardPanel extends JPanel{
 			userCards[i].setSize(CARD_WIDTH, CARD_HEGHT);
 		}
 		
-
+		infoLabel.setSize(WIDTH - 370, HEGTH - 300);
+		infoLabel.setBounds(WIDTH/2 - infoLabel.getWidth()/2, HEGTH/2 - 75 - infoLabel.getHeight()/2, infoLabel.getWidth(), infoLabel.getHeight());
+		infoLabel.setForeground(Color.WHITE);
+		infoLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		infoLabel.setVisible(false);
+		this.add(infoLabel);
 		
 		//-------------------------
 		//Panel Set-up

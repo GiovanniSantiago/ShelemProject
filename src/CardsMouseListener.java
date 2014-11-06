@@ -14,6 +14,8 @@ public class CardsMouseListener implements MouseListener{
 	final int 			CARD_WIDTH 				= 73;
 	final int 			CARD_HEGHT 				= 100;
 	
+	CardDeck 	cards2Discard = new CardDeck();
+	
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -24,9 +26,10 @@ public class CardsMouseListener implements MouseListener{
 				
 				if(label.getY() <= 540){
 					label.setLocation(label.getX(), 566 );
+					cards2Discard.addCard(new Card(label.getText()));
 				}else if(label.getY() <= 570){
 					label.setLocation(label.getX(), 550 - CARD_HEGHT/CARD_OVERLAP_Y_FACTOR);
-					
+					cards2Discard.removeCard(new Card(label.getText()));
 				}
 				
 			}else{

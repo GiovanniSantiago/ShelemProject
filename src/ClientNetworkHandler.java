@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
@@ -29,7 +31,6 @@ public class ClientNetworkHandler implements Runnable {
 	BidListener		bidListener 	= new BidListener();
 	LoginListener 	loginListener 	= new LoginListener();
 	
-	JLabel			infoLbl			= new JLabel();
 	
 	//==========================================
 	//Field para Shelem Game Logic
@@ -40,6 +41,7 @@ public class ClientNetworkHandler implements Runnable {
 	
 	int 		targetScore 	= 0;
 	int			actualBid		= 100;
+	Suit		trump;
 	Card[] 		myCards 		= new Card[12];
 	CardDeck 	myDeck;
 	
@@ -74,9 +76,8 @@ public class ClientNetworkHandler implements Runnable {
 	
 	ClientGameState state = ClientGameState.TABLE_CREATION_STATE;
 	
+	
 	public ClientNetworkHandler() {
-		
-
 		
 	}
 	
@@ -319,11 +320,26 @@ public class ClientNetworkHandler implements Runnable {
 									}else{
 										oponentTeam.setBidStatus(true);
 										Test.mp.scoreBoard.teamBidsLbl[1].setText("" + actualBid);
+										
 									}
 									
 									if(bidWinnerID==playerId) {
+										{
+											JLabel lb = Test.mp.board.infoLabel;
+											lb.setText("<html><p align = \"justify\" width =\""+  lb.getWidth() + "\">"
+													+ "Since you won the contract (the bid) you have to decide first the suit to be the trump."
+													+ "After that discard 4 cards from your deck. </p></html>");
+											lb.setVisible(true);
+										}
 										state = ClientGameState.WIDOW_STATE;
 									} else {
+										{
+											JLabel lb = Test.mp.board.infoLabel;
+											lb.setText("<html><p align = \"justify\" width =\""+  lb.getWidth() + "\">"
+													+ "The player that won the contract (the bid) is deciding which suit is"
+													+ "going to be the trump. Please be pation and wait, if not well...</p></html>");
+											lb.setVisible(true);
+										}
 										
 										state = ClientGameState.GAME_STATE;
 									}
@@ -370,8 +386,18 @@ public class ClientNetworkHandler implements Runnable {
 						case WIDOW_STATE: {
 							switch(m.getName()) {
 								case "YOUR_WIDOW": {
+									JButton 	send			= new JButton("Send Cards");
 									String 		widowSource 	= m.getValue(Message.Keys.CARDS.toString());
 									String[] 	widow 			= widowSource.split(",");
+									
+									send.setBackground(Color.lightGray);
+									send.setBounds(Test.mp.board.WIDTH - 350, Test.mp.board.HEGTH - 300, 100, 25);
+									send.setForeground(Color.GREEN);
+									send.setVisible(true);
+									send.addMouseListener(new WidowListener());
+									
+									Test.mp.board.add(send);
+									
 									
 									for(String s : widow){
 										myDeck.addCard(new Card(s));
@@ -380,6 +406,18 @@ public class ClientNetworkHandler implements Runnable {
 									//UI Update
 									myDeck.sortDeck();
 									Test.mp.board.setDeck(myDeck);
+									
+									Suit[] possibilities = {Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES};
+									trump = (Suit)JOptionPane.showInputDialog(
+						                    Test.mainFrame,
+						                    "Please select the desire suit trump:",
+						                    "Trump Selection",
+						                    JOptionPane.QUESTION_MESSAGE,
+						                    null,
+						                    possibilities,
+						                    Suit.CLUBS);
+									Test.mp.scoreBoard.setSuit(trump.toString());
+									
 									Test.mp.board.mouseLst.isMyTurn = true;
 									
 									///////
@@ -621,6 +659,40 @@ public class ClientNetworkHandler implements Runnable {
 				Test.mp.bidPanel.bidStatuslbl.setForeground(Color.WHITE);
 			}
 			
+			
+		}
+		
+	}
+	
+	class WidowListener implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
 			
 		}
 		
