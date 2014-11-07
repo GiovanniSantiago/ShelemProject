@@ -457,6 +457,9 @@ public class ServerRoom extends Thread {
 							}
 							case GAME_STATE: {
 								switch(m.getName()) {
+									case "MY_CARD": {
+										
+									} break;
 									//TODO: Add QUITTING message thing
 								}
 							} break;

@@ -429,23 +429,60 @@ public class ClientNetworkHandler implements Runnable {
 								case "GIVE_CARD": {
 									//
 									//
-									//	Here the player is asked 
-									//
+									//	Here the player is asked what card he is going to play. This says, it's YOUR turn, gimme.
+									//	Does not have extra information.
+									//	
+									//	MY_CARD
 									//
 								} break;
 								case "CARD_PLAYED": {
-									
+									Card cardPlayed = new Card(m.getValue(Message.Keys.PLAYED_CARD.toString()));
+									int submittingPlayer = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									//
+									//
+									//	Client is told that a player played a card INCLUDING HIS OWN
+									//	name:CARD_PLAYED
+									//
+									//
 								} break;
 								case "HAND_WON": {
-									
+									int winningPlayer = m.getInteger(Message.Keys.PLAYER_ID.toString());
+									int points = m.getInteger(Message.Keys.HAND_SCORE.toString());
+									//
+									//
+									//	Client is told that a player has won the current hand. INCLUDING IF HE DOES SO HIMSELF.
+									//	
+									//
+									//
 								} break;
 								case "GAME_OVER": {
+									int winningTeam = m.getInteger(Message.Keys.TEAM_ID.toString());
+									String[] sources = m.getValue(Message.Keys.SCORE_DELTAS.toString()).split(",");
+									int[] teamScoreChanges = new int[] {Integer.parseInt(sources[0]),Integer.parseInt(sources[1])};
+									//
+									//
+									//	Client is told that the game is over, and which team won (0,1). A new game will happen, going to lobby.
+									//
+									//
 									
+									
+									
+									//
+									//	TODO: DO ALL UI CHANGES INVOLVED WITH GOING TO LOBBY.
+									//
+									this.state = ClientGameState.GAME_LOBBY_STATE;
 								} break;
 								case "SET_OVER": {
+									int currentGameWinningTeam = m.getInteger(Message.Keys.TEAM_ID.toString());
+									int gameSetWinningTeam = m.getInteger(Message.Keys.GAME_SET_WIN_ID.toString());
+									String[] sources = m.getValue(Message.Keys.SCORE_DELTAS.toString()).split(",");
+									int[] teamScoreChanges = new int[] {Integer.parseInt(sources[0]),Integer.parseInt(sources[1])};
+									
+									//
+									//	Client is told that the game is over, and there are no more games. 
+									//
 									
 								} break;
-								//cases here
 								
 								//TODO: Add QUITTING message thing
 							}
