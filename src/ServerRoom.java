@@ -16,10 +16,22 @@ public class ServerRoom extends Thread {
 	 */
 	Card[] mainDeck = new Card[52];
 	
-	Card[] teamDeck1 = new Card[52];
-	Card[] teamDeck2 = new Card[52];
-	int teamDeck1amount = 0;
-	int teamDeck2amount = 0;
+	Card[][] teamDecks = new Card[52][2];
+	int[] teamDeckAmount = new int[] {0,0};
+	int[] teamRoundScore = new int[] {0, 0};
+	int[] teamTotalScore = new int[] {0,0};
+	int currentTurn = 0;
+	
+	int gameSetGoal = 0;
+	int biddingTeam = -1;
+	
+	//--------------------------------
+	//---CURRENT HAND Variables
+	//--------------------------------
+	
+	Card[] currentHand;
+	int currentHandCount = 0;
+	Suit gameSuit = null;
 	
 	//------------------------
 	//---BID Variables
@@ -91,6 +103,8 @@ public class ServerRoom extends Thread {
 													Message.Keys.PLAYER_NAME.toString() + ":" +m.getValue(Message.Names.PLAYER_NAME.toString()),
 													Message.Keys.PLAYER_ID.toString()+":"+player,
 													Message.Keys.GAME_SETTINGS.toString()+":"+m.getValue(Message.Keys.GAME_SETTINGS.toString())));
+											
+											gameSetGoal = m.getInteger(Message.Keys.GAME_SETTINGS.toString());
 										} else {
 											MC.broadcastMessage(connections, Message.fromPairs(
 													"name:" + Message.Names.PLAYER_NAME.toString(),
@@ -340,6 +354,9 @@ public class ServerRoom extends Thread {
 															Message.Keys.BID_AMOUNT.toString()+":"+currentBid,
 															Message.Keys.BID_WINNER.toString()+":"+lonePlayer));
 													
+													// Remember bidding team
+													biddingTeam=lonePlayer;
+													
 													// Move to widowstate
 													state = ServerRoomState.WIDOW_STATE;
 													String cardlist = "";
@@ -394,6 +411,9 @@ public class ServerRoom extends Thread {
 														Message.Keys.BID_AMOUNT+":"+currentBid,
 														Message.Keys.BID_WINNER+":"+player));
 												playerIdInTurnToBid++;
+												// Remember bidding team
+												biddingTeam=player;
+												
 												// Move to widowstate
 												state = ServerRoomState.WIDOW_STATE;
 												String cardlist = "";
@@ -446,21 +466,30 @@ public class ServerRoom extends Thread {
 											trashCards[i] = new Card(sourceList[i]);
 										}
 										
+										teamDecks[0] = new Card[52];
+										teamDecks[1] = new Card[52];
+										teamDeckAmount[0]=0;
+										teamDeckAmount[1]=0;
+
+										teamRoundScore[0] = 0;
+										teamRoundScore[1]=0;
 										
-										if(player%2==0) {
-											System.arraycopy(trashCards, 0, teamDeck1, teamDeck1amount, trashCards.length);
-											teamDeck1amount+=trashCards.length;
-										}
-										if(player%2==1) {
-											System.arraycopy(trashCards, 0, teamDeck2, teamDeck2amount, trashCards.length);
-											teamDeck2amount+=trashCards.length;
-										}
+										int playerTeam = player%2;
+										
+										System.arraycopy(trashCards,0,teamDecks[playerTeam],teamDeckAmount[playerTeam], trashCards.length);
+										teamDeckAmount[playerTeam]+=trashCards.length;
+										
+										teamRoundScore[playerTeam]=calculateScore(trashCards);
+					
 										
 										MC.broadcastMessage(connections, Message.fromPairs(
 												"name:"+Message.Names.GAME_SUIT,
 												Message.Keys.SUIT+":"+m.getValue(Message.Keys.SUIT.toString()),
 														Message.Keys.PLAYER_TURN_ID+":"+playerIDIntTurn));
 										
+										currentHand = new Card[4];
+										currentHandCount = 0;
+										gameSuit = Suit.valueOf(m.getValue(Message.Keys.SUIT.toString()));
 										this.state = ServerRoomState.GAME_STATE;
 									} break;
 									//TODO: Add QUITTING message thing
@@ -468,6 +497,70 @@ public class ServerRoom extends Thread {
 							}
 							case GAME_STATE: {
 								switch(m.getName()) {
+									case "MY_CARD": {
+										Card card = new Card(m.getValue(Message.Keys.PLAYED_CARD.toString()));
+										
+										currentHand[player] = card;
+										currentHandCount++;
+										
+										MC.broadcastMessage(connections, Message.fromPairs(
+												"name:"+Message.Names.CARD_PLAYED,
+												Message.Keys.PLAYED_CARD+":"+card.getName(),
+												Message.Keys.PLAYER_ID+":"+player));
+										
+										//if this turn is LAST, compute hand winner
+										if(currentHandCount == 4) {
+											
+											//Reset hand counter
+											currentTurn++;
+											currentHandCount = 0;
+											
+											int handWinner = calculateWinner(currentHand,(player+1)%4,gameSuit);
+											int handScore = calculateScore(currentHand) + 5;
+											int handWinningTeam = handWinner%2;
+											
+											// Pass hand to a team deck
+											System.arraycopy(currentHand,0,teamDecks[handWinningTeam],teamDeckAmount[handWinningTeam],4);
+											teamDeckAmount[handWinningTeam] +=4;
+											
+											//Tell everybody who won hand, and how many points.
+											MC.broadcastMessage(connections, Message.fromPairs(
+													"name:"+Message.Names.HAND_WON,
+													Message.Keys.PLAYER_ID+":"+handWinner,
+													Message.Keys.HAND_SCORE+":"+handScore
+													));
+											
+											// Increase team round score
+											teamRoundScore[handWinningTeam]+=handScore;
+											
+											//Reset hand
+											currentHand = new Card[4];
+											
+											//Is round end?
+											if(currentTurn==12) {
+												int[] teamScoreDeltas = new int[]{0,0};
+												// Did declaring win?
+												boolean declaringWon = teamRoundScore[biddingTeam]>=currentBid;
+												
+												//Did declaring win?
+												if(declaringWon) { // Declaring won
+													teamScoreDeltas[biddingTeam] = teamRoundScore[biddingTeam];
+													teamScoreDeltas[(biddingTeam+1)%2] = 0;
+													
+													if(teamRoundScore[biddingTeam]==165) {
+														teamScoreDeltas[biddingTeam]+= 100+(currentBid==165?100:0);
+													}
+												} else {
+													teamScoreDeltas[biddingTeam] = -currentBid;
+													teamScoreDeltas[(biddingTeam+1)%2] = teamRoundScore[(biddingTeam+1)%2];
+												}
+												
+												// Rebuild main deck (and shuffle)
+												// 
+											}
+										}
+										
+									} break;
 									//TODO: Add QUITTING message thing
 								}
 							} break;
@@ -483,6 +576,50 @@ public class ServerRoom extends Thread {
 		}
 	}
 	
+	private int calculateScore(Card[] hand) {
+		int score = 0;
+		for(Card c : hand) {
+			score+=c.getValue();
+		}
+		return score;
+	}
+
+	private int calculateWinner(Card[] hand, int firstCard, Suit trump) {
+		// if hand contains trump suit, find highest.
+		// else find highest handsuit
+		int highestValue = -1;
+		int winningSlot = -1;
+		{
+			boolean hasTrump = false;
+			
+			for(int i = 0; i < hand.length; i++) {
+				Card card = hand[i];
+				if(hand[i].getSuit()==trump) {
+					hasTrump=true;
+					if(highestValue<card.getRank().getTrumpValue()) {
+						highestValue = card.getRank().getTrumpValue();
+						winningSlot = i;
+					}
+				}
+			}
+			if(hasTrump) {
+				return winningSlot;
+			}
+		}
+		Suit winSuit = hand[firstCard].getSuit();
+		for(int i = 0; i < hand.length; i++) {
+			Card card = hand[i];
+			if(card.getSuit()==winSuit) {
+				if(highestValue<card.getRank().getTrumpValue()) {
+					highestValue=card.getRank().getTrumpValue();
+					winningSlot = i;
+				}
+			}
+		}
+		
+		return winningSlot;
+	}
+
 	private void onQuitGame(int i) {
 		
 	}

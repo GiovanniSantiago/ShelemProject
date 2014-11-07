@@ -1,19 +1,14 @@
 
 public enum Suit {
-	CLUBS(0),
-	SPADES(1),
-	HEARTS(2),
-	DIAMONDS(3);
+	CLUBS,
+	SPADES,
+	HEARTS,
+	DIAMONDS;
 	
-	int position;
 	
-	private Suit(int position){
-		this.position = position;
+	private Suit(){
 	}
 	
-	public int getPosition(){
-		return this.position;
-	}
 	
 	
 	

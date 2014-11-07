@@ -86,18 +86,18 @@ public class Card implements Comparable<Card>{
 	@Override
 	public int compareTo(Card arg0) {
 		if(this.suit.equals(arg0.getSuit())){
-			if(this.rank.getPosition() < arg0.getRank().getPosition()){
+			if(this.rank.ordinal() < arg0.getRank().ordinal()){
 				return -1;
-			}else if(this.rank.getPosition() == arg0.getRank().getPosition()){
+			}else if(this.rank.ordinal() == arg0.getRank().ordinal()){
 				return 0;
 			}else{
 				return 1;
 			}
 			
 		}else{
-			if(this.suit.getPosition() < arg0.getSuit().getPosition()){
+			if(this.suit.ordinal() < arg0.getSuit().ordinal()){
 				return -1;
-			}else if(this.suit.getPosition() == arg0.getSuit().getPosition()){
+			}else if(this.suit.ordinal() == arg0.getSuit().ordinal()){
 				return 0;
 			}else{
 				return 1;

@@ -5,23 +5,23 @@
  */
 public enum Rank {
 	
-	A(10, 1),
-	TWO(0, 2),
-	THREE(0, 3),
-	FOUR(0, 4),
-	FIVE(5, 5),
-	SIX(0, 6),
-	SEVEN(0, 7),
-	EIGHT(0, 8),
-	NINE(0, 9),
-	TENTH(10, 10),
-	J(0, 11),
-	Q(0, 12),
-	K(0, 13);
+	A(10, 13),
+	TWO(0, 1),
+	THREE(0, 2),
+	FOUR(0, 3),
+	FIVE(5, 4),
+	SIX(0, 5),
+	SEVEN(0, 6),
+	EIGHT(0, 7),
+	NINE(0, 8),
+	TENTH(10, 9),
+	J(0, 10),
+	Q(0, 11),
+	K(0, 12);
 	
 	
 	private int value;
-	private int position;
+	private int trumpValue;
 	
 
 	/**
@@ -31,18 +31,17 @@ public enum Rank {
 	 * @param position
 	 * 		This is for sorting 
 	 */
-	private Rank(int value, int position){
+	private Rank(int value, int trumpValue){
 		this.value = value;
-		this.position = position;
+		this.trumpValue = trumpValue;
 	}
 	
 	public int getValue(){
 		return this.value;
 	}
 	
-	public int getPosition(){
-		return this.position;
+	public int getTrumpValue() {
+		return this.trumpValue;
 	}
-	
 	
 }
