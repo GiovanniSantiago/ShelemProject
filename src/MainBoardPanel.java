@@ -37,8 +37,10 @@ public class MainBoardPanel extends JPanel{
 	AffineTransform 	oldForm;												//Original setting for the Graphics tranform
 	JLabel[] 			userNames 			= new JLabel[4];;					//Labels for the userNames, Current Player - Player at the right - team player - player at the left
 	JLabel[]			userCards			= new JLabel[MAX_CARDS_AMNT];
+	JLabel[]			arrowLbl			= new JLabel[4];
 	JLabel				infoLabel			= new JLabel();						//Label for give general info to the user
 	JLabel				statusLbl			= new JLabel();						//Label for give general info to the user about in game actions
+	
 	boolean  			isUserNamesSet 		= false;							//True if the user names where set, false if the user names are nulls
 	int[] 				playerCardsAmmount 	= new int[4];						//Amount of card by player
 	Point[] 			userNamePoint 		= new Point[4];						//Coordinate for drawing player cards in the center
@@ -68,6 +70,19 @@ public class MainBoardPanel extends JPanel{
 		//-------------------------
 		//Field initialization
 		
+		
+		for(int i = 0; i < 4; i++){							//UserNames labels set ups
+			arrowLbl[i] = new JLabel();
+			arrowLbl[i].setSize(50,50);
+			arrowLbl[i].setBounds(WIDTH/2 - arrowLbl[i].getWidth()/2 , HEGTH/2 - arrowLbl[i].getHeight()/2, arrowLbl[i].getWidth(), arrowLbl[i].getHeight());
+			arrowLbl[i].setVisible(false);
+			this.add(arrowLbl[i]);
+		}
+		arrowLbl[0].setIcon(new ImageIcon(ImageRegistry.loadImage("arrowDown.jpg")));
+		arrowLbl[1].setIcon(new ImageIcon(ImageRegistry.loadImage("arrowRight.jpg")));
+		arrowLbl[2].setIcon(new ImageIcon(ImageRegistry.loadImage("arrowUp.jpg")));
+		arrowLbl[3].setIcon(new ImageIcon(ImageRegistry.loadImage("arrowLeft.jpg")));
+		
 		for(int i = 0; i < this.userNames.length; i++){							//UserNames labels set ups
 			this.userNames[i] = new JLabel("", JLabel.CENTER);
 			userNames[i].setFont(new Font("TimesNewRoman", Font.BOLD, 14));
@@ -95,11 +110,11 @@ public class MainBoardPanel extends JPanel{
 		this.add(infoLabel);
 		
 		statusLbl.setSize(200, 50);
-		statusLbl.setBounds(WIDTH - statusLbl.getWidth() - 100, HEGTH - 100 - statusLbl.getHeight(), statusLbl.getWidth(), statusLbl.getHeight());
+		statusLbl.setBounds(WIDTH - statusLbl.getWidth() - 200, HEGTH - 170 - statusLbl.getHeight(), statusLbl.getWidth(), statusLbl.getHeight());
 		statusLbl.setForeground(Color.WHITE);
-		statusLbl.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		statusLbl.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		statusLbl.setVisible(false);
-		this.add(infoLabel);
+		this.add(statusLbl);
 		
 		//-------------------------
 		//Panel Set-up
@@ -157,6 +172,7 @@ public class MainBoardPanel extends JPanel{
 			g2.setTransform(oldForm);
 		}
 		
+		
 		Test.mp.updateUI();
 		this.updateUI();
 		
@@ -205,6 +221,7 @@ public class MainBoardPanel extends JPanel{
 		this.playeCardPoints[PARTNER_POS].setLocation(this.getWidth()/2 - CARD_WIDTH/2, this.getHeight()/2 - CARD_HEGHT - 25);
 		this.playeCardPoints[EAST_OPPONENT_POS].setLocation(this.getWidth()/2 + 25, this.getHeight()/2 - CARD_HEGHT/2);
 		this.playeCardPoints[WEST_OPPONENT_POS].setLocation(this.getWidth()/2 - 25 - CARD_WIDTH, this.getHeight()/2 - CARD_HEGHT/2);
+		
 		
 		
 		this.deckPoint[PARTNER_POS].setLocation(deckPoint[PARTNER_POS].getX(), deckPoint[PARTNER_POS].getY()/2);
@@ -306,10 +323,11 @@ public class MainBoardPanel extends JPanel{
 	 *  
 	 * @param image
 	 */
-	public void setPlayedCard(BufferedImage image){
+	public void setPlayedCard(BufferedImage image, String cardName){
 		this.playedCardImg = image;
 		isCardPlayed = true;
-		//this.deck.removeCard(card);
+		this.deck.removeCard(new Card(cardName));
+		setDeck(deck);
 		repaint();
 	}
 	

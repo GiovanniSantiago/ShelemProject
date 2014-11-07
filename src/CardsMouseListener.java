@@ -33,7 +33,8 @@ public class CardsMouseListener implements MouseListener{
 				}
 				
 			}else{
-				Test.mp.board.setPlayedCard(ImageRegistry.getImage(label.getText()));
+				Test.mp.board.setPlayedCard(ImageRegistry.getImage(label.getText()), label.getText());
+				isMyTurn = false;
 			}
 		}
 		

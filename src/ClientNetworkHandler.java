@@ -434,16 +434,18 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								
 								//TODO: Add QUITTING message thing
-							}
-						} break;
+						} }break;
 						case GAME_STATE: {
 							switch(m.getName()) {
 								case "GAME_SUIT": {
+									this.playerTurn = Integer.parseInt(m.getValue(Message.Keys.PLAYER_TURN_ID.toString()));
 									Test.mp.board.infoLabel.setVisible(false);
 									Test.mp.board.statusLbl.setVisible(true);
+									Test.mp.board.statusLbl.setText("Starting game. Is player " + players[playerTurn].getName() +" turn...");
 									//Test.mp.board.statusLbl.setText("Starting game. Player )
 									String suit = m.getValue(Message.Keys.SUIT.toString());
 									Test.mp.scoreBoard.setSuit(suit);
+									Test.mp.board.arrowLbl[playersPos[playerTurn]].setVisible(true);
 									
 									
 								} break;
@@ -765,7 +767,8 @@ public class ClientNetworkHandler implements Runnable {
 				cardList = cardList.substring(0, cardList.length() - 1);
 				//send server results
 				line.sendMessage(Message.fromPairs("name:" + Message.Names.MY_TRASH.toString(), 
-						Message.Keys.CARDS + ":" + cardList, Message.Keys.SUIT+":"+trump));
+						Message.Keys.CARDS + ":" + cardList, Message.Keys.SUIT+":"+trump,
+						Message.Keys.PLAYER_ID+":"+playerId));
 				
 				//UI updates
 				JButton btn = ((JButton)e.getSource());

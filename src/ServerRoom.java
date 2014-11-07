@@ -32,7 +32,6 @@ public class ServerRoom extends Thread {
 	Card[] currentHand;
 	int currentHandCount = 0;
 	Suit gameSuit = null;
-	
 	//------------------------
 	//---BID Variables
 	//------------------------
@@ -77,8 +76,7 @@ public class ServerRoom extends Thread {
 		
 		CardDeck[] playerDecks = new CardDeck[4];
 		Card[] widow = new Card[4];
-		//In game field
-		int playerIDIntTurn = 0;
+		
 		
 		//Bid Field
 		int currentBid = 0;
@@ -485,7 +483,7 @@ public class ServerRoom extends Thread {
 										MC.broadcastMessage(connections, Message.fromPairs(
 												"name:"+Message.Names.GAME_SUIT,
 												Message.Keys.SUIT+":"+m.getValue(Message.Keys.SUIT.toString()),
-														Message.Keys.PLAYER_TURN_ID+":"+playerIDIntTurn));
+														Message.Keys.PLAYER_TURN_ID+":"+player));
 										
 										currentHand = new Card[4];
 										currentHandCount = 0;
@@ -506,7 +504,8 @@ public class ServerRoom extends Thread {
 										MC.broadcastMessage(connections, Message.fromPairs(
 												"name:"+Message.Names.CARD_PLAYED,
 												Message.Keys.PLAYED_CARD+":"+card.getName(),
-												Message.Keys.PLAYER_ID+":"+player));
+												Message.Keys.PLAYER_ID+":"+player,
+												Message.Keys.PLAYER_TURN_ID+":"+((player+1)%4)));
 										
 										//if this turn is LAST, compute hand winner
 										if(currentHandCount == 4) {
