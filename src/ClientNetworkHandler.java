@@ -441,7 +441,7 @@ public class ClientNetworkHandler implements Runnable {
 								case "GAME_SUIT": {
 									Test.mp.board.infoLabel.setVisible(false);
 									Test.mp.board.statusLbl.setVisible(true);
-									Test.mp.board.statusLbl.setText("Starting game. Player )
+									//Test.mp.board.statusLbl.setText("Starting game. Player )
 									String suit = m.getValue(Message.Keys.SUIT.toString());
 									Test.mp.scoreBoard.setSuit(suit);
 									
