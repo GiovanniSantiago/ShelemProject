@@ -483,8 +483,9 @@ public class ServerRoom extends Thread {
 										MC.broadcastMessage(connections, Message.fromPairs(
 												"name:"+Message.Names.GAME_SUIT,
 												Message.Keys.SUIT+":"+m.getValue(Message.Keys.SUIT.toString()),
+
 														Message.Keys.PLAYER_TURN_ID+":"+player));
-										
+
 										currentHand = new Card[4];
 										currentHandCount = 0;
 										gameSuit = Suit.valueOf(m.getValue(Message.Keys.SUIT.toString()));
@@ -496,11 +497,15 @@ public class ServerRoom extends Thread {
 							case GAME_STATE: {
 								switch(m.getName()) {
 									case "MY_CARD": {
+										//	REQUEST NEXT CARD
+										
+										
 										Card card = new Card(m.getValue(Message.Keys.PLAYED_CARD.toString()));
 										
 										currentHand[player] = card;
 										currentHandCount++;
 										
+										// Tell everyone someone played a card
 										MC.broadcastMessage(connections, Message.fromPairs(
 												"name:"+Message.Names.CARD_PLAYED,
 												Message.Keys.PLAYED_CARD+":"+card.getName(),
@@ -508,11 +513,9 @@ public class ServerRoom extends Thread {
 												Message.Keys.PLAYER_TURN_ID+":"+((player+1)%4)));
 										
 										//if this turn is LAST, compute hand winner
-										if(currentHandCount == 4) {
+										if(currentHandCount == 4) { // Hand complete
 											
-											//Reset hand counter
-											currentTurn++;
-											currentHandCount = 0;
+											
 											
 											int handWinner = calculateWinner(currentHand,(player+1)%4,gameSuit);
 											int handScore = calculateScore(currentHand) + 5;
@@ -532,14 +535,22 @@ public class ServerRoom extends Thread {
 											// Increase team round score
 											teamRoundScore[handWinningTeam]+=handScore;
 											
-											//Reset hand
+											//Reset hand counters !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+											currentTurn++;
+											currentHandCount = 0;
+											//Reset hand!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 											currentHand = new Card[4];
 											
 											//Is round end?
-											if(currentTurn==12) {
+											if(currentTurn==12) { // Round ended
 												int[] teamScoreDeltas = new int[]{0,0};
 												// Did declaring win?
 												boolean declaringWon = teamRoundScore[biddingTeam]>=currentBid;
+												
+												
+												// Remember which team won
+												int roundWinningTeam = declaringWon?biddingTeam:((biddingTeam+1)%2);
+												
 												
 												//Did declaring win?
 												if(declaringWon) { // Declaring won
@@ -554,9 +565,56 @@ public class ServerRoom extends Thread {
 													teamScoreDeltas[(biddingTeam+1)%2] = teamRoundScore[(biddingTeam+1)%2];
 												}
 												
-												// Rebuild main deck (and shuffle)
-												// 
+												//Update total scores.
+												teamTotalScore[0]+=teamScoreDeltas[0];
+												teamTotalScore[1]+=teamScoreDeltas[1];
+												
+												// If last round
+												//		Tell everyone winning team
+												//		Tell everyone round is over (and no next one)
+												//		Go to end state
+												//		else
+												// 		Rebuild main deck
+												//		Tell everyone winning team
+												//		Tell everyone round is over (and next one comes)
+												//		Go to lobby state
+												if(teamTotalScore[0] >= gameSetGoal || teamTotalScore[1] >= gameSetGoal) { // Last round
+													
+													
+													int setWinningTeam = (teamTotalScore[0] >= gameSetGoal?0:1);
+													
+													MC.broadcastMessage(connections, Message.fromPairs(
+															"name:"+Message.Names.SET_OVER,
+															Message.Keys.TEAM_ID+":"+roundWinningTeam,
+															Message.Keys.GAME_SET_WIN_ID+":"+setWinningTeam,
+															Message.Keys.SCORE_DELTAS+":"+teamScoreDeltas[0]+","+teamScoreDeltas[1]));
+													
+													// Go to end state
+													this.state = ServerRoomState.END_GAME_STATE;
+												} else { // Not last round
+													System.arraycopy(teamDecks[0],
+															0, mainDeck, 0,
+															teamDeckAmount[0]);
+													System.arraycopy(teamDecks[1],
+															0, mainDeck,
+															teamDeckAmount[0],
+															teamDeckAmount[1]);
+													MC.broadcastMessage(connections, Message.fromPairs(
+															"name:"+Message.Names.SET_OVER,
+															Message.Keys.TEAM_ID+":"+roundWinningTeam,
+															Message.Keys.SCORE_DELTAS+":"+teamScoreDeltas[0]+","+teamScoreDeltas[1]));
+													
+													// Go to lobby state
+													this.state = ServerRoomState.GAME_LOBBY_STATE;
+												}
+												
+											} else { // Round not end
+												connections[handWinner].sendMessage(Message.fromPairs(
+														"name:"+Message.Names.GIVE_CARD));
 											}
+										} else { // Hand not complete
+											//Tell next person
+											connections[(player+1)%4].sendMessage(Message.fromPairs("name:"+Message.Names.GIVE_CARD));
 										}
 										
 									} break;
