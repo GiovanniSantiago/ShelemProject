@@ -492,7 +492,8 @@ public class ClientNetworkHandler implements Runnable {
 									//
 									//
 									//	Client is told that the game is over, and which team won (0,1). A new game will happen, going to lobby.
-									//
+									//	Go to lobby
+									//	
 									//
 									
 									
