@@ -66,8 +66,12 @@ public class BiddingPanel extends JPanel{
 			bidingInfo.setBounds(3, 3, bidingInfo.getWidth(), bidingInfo.getHeight());
 			
 			for(int i = 0; i < playersBids.length; i++){
-				playersBids[i] = new JLabel(userNames[i] + " bid: 0", JLabel.CENTER);
-				playersBids[i].setSize(120, 20);
+				if(i == 1){
+					playersBids[i] = new JLabel(userNames[i] + " bid: 0", JLabel.LEFT);
+				}else{
+					playersBids[i] = new JLabel(userNames[i] + " bid: 0", JLabel.CENTER);
+				}
+				playersBids[i].setSize(250, 20);
 				playersBids[i].setForeground(new Color(118, 0, 0));
 				playersBids[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
 			}

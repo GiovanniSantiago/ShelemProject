@@ -25,7 +25,9 @@ public class ServerRoom extends Thread {
 	//---BID Variables
 	//------------------------
 	int 		bidStarter = 0;
+	int			isFirstBid = 1;
 	int 		currentBid = 0;
+	int			playerIdInTurnToBid	= 0;
 	
 	/**
 	 * ================================================================================
@@ -63,9 +65,11 @@ public class ServerRoom extends Thread {
 		
 		CardDeck[] playerDecks = new CardDeck[4];
 		Card[] widow = new Card[4];
+		//In game field
+		int playerIDIntTurn = 0;
 		
+		//Bid Field
 		int currentBid = 0;
-		
 		boolean 	bidCanFail = true;
 		int 		bidPassCount = 0;
 		boolean[] 	havePassedBid = new boolean[] {false,false,false,false};
@@ -149,7 +153,8 @@ public class ServerRoom extends Thread {
 											MessageLine l = connections[i];
 											l.sendMessage(Message.fromPairs(
 													"name:"+Message.Names.GAME_READY.toString(),
-													Message.Keys.CARDS.toString()+":"+cards));
+													Message.Keys.CARDS.toString()+":"+cards,
+													Message.Keys.PLAYER_ID+":"+playerIdInTurnToBid));
 										}
 										
 										// Go to bidding state
@@ -166,7 +171,9 @@ public class ServerRoom extends Thread {
 										
 										connections[bidStarter].sendMessage(Message.fromPairs(
 												"name:"+Message.Names.REQUEST_BID.toString(),
-												Message.Keys.CURRENT_BID.toString()+":0"));
+												Message.Keys.CURRENT_BID.toString()+":0",
+												Message.Keys.PLAYER_ID+":"+playerIdInTurnToBid,
+												Message.Keys.IS_FIRST_BID+":"+isFirstBid));
 										bidStarter ++;
 										if(bidStarter==4) {
 											bidStarter = 0;
@@ -238,7 +245,8 @@ public class ServerRoom extends Thread {
 											//Tell everybody someone passed
 											MC.broadcastMessage(connections, Message.fromPairs(
 													"name:"+Message.Names.SOMEONE_PASSED.toString(),
-													Message.Keys.PLAYER_ID.toString()+":"+player));
+													Message.Keys.PLAYER_ID.toString()+":"+player,
+													Message.Keys.IS_FIRST_BID+":"+isFirstBid));
 											
 											// Is there initial passStreak?
 											if(bidCanFail) { // Yes initial passStreak
@@ -251,7 +259,7 @@ public class ServerRoom extends Thread {
 													
 													// !Shuffle and split cards again
 													
-													
+													isFirstBid = 1;
 													Utilities.overhandArrayShuffle(mainDeck);
 													
 													// !Make new decks for each player.
@@ -285,7 +293,8 @@ public class ServerRoom extends Thread {
 														MessageLine l = connections[i];
 														l.sendMessage(Message.fromPairs(
 																"name:"+Message.Names.BIDDING_FAIL.toString(),
-																Message.Keys.CARDS.toString()+":"+cards));
+																Message.Keys.CARDS.toString()+":"+cards,
+																Message.Keys.PLAYER_ID+":"+playerIdInTurnToBid));
 													}
 													
 													// Reset passStreak parameters
@@ -354,7 +363,7 @@ public class ServerRoom extends Thread {
 												
 											}
 										} else { // No player did not pass
-											
+											isFirstBid = 0;
 											// REMEMBER THAT BID CANNOT FAIL NOW
 											bidCanFail = false;
 											// Get new bid
@@ -384,7 +393,7 @@ public class ServerRoom extends Thread {
 														"name:"+Message.Names.BIDDING_COMPLETE,
 														Message.Keys.BID_AMOUNT+":"+currentBid,
 														Message.Keys.BID_WINNER+":"+player));
-												
+												playerIdInTurnToBid++;
 												// Move to widowstate
 												state = ServerRoomState.WIDOW_STATE;
 												String cardlist = "";
@@ -418,7 +427,8 @@ public class ServerRoom extends Thread {
 										//Ask the next correct person
 										connections[nextPerson].sendMessage(Message.fromPairs(
 												"name:"+Message.Names.REQUEST_BID,
-												Message.Keys.CURRENT_BID+":"+currentBid));
+												Message.Keys.CURRENT_BID+":"+currentBid,
+												Message.Keys.IS_FIRST_BID+":"+isFirstBid));
 									}
 									//TODO: Add QUITTING message thing
 								}
@@ -448,7 +458,8 @@ public class ServerRoom extends Thread {
 										
 										MC.broadcastMessage(connections, Message.fromPairs(
 												"name:"+Message.Names.GAME_SUIT,
-												Message.Keys.SUIT+":"+m.getValue(Message.Keys.SUIT.toString())));
+												Message.Keys.SUIT+":"+m.getValue(Message.Keys.SUIT.toString()),
+														Message.Keys.PLAYER_TURN_ID+":"+playerIDIntTurn));
 										
 										this.state = ServerRoomState.GAME_STATE;
 									} break;

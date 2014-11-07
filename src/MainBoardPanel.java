@@ -38,6 +38,7 @@ public class MainBoardPanel extends JPanel{
 	JLabel[] 			userNames 			= new JLabel[4];;					//Labels for the userNames, Current Player - Player at the right - team player - player at the left
 	JLabel[]			userCards			= new JLabel[MAX_CARDS_AMNT];
 	JLabel				infoLabel			= new JLabel();						//Label for give general info to the user
+	JLabel				statusLbl			= new JLabel();						//Label for give general info to the user about in game actions
 	boolean  			isUserNamesSet 		= false;							//True if the user names where set, false if the user names are nulls
 	int[] 				playerCardsAmmount 	= new int[4];						//Amount of card by player
 	Point[] 			userNamePoint 		= new Point[4];						//Coordinate for drawing player cards in the center
@@ -86,11 +87,18 @@ public class MainBoardPanel extends JPanel{
 			userCards[i].setSize(CARD_WIDTH, CARD_HEGHT);
 		}
 		
-		infoLabel.setSize(WIDTH - 370, HEGTH - 300);
+		infoLabel.setSize(WIDTH - 370, HEGTH - 200);
 		infoLabel.setBounds(WIDTH/2 - infoLabel.getWidth()/2, HEGTH/2 - 75 - infoLabel.getHeight()/2, infoLabel.getWidth(), infoLabel.getHeight());
 		infoLabel.setForeground(Color.WHITE);
 		infoLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		infoLabel.setVisible(false);
+		this.add(infoLabel);
+		
+		statusLbl.setSize(200, 50);
+		statusLbl.setBounds(WIDTH - statusLbl.getWidth() - 100, HEGTH - 100 - statusLbl.getHeight(), statusLbl.getWidth(), statusLbl.getHeight());
+		statusLbl.setForeground(Color.WHITE);
+		statusLbl.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		statusLbl.setVisible(false);
 		this.add(infoLabel);
 		
 		//-------------------------
@@ -117,7 +125,7 @@ public class MainBoardPanel extends JPanel{
 		super.paintComponent(g);
 		this.g2 = (Graphics2D) g;
 		oldForm = g2.getTransform();
-		
+	
 		//g2.drawImage(backgroundImg, null, 0, 0);
 		
 		if(isUserNamesSet){
@@ -150,6 +158,7 @@ public class MainBoardPanel extends JPanel{
 		}
 		
 		Test.mp.updateUI();
+		this.updateUI();
 		
 				
 	}
@@ -332,6 +341,12 @@ public class MainBoardPanel extends JPanel{
 	 * @param deck
 	 */
 	public void setDeck(CardDeck deck){
+		
+		if(isDeckSet== true){
+			for(JLabel lb : userCards){
+				this.remove(lb);
+			}
+		}
 		this.deck = deck;
 		isDeckSet = true;
 		int x = (int) this.deckPoint[CURRENT_PLAYER_POS].getX();
@@ -347,6 +362,7 @@ public class MainBoardPanel extends JPanel{
 			x += CARD_WIDTH/CARD_OVERLAP_X_FACTOR;
 		}
 		this.deck.sortDeck();
+		repaint();
 		
 	}
 	

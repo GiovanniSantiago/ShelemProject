@@ -83,6 +83,16 @@ public class CardDeck {
 		}
 	}
 	
+	public String toString(){
+		String s = "";
+		for(int i = 0; i < actualLenght; i++){
+			s += cardDeck[i];
+			
+		}
+		return s;
+		
+	}
+	
 	/**
 	 * Shuffle the arrayof card with the overhand thecnique
 	 */
@@ -117,6 +127,13 @@ public class CardDeck {
 			return false;
 	}
 	
+	/**
+	 * ------------------------------------------------------------------------------------------
+	 * 										   REMOVE CARD
+	 * ------------------------------------------------------------------------------------------
+	 * @param card
+	 * @return
+	 */
 	public boolean removeCard(Card card){
 		boolean found = false;
 		int position = -1;
@@ -142,6 +159,13 @@ public class CardDeck {
 		return found;
 	}
 	
+	/**
+	 * ------------------------------------------------------------------------------------------
+	 * 											getCard
+	 * ------------------------------------------------------------------------------------------
+	 * @param position
+	 * @return
+	 */
 	public Card getCard(int position){
 		if(position >= actualLenght){
 			return null;
@@ -155,7 +179,11 @@ public class CardDeck {
 	}
 	
 	public Card[] getDeck(){
-		return cardDeck;
+		Card[] cards = new Card[this.actualLenght];
+		for(int i = 0; i < actualLenght; i ++){
+			cards[i] = this.cardDeck[i];
+		}
+		return cards;
 	}
 	
 	public int getSize(){

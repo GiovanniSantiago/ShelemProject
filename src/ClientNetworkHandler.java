@@ -38,12 +38,14 @@ public class ClientNetworkHandler implements Runnable {
 	final int	MAX_BID_POSSIBLE	= 165;
 	final int	BID_MULTIPLE		= 5;
 	
-	
+	int			isFirstBid		= 1;
 	int 		targetScore 	= 0;
 	int			actualBid		= 100;
 	Suit		trump;
 	Card[] 		myCards 		= new Card[12];
 	CardDeck 	myDeck;
+	
+	int 		playerTurn = 0;
 	
 	
 	////
@@ -234,6 +236,7 @@ public class ClientNetworkHandler implements Runnable {
 									// 	Show initial cards in the board
 									
 									// DUPE CODE FROM GAME_READY
+									playerTurn  = Integer.parseInt(m.getValue(Message.Keys.PLAYER_ID.toString()));
 									
 									String 		cardlist 	= m.getValue(Message.Keys.CARDS.toString());		//Gets input from the server
 									String[] 	cardNames 	= cardlist.split(",");								//Convierte el input del server a un array de nombres de cartas
@@ -258,7 +261,7 @@ public class ClientNetworkHandler implements Runnable {
 									
 									//GCN ===============================CORREGIRR
 									//Esto no puede ser asi tiene que ser mediante un key de parte del servidor
-									if(playerId == 0){
+									if(playerId == playerTurn){
 										Test.mp.bidPanel.eneableButtons();
 									}
 									
@@ -284,13 +287,17 @@ public class ClientNetworkHandler implements Runnable {
 									
 									
 									Test.mp.bidPanel.setPlayerBid(playersPos[player], actualBid);		//Update al UI para notificar el bid del jugador	
+									Test.mp.bidPanel.bidStatuslbl.setForeground(Color.WHITE);
 									Test.mp.bidPanel.bidStatuslbl.setText(players[player].getName() + " bid. Waiting for next player...");		//Update al mensaje de estatus.
+									
+									isFirstBid = 0;
 								} break;
 								
 								case "SOMEONE_PASSED": {			////	Someone submitted a bid
 									
 									int player = m.getInteger(Message.Keys.PLAYER_ID.toString());
 									Test.mp.bidPanel.setPlayerBid(playersPos[player], -1);
+									Test.mp.bidPanel.bidStatuslbl.setForeground(Color.WHITE);
 									Test.mp.bidPanel.bidStatuslbl.setText(players[player].getName() + " pass. Waiting for next player...");
 									
 								} break; //-_- -_- Te estoy mirando mal Giovanni estube 36min dandole cabeza de pq esto esta dando problema y te comistes un BREAK!!!! JAJAJA
@@ -303,8 +310,8 @@ public class ClientNetworkHandler implements Runnable {
 									Test.mp.bidPanel.sumBtn.setEnabled(true);
 									Test.mp.bidPanel.senBidBtn.setEnabled(true);
 									Test.mp.bidPanel.passBtn.setEnabled(true);
-									Test.mp.bidPanel.bidStatuslbl.setText("It is your Turn");
 									Test.mp.bidPanel.bidStatuslbl.setForeground(Color.YELLOW);
+									Test.mp.bidPanel.bidStatuslbl.setText("It is your Turn");
 									
 								} break;
 								
@@ -336,7 +343,7 @@ public class ClientNetworkHandler implements Runnable {
 										{
 											JLabel lb = Test.mp.board.infoLabel;
 											lb.setText("<html><p align = \"justify\" width =\""+  lb.getWidth() + "\">"
-													+ "The player that won the contract (the bid) is deciding which suit is"
+													+ players[bidWinnerID].getName() + " has won the contract (the bid) and is deciding which suit is"
 													+ "going to be the trump. Please be pation and wait, if not well...</p></html>");
 											lb.setVisible(true);
 										}
@@ -351,34 +358,38 @@ public class ClientNetworkHandler implements Runnable {
 								} break;
 								
 								case "BIDDING_FAIL": {
-									//
-									// Everybody passed. Start bidding over.
-									//
+									isFirstBid = 1;
 									
+									// Everybody passed. Start bidding over.
+									Test.mp.bidPanel.bidStatuslbl.setBackground(Color.RED);
+									Test.mp.bidPanel.bidStatuslbl.setText("All player pass. Shuffling the cards...");
+									playerTurn  = m.getInteger(Message.Keys.PLAYER_ID.toString());
 									String 		cardlist 	= m.getValue(Message.Keys.CARDS.toString());		//Gets input from the server
 									String[] 	cardNames 	= cardlist.split(",");								//Convierte el input del server a un array de nombres de cartas
 																
-									for(int i = 0; i < cardNames.length; i++) {									//cambia las cartas del current player
+									for(int i = 0; i < cardNames.length; i++) {								//Inicializa las cartas del current player
 										this.myCards[i] = new Card(cardNames[i]);
 									}
 									
-									this.myDeck.setDeck(this.myCards);
-									Test.mp.board.setDeck(this.myDeck);
+									myDeck = new CardDeck();
+									
+									for(String s : cardNames){
+										myDeck.addCard(new Card(s));
+									}
+									Test.mp.board.setDeck(myDeck);
 									
 									int playersCardsAmmounts[] = {12, 12, 12, 12};
 									Test.mp.board.setPlayerCardsAmount(playersCardsAmmounts);
-									Test.mp.board.setDeck(myDeck);
 									
 									
 									
-									//		U      U	IIIII
-									//		U      U	  I
-									//		U      U	  I
-									//		U	   U	  I
-									//		 UUUUUU 	IIIII
+									if(playerId == playerTurn){
+										Test.mp.bidPanel.eneableButtons();
+									}
+									Test.mp.bidPanel.senBidBtn.setVisible(true);
+									Test.mp.bidPanel.passBtn.setVisible(true);
+									Test.mp.bidPanel.sumBtn.setVisible(true);
 									
-									//TODO: Add UI notification that bidding failed.
-									//TODO: reset bidding everything back to normal, including visual notifiers.
 								} break;
 								//TODO: Add QUITTING message thing
 							}
@@ -391,8 +402,8 @@ public class ClientNetworkHandler implements Runnable {
 									String[] 	widow 			= widowSource.split(",");
 									
 									send.setBackground(Color.lightGray);
-									send.setBounds(Test.mp.board.WIDTH - 350, Test.mp.board.HEGTH - 300, 100, 25);
-									send.setForeground(Color.GREEN);
+									send.setBounds(Test.mp.board.WIDTH - 350, Test.mp.board.HEGTH - 200, 100, 25);
+									send.setForeground(Color.BLACK);
 									send.setVisible(true);
 									send.addMouseListener(new WidowListener());
 									
@@ -403,13 +414,6 @@ public class ClientNetworkHandler implements Runnable {
 										myDeck.addCard(new Card(s));
 									}
 									
-									
-									//UI Update
-									//TODO: Remember that the message sent from client is 
-									//name:MY_TRASH
-									//CARDS:<CARDLIST>
-									//SUIT:<selected game suit>
-									//
 									myDeck.sortDeck();
 									Test.mp.board.setDeck(myDeck);
 									
@@ -425,15 +429,6 @@ public class ClientNetworkHandler implements Runnable {
 									Test.mp.scoreBoard.setSuit(trump.toString());
 									
 									Test.mp.board.mouseLst.isMyTurn = true;
-									//
-									
-									///////
-									///////
-									///////
-									///////	TODO: EXTRACT WIDOW FROM THIS AND CAN NOW SEND THE FOUR TRASH CARDS
-									///////
-									///////
-									///////
 									
 									this.state = ClientGameState.GAME_STATE;
 								} break;
@@ -444,15 +439,12 @@ public class ClientNetworkHandler implements Runnable {
 						case GAME_STATE: {
 							switch(m.getName()) {
 								case "GAME_SUIT": {
-									
+									Test.mp.board.infoLabel.setVisible(false);
+									Test.mp.board.statusLbl.setVisible(true);
+									Test.mp.board.statusLbl.setText("Starting game. Player )
 									String suit = m.getValue(Message.Keys.SUIT.toString());
-									//
-									//
-									//
-									//	Here the client is notified of the game suit.
-									//
-									//
-									//
+									Test.mp.scoreBoard.setSuit(suit);
+									
 									
 								} break;
 								
@@ -651,15 +643,17 @@ public class ClientNetworkHandler implements Runnable {
 	 *
 	 */
 	class BidListener implements ActionListener{
-
+		boolean hasChangeBid = false;
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton btn = (JButton) e.getSource();
 			
 			if(btn == Test.mp.bidPanel.sumBtn){							//Aumentar Bid
-				if(actualBid < MAX_BID_POSSIBLE - BID_MULTIPLE){
+				if(actualBid <= MAX_BID_POSSIBLE - BID_MULTIPLE){
 					actualBid+= BID_MULTIPLE;
 					Test.mp.bidPanel.bidTxt.setText("" + actualBid);
+					hasChangeBid = true;
 				}else{
 					JOptionPane.showMessageDialog(Test.mp, "Maximmun bid value reached.", "Max Bid Value", JOptionPane.WARNING_MESSAGE);
 				}
@@ -670,20 +664,29 @@ public class ClientNetworkHandler implements Runnable {
 				Test.mp.bidPanel.passBtn.setVisible(false);
 				Test.mp.bidPanel.sumBtn.setEnabled(false);
 				Test.mp.bidPanel.sumBtn.setVisible(false);
-				System.out.println("dfgbfgbhfgHN");
 				line.sendMessage(Message.fromPairs(
 						"name:"+Message.Names.MY_BID.toString(),
 						Message.Keys.BID_AMOUNT.toString()+":"+0));
 				Test.mp.bidPanel.bidStatuslbl.setForeground(Color.WHITE);
 
 			}else{														//Send Button
-				Test.mp.bidPanel.senBidBtn.setEnabled(false);
-				Test.mp.bidPanel.passBtn.setEnabled(false);
-				Test.mp.bidPanel.sumBtn.setEnabled(false);
-				line.sendMessage(Message.fromPairs(
-						"name:"+Message.Names.MY_BID.toString(),
-						Message.Keys.BID_AMOUNT.toString()+":"+actualBid));
-				Test.mp.bidPanel.bidStatuslbl.setForeground(Color.WHITE);
+				if(hasChangeBid || (actualBid == 100 && (isFirstBid == 1))){
+					Test.mp.bidPanel.senBidBtn.setEnabled(false);
+					Test.mp.bidPanel.passBtn.setEnabled(false);
+					Test.mp.bidPanel.sumBtn.setEnabled(false);
+					
+					//send to server results
+					line.sendMessage(Message.fromPairs(
+							"name:"+Message.Names.MY_BID.toString(),
+							Message.Keys.BID_AMOUNT.toString()+":"+actualBid));
+					Test.mp.bidPanel.bidStatuslbl.setForeground(Color.WHITE);
+					hasChangeBid = false;
+				}else {
+					JOptionPane.showMessageDialog(Test.mainFrame, "You have to make a bid larger than the last bid made");
+				}
+				
+				
+				
 			}
 			
 			
@@ -691,11 +694,60 @@ public class ClientNetworkHandler implements Runnable {
 		
 	}
 	
+	/**
+	 * -------------------------------------------------------------------------------------------------------------------------
+	 * 										WidowListener
+	 * -------------------------------------------------------------------------------------------------------------------------
+	 * 
+	 * @author Glorimar Castro
+	 *
+	 */
 	class WidowListener implements MouseListener{
-
+		int counter = 0;
 		@Override
 		public void mouseClicked(MouseEvent e) {
+
+			Card[] cards = CardsMouseListener.cards2Discard.getDeck();
+			String cardList = "";
 			
+			if(CardsMouseListener.cards2Discard.getAmntOfCards() != 4){
+				if(counter%2 == 0){
+					counter++;
+					Test.mp.board.infoLabel.setForeground(Color.RED);
+				}else{
+					counter++;
+					Test.mp.board.infoLabel.setForeground(Color.WHITE);
+				}
+				Test.mp.board.infoLabel.setText("<html><p align=\"center\" width = \"" + Test.mp.board.infoLabel.getWidth() + "\"> You have to select 4 cards... Try Again </p></html>"); 
+			}else {
+				for(Card c : cards){
+					cardList += c.getName() + ",";
+					myDeck.removeCard(c);
+				}
+				Test.mp.board.infoLabel.setBackground(Color.BLUE);
+				cardList = cardList.substring(0, cardList.length() - 1);
+				//send server results
+				line.sendMessage(Message.fromPairs("name:" + Message.Names.MY_TRASH.toString(), 
+						Message.Keys.CARDS + ":" + cardList, Message.Keys.SUIT+":"+trump));
+				
+				//UI updates
+				JButton btn = ((JButton)e.getSource());
+				btn.setEnabled(false);
+				btn.setVisible(false);
+				Test.mp.board.setDeck(myDeck);
+				
+				Test.mp.board.mouseLst.bidProtocol = false;
+				
+				
+				
+			}
+			
+			//UI Update
+			//TODO: Remember that the message sent from client is 
+			//name:MY_TRASH
+			//CARDS:<CARDLIST>
+			//SUIT:<selected game suit>
+			//
 			
 		}
 
